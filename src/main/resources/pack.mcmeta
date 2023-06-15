@@ -1,6 +1,8 @@
 {
     "pack": {
-        "description": "spice of life: sweet potato edition resources",
-        "pack_format": 9
+        "description": "${mod_id} resources",
+        "pack_format": ${resource_pack_format},
+        "forge:resource_pack_format": ${resource_pack_format},
+        "forge:data_pack_format": ${data_pack_format}
     }
 }
