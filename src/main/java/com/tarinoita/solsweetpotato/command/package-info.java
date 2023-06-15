@@ -1,10 +1,8 @@
-/**
- This package defines the commands the mod offers.
- */
+/** This package defines the commands the mod offers. */
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 package com.tarinoita.solsweetpotato.command;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
-
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import net.minecraft.MethodsReturnNonnullByDefault;
