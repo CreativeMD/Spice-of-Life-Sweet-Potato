@@ -10,7 +10,6 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.tarinoita.solsweetpotato.SOLSweetPotato;
-import com.tarinoita.solsweetpotato.integration.Origins;
 import com.tarinoita.solsweetpotato.lib.Localization;
 import com.tarinoita.solsweetpotato.tracking.CapabilityHandler;
 import com.tarinoita.solsweetpotato.tracking.FoodList;
@@ -108,7 +107,7 @@ public final class FoodListCommand {
         if (!isOp && !isTargetingSelf)
             throw new CommandRuntimeException(localizedComponent("no_permissions"));
         
-        Origins.cacheInvalidate(target);
+        //Origins.cacheInvalidate(target);
         
         MutableComponent feedback;
         if (ModList.get().isLoaded("origins")) {
@@ -129,7 +128,7 @@ public final class FoodListCommand {
         if (!isOp)
             throw new CommandRuntimeException(localizedComponent("no_permissions"));
         
-        Origins.clearCache();
+        //Origins.clearCache();
         
         MutableComponent feedback;
         if (ModList.get().isLoaded("origins")) {

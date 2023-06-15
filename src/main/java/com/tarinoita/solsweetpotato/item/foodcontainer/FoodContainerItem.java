@@ -2,7 +2,6 @@ package com.tarinoita.solsweetpotato.item.foodcontainer;
 
 import javax.annotation.Nullable;
 
-import com.tarinoita.solsweetpotato.integration.Origins;
 import com.tarinoita.solsweetpotato.tracking.FoodList;
 
 import net.minecraft.nbt.CompoundTag;
@@ -57,7 +56,7 @@ public class FoodContainerItem extends Item {
     
     private InteractionResultHolder<ItemStack> processRightClick(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (isInventoryEmpty(stack) || (ModList.get().isLoaded("origins") && Origins.hasRestrictedDiet(player))) {
+        if (isInventoryEmpty(stack) || (ModList.get().isLoaded("origins")/* && Origins.hasRestrictedDiet(player)*/)) {
             return InteractionResultHolder.pass(stack);
         }
         
