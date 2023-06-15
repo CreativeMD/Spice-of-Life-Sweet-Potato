@@ -6,32 +6,32 @@
 package com.tarinoita.solsweetpotato.item.foodcontainer;
 
 import com.tarinoita.solsweetpotato.client.ContainerScreenRegistry;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.*;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.CapabilityItemHandler;
 
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 public class FoodContainer extends AbstractContainerMenu {
     public static final int PLAYERSIZE = 4 * 9;
-
+    
     public ItemStack containerItem;
     public int nslots;
-
+    
     private Inventory playerInventory;
-
+    
     public FoodContainer(int id, Inventory playerInventory, Player player) {
         super(ContainerScreenRegistry.FOOD_CONTAINER.get(), id);
-
+        
         // When we hit the hotkey to open a food container, check held items first
         if (player.getMainHandItem().getItem() instanceof FoodContainerItem) {
             containerItem = player.getMainHandItem();
-        }
-        else if (player.getOffhandItem().getItem() instanceof FoodContainerItem) {
+        } else if (player.getOffhandItem().getItem() instanceof FoodContainerItem) {
             containerItem = player.getOffhandItem();
-        }
-        else {
+        } else {
             for (ItemStack stack : playerInventory.items) {
                 if (stack.getItem() instanceof FoodContainerItem) {
                     containerItem = stack;
@@ -39,18 +39,18 @@ public class FoodContainer extends AbstractContainerMenu {
                 }
             }
         }
-
+        
         this.playerInventory = playerInventory;
-        containerItem.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
+        containerItem.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(h -> {
             nslots = h.getSlots();
             int slotsPerRow = h.getSlots();
             if (h.getSlots() > 9) {
                 slotsPerRow = h.getSlots() / 2;
             }
-            int xStart = (2*8 + 9*18 - slotsPerRow * 18) / 2;
+            int xStart = (2 * 8 + 9 * 18 - slotsPerRow * 18) / 2;
             int yStart = 17 + 18;
             if (h.getSlots() > 9) {
-                yStart = 17 + (84-36-23)/2;
+                yStart = 17 + (84 - 36 - 23) / 2;
             }
             for (int j = 0; j < h.getSlots(); j++) {
                 int row = j / slotsPerRow;
@@ -60,10 +60,10 @@ public class FoodContainer extends AbstractContainerMenu {
                 this.addSlot(new FoodSlot(h, j, xPos, yPos));
             }
         });
-
+        
         layoutPlayerInventorySlots(8, 84);
     }
-
+    
     @Override
     public void clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
         if (!(slotId < 0 || slotId >= this.slots.size())) {
@@ -107,15 +107,15 @@ public class FoodContainer extends AbstractContainerMenu {
         } else {
             clickedSlot.setChanged();
         }
-
+        
         if (clickedStack.getCount() == unchangedCopy.getCount()) {
             return ItemStack.EMPTY;
         }
-
+        
         clickedSlot.onTake(player, clickedStack);
         return clickedStack;
-     }
-
+    }
+    
     private int addSlotRange(Inventory handler, int index, int x, int y, int amount, int dx) {
         for (int i = 0; i < amount; i++) {
             addSlot(new Slot(handler, index, x, y));
@@ -124,7 +124,7 @@ public class FoodContainer extends AbstractContainerMenu {
         }
         return index;
     }
-
+    
     private int addSlotBox(Inventory handler, int index, int x, int y, int horAmount, int dx, int verAmount, int dy) {
         for (int j = 0; j < verAmount; j++) {
             index = addSlotRange(handler, index, x, y, horAmount, dx);
@@ -132,7 +132,7 @@ public class FoodContainer extends AbstractContainerMenu {
         }
         return index;
     }
-
+    
     protected void layoutPlayerInventorySlots(int leftCol, int topRow) {
         // Player inventory
         addSlotBox(playerInventory, 9, leftCol, topRow, 9, 18, 3, 18);
