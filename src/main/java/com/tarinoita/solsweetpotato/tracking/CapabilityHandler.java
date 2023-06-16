@@ -58,13 +58,14 @@ public final class CapabilityHandler {
             return;
         
         Player originalPlayer = event.getOriginal();
-        originalPlayer.revive(); // so we can access the capabilities; entity will get removed either way
+        originalPlayer.reviveCaps(); // so we can access the capabilities; entity will get removed either way
         FoodList original = FoodList.get(originalPlayer);
         FoodList newInstance = FoodList.get(event.getEntity());
         newInstance.deserializeNBT(original.serializeNBT());
         // can't sync yet; client hasn't attached capabilities yet
         
         BenefitsHandler.updatePlayer(event.getEntity());
+        originalPlayer.invalidateCaps();
     }
     
     @SubscribeEvent
