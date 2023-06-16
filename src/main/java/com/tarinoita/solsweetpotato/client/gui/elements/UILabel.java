@@ -33,10 +33,9 @@ public class UILabel extends UIElement {
         int textWidth = mc.font.width(text) - 1;
         int x = frame.x + (frame.width - textWidth) * alignment.ordinal / 2;
         int y = frame.y + (frame.height - 7) / 2;
-        if (color.getTransparency() == Color.TRANSLUCENT) {
+        if (color.getTransparency() == Color.TRANSLUCENT)
             RenderSystem.enableBlend();
-        }
-        graphics.drawString(mc.font, text, x, y, color.getRGB());
+        graphics.drawString(mc.font, text, x, y, color.getRGB(), false);
     }
     
     enum TextAlignment {

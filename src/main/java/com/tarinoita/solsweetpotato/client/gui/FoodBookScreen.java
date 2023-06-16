@@ -134,9 +134,8 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
         String header = localized("gui", "food_book." + headerLocalizationPath, items.size());
         List<ItemStack> stacks = items.stream().map(ItemStack::new).collect(Collectors.toList());
         Map<FoodInstance, Integer> foodMap = new HashMap<>();
-        for (Map.Entry<FoodInstance, Integer> entry : foodData) {
+        for (Map.Entry<FoodInstance, Integer> entry : foodData)
             foodMap.put(entry.getKey(), entry.getValue());
-        }
         
         pages.addAll(FoodListPage.pages(background.frame, header, stacks, foodMap));
     }
