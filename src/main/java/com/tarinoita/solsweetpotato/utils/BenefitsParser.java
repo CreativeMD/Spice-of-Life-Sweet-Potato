@@ -9,6 +9,7 @@ import com.tarinoita.solsweetpotato.tracking.benefits.Benefit;
 import com.tarinoita.solsweetpotato.tracking.benefits.EffectBenefit;
 
 public class BenefitsParser {
+    
     public static List<List<Benefit>> parse(List<String> unparsed) {
         List<List<Benefit>> allBenefits = new ArrayList<>();
         

@@ -9,9 +9,10 @@ import com.tarinoita.solsweetpotato.SOLSweetPotatoConfig;
 import com.tarinoita.solsweetpotato.client.gui.elements.UIBox;
 import com.tarinoita.solsweetpotato.client.gui.elements.UIElement;
 import com.tarinoita.solsweetpotato.client.gui.elements.UILabel;
+import com.tarinoita.solsweetpotato.client.gui.screen.FoodBookScreen;
 
 public class DiversityPage extends Page {
-    DiversityPage(double foodDiversity, int foodEaten, Rectangle frame) {
+    public DiversityPage(double foodDiversity, int foodEaten, Rectangle frame) {
         super(frame, localized("gui", "food_book.stats"));
         
         // Dummy box to center the diversity display

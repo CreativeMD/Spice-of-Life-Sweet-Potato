@@ -12,7 +12,7 @@ public final class Localization {
     
     /** e.g. keyString("tooltip", "eaten_status.not_eaten_1") -> "tooltip.solsweetpotato.eatenStatus.not_eaten_1") */
     public static String keyString(String domain, String path) {
-        return domain + "." + SOLSweetPotato.MOD_ID + "." + path;
+        return domain + "." + SOLSweetPotato.MODID + "." + path;
     }
     
     @OnlyIn(Dist.CLIENT)
@@ -34,14 +34,11 @@ public final class Localization {
     }
     
     public static String formatBigNumber(int number) {
-        if (number < 1000) {
+        if (number < 1000)
             return "" + number;
-        } else if (number < 10_000) {
+        if (number < 10_000)
             return Math.round(number / 1000F) + "." + Math.round((number % 1000) / 100F) + "k";
-        } else {
-            return Math.round(number / 1000F) + "k";
-        }
+        return Math.round(number / 1000F) + "k";
     }
     
-    private Localization() {}
 }

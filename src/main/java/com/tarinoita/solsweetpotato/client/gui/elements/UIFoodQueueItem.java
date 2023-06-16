@@ -3,7 +3,7 @@ package com.tarinoita.solsweetpotato.client.gui.elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tarinoita.solsweetpotato.client.TooltipHandler;
+import com.tarinoita.solsweetpotato.client.SOLSweetPotatoClient;
 import com.tarinoita.solsweetpotato.tracking.FoodInstance;
 import com.tarinoita.solsweetpotato.tracking.FoodList;
 
@@ -39,7 +39,7 @@ public class UIFoodQueueItem extends UIItemStack {
         
         double contribution = FoodList.calculateDiversityContribution(new FoodInstance(itemStack.getItem()), lastEaten);
         
-        TooltipHandler.addDiversityInfoTooltips(tooltip, contribution, lastEaten);
+        SOLSweetPotatoClient.addDiversityInfoTooltips(tooltip, contribution, lastEaten);
         
         return tooltip;
     }

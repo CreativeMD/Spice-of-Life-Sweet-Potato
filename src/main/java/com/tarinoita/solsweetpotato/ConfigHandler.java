@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tarinoita.solsweetpotato.communication.ConfigMessage;
+import com.tarinoita.solsweetpotato.network.ConfigMessage;
 import com.tarinoita.solsweetpotato.tracking.FoodInstance;
 import com.tarinoita.solsweetpotato.tracking.benefits.Benefit;
 import com.tarinoita.solsweetpotato.tracking.benefits.BenefitList;
@@ -24,9 +24,8 @@ import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.NetworkDirection;
 
-@Mod.EventBusSubscriber(modid = SOLSweetPotato.MOD_ID)
+@Mod.EventBusSubscriber(modid = SOLSweetPotato.MODID)
 public class ConfigHandler {
     public static Map<FoodInstance, Double> complexityMap = new HashMap<>();
     public static List<Double> thresholds = new ArrayList<>();
@@ -57,11 +56,8 @@ public class ConfigHandler {
     
     public static ListTag serializeThresholds() {
         ListTag tag = new ListTag();
-        
-        for (double t : thresholds) {
+        for (double t : thresholds)
             tag.add(DoubleTag.valueOf(t));
-        }
-        
         return tag;
     }
     
@@ -129,7 +125,6 @@ public class ConfigHandler {
         if (player.level().isClientSide)
             return;
         
-        ServerPlayer target = (ServerPlayer) player;
-        SOLSweetPotato.channel.sendTo(new ConfigMessage(), target.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+        SOLSweetPotato.NETWORK.sendToClient(new ConfigMessage(ConfigHandler.serializeConfig()), (ServerPlayer) player);
     }
 }

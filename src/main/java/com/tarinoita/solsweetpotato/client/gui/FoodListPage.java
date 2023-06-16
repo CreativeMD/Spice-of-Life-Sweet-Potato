@@ -39,7 +39,7 @@ public final class FoodListPage extends ItemListPage {
         }
     }
     
-    static List<ItemListPage> pages(Rectangle frame, String header, List<ItemStack> items, Map<FoodInstance, Integer> foodMap) {
+    public static List<ItemListPage> pages(Rectangle frame, String header, List<ItemStack> items, Map<FoodInstance, Integer> foodMap) {
         List<ItemListPage> pages = new ArrayList<>();
         for (int startIndex = 0; startIndex < items.size(); startIndex += ItemListPage.itemsPerPage) {
             int endIndex = Math.min(startIndex + ItemListPage.itemsPerPage, items.size());

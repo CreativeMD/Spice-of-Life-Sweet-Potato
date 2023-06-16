@@ -3,9 +3,10 @@
  * Copyright for portions of the code are held by Samson Basset (Lothrazar)
  * as part of Cyclic, under the MIT license.
  */
-package com.tarinoita.solsweetpotato.item.foodcontainer;
+package com.tarinoita.solsweetpotato.client.gui.screen;
 
 import com.tarinoita.solsweetpotato.SOLSweetPotato;
+import com.tarinoita.solsweetpotato.item.foodcontainer.FoodContainer;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -28,7 +29,7 @@ public class FoodContainerScreen extends AbstractContainerScreen<FoodContainer> 
     
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int x, int y) {
-        this.drawBackground(graphics, new ResourceLocation(SOLSweetPotato.MOD_ID, "textures/gui/inventory.png"));
+        this.drawBackground(graphics, new ResourceLocation(SOLSweetPotato.MODID, "textures/gui/inventory.png"));
         this.menu.containerItem.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(h -> {
             int slotsPerRow = h.getSlots();
             if (h.getSlots() > 9) {
@@ -61,6 +62,6 @@ public class FoodContainerScreen extends AbstractContainerScreen<FoodContainer> 
     }
     
     protected void drawSlot(GuiGraphics graphics, int x, int y) {
-        drawSlot(graphics, x, y, new ResourceLocation(SOLSweetPotato.MOD_ID, "textures/gui/slot.png"), 18);
+        drawSlot(graphics, x, y, new ResourceLocation(SOLSweetPotato.MODID, "textures/gui/slot.png"), 18);
     }
 }

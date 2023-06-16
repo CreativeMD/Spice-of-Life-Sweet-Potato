@@ -30,10 +30,10 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
-@Mod.EventBusSubscriber(modid = SOLSweetPotato.MOD_ID)
+@Mod.EventBusSubscriber(modid = SOLSweetPotato.MODID)
 public final class SOLSweetPotatoConfig {
     private static String localizationPath(String path) {
-        return "config." + SOLSweetPotato.MOD_ID + "." + path;
+        return "config." + SOLSweetPotato.MODID + "." + path;
     }
     
     public static final Server SERVER;
@@ -131,6 +131,7 @@ public final class SOLSweetPotatoConfig {
     }
     
     public static class Server {
+        
         public final ConfigValue<List<? extends String>> blacklist;
         public final ConfigValue<List<? extends String>> whitelist;
         

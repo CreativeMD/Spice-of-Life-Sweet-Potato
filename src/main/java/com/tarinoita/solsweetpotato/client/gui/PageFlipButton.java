@@ -14,15 +14,16 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-final class PageFlipButton extends Button {
-    private static final ResourceLocation texture = SOLSweetPotato.resourceLocation("textures/gui/food_book.png");
+public final class PageFlipButton extends Button {
+    
+    private static final ResourceLocation texture = new ResourceLocation(SOLSweetPotato.MODID, "textures/gui/food_book.png");
     public static final int width = 23;
     public static final int height = 13;
     
     private final Direction direction;
     private final Pageable pageable;
     
-    PageFlipButton(int x, int y, Direction direction, Pageable pageable) {
+    public PageFlipButton(int x, int y, Direction direction, Pageable pageable) {
         super(x, y, 23, 13, Component.literal(""), (button) -> ((PageFlipButton) button).changePage(), Button.DEFAULT_NARRATION);
         
         this.direction = direction;
@@ -60,7 +61,7 @@ final class PageFlipButton extends Button {
         soundManager.play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
     }
     
-    enum Direction {
+    public enum Direction {
         FORWARD(1),
         BACKWARD(-1);
         
@@ -71,7 +72,7 @@ final class PageFlipButton extends Button {
         }
     }
     
-    interface Pageable {
+    public interface Pageable {
         void switchToPage(int pageNumber);
         
         int getCurrentPageNumber();

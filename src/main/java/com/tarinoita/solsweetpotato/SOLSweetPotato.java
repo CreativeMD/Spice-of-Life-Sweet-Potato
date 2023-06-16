@@ -1,59 +1,54 @@
 package com.tarinoita.solsweetpotato;
 
-import static net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD;
+import static net.minecraft.commands.Commands.literal;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tarinoita.solsweetpotato.client.ContainerScreenRegistry;
-import com.tarinoita.solsweetpotato.communication.ConfigMessage;
-import com.tarinoita.solsweetpotato.communication.FoodListMessage;
+import com.tarinoita.solsweetpotato.client.SOLSweetPotatoClient;
+import com.tarinoita.solsweetpotato.command.FoodListCommand;
 import com.tarinoita.solsweetpotato.item.SOLSweetPotatoItems;
-import com.tarinoita.solsweetpotato.item.foodcontainer.FoodContainerScreen;
+import com.tarinoita.solsweetpotato.network.ConfigMessage;
+import com.tarinoita.solsweetpotato.network.FoodListMessage;
 
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import team.creative.creativecore.common.network.CreativeNetwork;
 
-@Mod(SOLSweetPotato.MOD_ID)
-@Mod.EventBusSubscriber(modid = SOLSweetPotato.MOD_ID, bus = MOD)
+@Mod(SOLSweetPotato.MODID)
 public final class SOLSweetPotato {
-    public static final String MOD_ID = "solsweetpotato";
     
-    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-    
-    private static final String PROTOCOL_VERSION = "1.0";
-    public static SimpleChannel channel = NetworkRegistry.ChannelBuilder.named(resourceLocation("main")).clientAcceptedVersions(PROTOCOL_VERSION::equals)
-            .serverAcceptedVersions(PROTOCOL_VERSION::equals).networkProtocolVersion(() -> PROTOCOL_VERSION).simpleChannel();
-    
-    public static ResourceLocation resourceLocation(String path) {
-        return new ResourceLocation(MOD_ID, path);
-    }
-    
-    @SubscribeEvent
-    public static void setUp(FMLCommonSetupEvent event) {
-        channel.messageBuilder(FoodListMessage.class, 0).encoder(FoodListMessage::write).decoder(FoodListMessage::new).consumerMainThread(FoodListMessage::handle).add();
-        
-        channel.messageBuilder(ConfigMessage.class, 1).encoder(ConfigMessage::write).decoder(ConfigMessage::new).consumerMainThread(ConfigMessage::handle).add();
-    }
-    
-    @SubscribeEvent
-    public static void setupClient(FMLClientSetupEvent event) {
-        event.enqueueWork(() -> {
-            MenuScreens.register(ContainerScreenRegistry.FOOD_CONTAINER.get(), FoodContainerScreen::new);
-        });
-    }
+    public static final String MODID = "solsweetpotato";
+    public static final Logger LOGGER = LogManager.getLogger(MODID);
+    public static CreativeNetwork NETWORK = new CreativeNetwork("1.0", LOGGER, new ResourceLocation(SOLSweetPotato.MODID, "main"));
     
     public SOLSweetPotato() {
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> SOLSweetPotatoClient.load(FMLJavaModLoadingContext.get().getModEventBus()));
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setUp);
         SOLSweetPotatoConfig.setUp();
-        ContainerScreenRegistry.MENU_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         SOLSweetPotatoItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SOLSweetPotatoItems::registerTabs);
+        MinecraftForge.EVENT_BUS.addListener(this::command);
     }
+    
+    public void setUp(FMLCommonSetupEvent event) {
+        NETWORK.registerType(FoodListMessage.class, FoodListMessage::new);
+        NETWORK.registerType(ConfigMessage.class, ConfigMessage::new);
+    }
+    
+    public void command(RegisterCommandsEvent event) {
+        event.getDispatcher()
+                .register(literal(FoodListCommand.name).then(FoodListCommand.withPlayerArgumentOrSender(literal("sync"), FoodListCommand::syncFoodList))
+                        .then(FoodListCommand.withPlayerArgumentOrSender(literal("clear"), FoodListCommand::clearFoodList))
+                        .then(FoodListCommand.withPlayerArgumentOrSender(literal("diversity"), FoodListCommand::displayDiversity))
+                        .then(FoodListCommand.withPlayerArgumentOrSender(literal("resetOrigin"), FoodListCommand::resetPlayerOrigin))
+                        .then(FoodListCommand.withNoArgument(literal("resetAllOrigins"), FoodListCommand::resetAllOrigins)));
+    }
+    
 }

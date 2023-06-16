@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tarinoita.solsweetpotato.client.gui.elements.UILabel;
+import com.tarinoita.solsweetpotato.client.gui.screen.FoodBookScreen;
 import com.tarinoita.solsweetpotato.tracking.benefits.BenefitInfo;
 import com.tarinoita.solsweetpotato.utils.RomanNumber;
 

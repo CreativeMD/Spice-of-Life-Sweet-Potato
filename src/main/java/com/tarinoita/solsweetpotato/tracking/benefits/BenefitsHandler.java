@@ -20,7 +20,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /** All updates to food diversity benefits go through this class. */
-@Mod.EventBusSubscriber(modid = SOLSweetPotato.MOD_ID)
+@Mod.EventBusSubscriber(modid = SOLSweetPotato.MODID)
 public class BenefitsHandler {
     @SubscribeEvent
     public static void tickBenefits(LivingEvent.LivingTickEvent event) {

@@ -1,6 +1,6 @@
 package com.tarinoita.solsweetpotato.item;
 
-import com.tarinoita.solsweetpotato.client.gui.FoodBookScreen;
+import com.tarinoita.solsweetpotato.client.gui.screen.FoodBookScreen;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

@@ -5,7 +5,7 @@
  */
 package com.tarinoita.solsweetpotato.item.foodcontainer;
 
-import com.tarinoita.solsweetpotato.client.ContainerScreenRegistry;
+import com.tarinoita.solsweetpotato.client.SOLSweetPotatoClient;
 
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -24,7 +24,7 @@ public class FoodContainer extends AbstractContainerMenu {
     private Inventory playerInventory;
     
     public FoodContainer(int id, Inventory playerInventory, Player player) {
-        super(ContainerScreenRegistry.FOOD_CONTAINER.get(), id);
+        super(SOLSweetPotatoClient.FOOD_CONTAINER.get(), id);
         
         // When we hit the hotkey to open a food container, check held items first
         if (player.getMainHandItem().getItem() instanceof FoodContainerItem) {

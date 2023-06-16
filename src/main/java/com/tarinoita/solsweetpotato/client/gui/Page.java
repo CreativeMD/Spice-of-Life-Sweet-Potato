@@ -9,8 +9,9 @@ import com.tarinoita.solsweetpotato.client.gui.elements.UIElement;
 import com.tarinoita.solsweetpotato.client.gui.elements.UIImage;
 import com.tarinoita.solsweetpotato.client.gui.elements.UILabel;
 import com.tarinoita.solsweetpotato.client.gui.elements.UIStack;
+import com.tarinoita.solsweetpotato.client.gui.screen.FoodBookScreen;
 
-abstract class Page extends UIElement {
+public abstract class Page extends UIElement {
     final UIStack mainStack;
     final int spacing = 6;
     final UILabel headerLabel;

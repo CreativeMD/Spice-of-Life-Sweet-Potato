@@ -12,7 +12,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public final class SOLSweetPotatoItems {
     
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, SOLSweetPotato.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, SOLSweetPotato.MODID);
     
     public static final RegistryObject<Item> BOOK = ITEMS.register("food_book", () -> new FoodBookItem());
     public static final RegistryObject<Item> LUNCHBOX = ITEMS.register("lunchbox", () -> new FoodContainerItem(9, "lunchbox"));

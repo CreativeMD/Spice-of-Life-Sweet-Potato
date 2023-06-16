@@ -1,4 +1,4 @@
-package com.tarinoita.solsweetpotato.client.gui;
+package com.tarinoita.solsweetpotato.client.gui.screen;
 
 import static com.tarinoita.solsweetpotato.lib.Localization.localized;
 
@@ -15,6 +15,11 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.tarinoita.solsweetpotato.SOLSweetPotato;
 import com.tarinoita.solsweetpotato.SOLSweetPotatoConfig;
+import com.tarinoita.solsweetpotato.client.gui.BenefitsPage;
+import com.tarinoita.solsweetpotato.client.gui.DiversityPage;
+import com.tarinoita.solsweetpotato.client.gui.FoodListPage;
+import com.tarinoita.solsweetpotato.client.gui.Page;
+import com.tarinoita.solsweetpotato.client.gui.PageFlipButton;
 import com.tarinoita.solsweetpotato.client.gui.elements.UIElement;
 import com.tarinoita.solsweetpotato.client.gui.elements.UIImage;
 import com.tarinoita.solsweetpotato.client.gui.elements.UILabel;
@@ -36,15 +41,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public final class FoodBookScreen extends Screen implements PageFlipButton.Pageable {
-    private static final ResourceLocation texture = SOLSweetPotato.resourceLocation("textures/gui/food_book.png");
+    private static final ResourceLocation texture = new ResourceLocation(SOLSweetPotato.MODID, "textures/gui/food_book.png");
     private static final UIImage.Image bookImage = new UIImage.Image(texture, new Rectangle(0, 0, 186, 192));
-    static final UIImage.Image carrotImage = new UIImage.Image(texture, new Rectangle(0, 240, 16, 16));
+    public static final UIImage.Image carrotImage = new UIImage.Image(texture, new Rectangle(0, 240, 16, 16));
     
-    static final Color fullBlack = Color.BLACK;
-    static final Color lessBlack = new Color(0, 0, 0, 128);
-    static final Color leastBlack = new Color(0, 0, 0, 64);
-    static final Color activeGreen = new Color(29, 104, 29, 255);
-    static final Color inactiveRed = new Color(104, 29, 29, 255);
+    public static final Color fullBlack = Color.BLACK;
+    public static final Color lessBlack = new Color(0, 0, 0, 128);
+    public static final Color leastBlack = new Color(0, 0, 0, 64);
+    public static final Color activeGreen = new Color(29, 104, 29, 255);
+    public static final Color inactiveRed = new Color(104, 29, 29, 255);
     
     private final List<UIElement> elements = new ArrayList<>();
     private UIImage background;

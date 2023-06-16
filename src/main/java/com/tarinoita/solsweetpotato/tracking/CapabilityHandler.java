@@ -5,7 +5,7 @@ import static net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD;
 import com.tarinoita.solsweetpotato.SOLSweetPotato;
 import com.tarinoita.solsweetpotato.SOLSweetPotatoConfig;
 import com.tarinoita.solsweetpotato.api.FoodCapability;
-import com.tarinoita.solsweetpotato.communication.FoodListMessage;
+import com.tarinoita.solsweetpotato.network.FoodListMessage;
 import com.tarinoita.solsweetpotato.tracking.benefits.BenefitsHandler;
 import com.tarinoita.solsweetpotato.tracking.benefits.EffectBenefitsCapability;
 
@@ -21,15 +21,14 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.NetworkDirection;
 
-@Mod.EventBusSubscriber(modid = SOLSweetPotato.MOD_ID)
+@Mod.EventBusSubscriber(modid = SOLSweetPotato.MODID)
 public final class CapabilityHandler {
-    private static final ResourceLocation FOOD = SOLSweetPotato.resourceLocation("food");
-    private static final ResourceLocation EFFECT_BENEFITS = SOLSweetPotato.resourceLocation("effect_benefits");
+    private static final ResourceLocation FOOD = new ResourceLocation(SOLSweetPotato.MODID, "food");
+    private static final ResourceLocation EFFECT_BENEFITS = new ResourceLocation(SOLSweetPotato.MODID, "effect_benefits");
     public static Capability<EffectBenefitsCapability> effectBenefitsCapability = CapabilityManager.get(new CapabilityToken<>() {});
     
-    @Mod.EventBusSubscriber(modid = SOLSweetPotato.MOD_ID, bus = MOD)
+    @Mod.EventBusSubscriber(modid = SOLSweetPotato.MODID, bus = MOD)
     private static final class RegisterCapabilitiesSubscriber {
         @SubscribeEvent
         public static void registerCapabilities(RegisterCapabilitiesEvent event) {
@@ -77,7 +76,6 @@ public final class CapabilityHandler {
         if (player.level().isClientSide)
             return;
         
-        ServerPlayer target = (ServerPlayer) player;
-        SOLSweetPotato.channel.sendTo(new FoodListMessage(FoodList.get(player)), target.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+        SOLSweetPotato.NETWORK.sendToClient(new FoodListMessage(FoodList.get(player)), (ServerPlayer) player);
     }
 }

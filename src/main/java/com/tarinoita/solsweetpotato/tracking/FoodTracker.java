@@ -22,7 +22,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
-@Mod.EventBusSubscriber(modid = SOLSweetPotato.MOD_ID)
+@Mod.EventBusSubscriber(modid = SOLSweetPotato.MODID)
 public final class FoodTracker {
     
     @SubscribeEvent
@@ -51,7 +51,7 @@ public final class FoodTracker {
         
         BlockState state = event.getLevel().getBlockState(event.getPos());
         Block clickedBlock = state.getBlock();
-        Player player = (Player) event.getEntity();
+        Player player = event.getEntity();
         
         Item eatenItem = Items.CAKE;
         // If Farmer's Delight is installed, replace "cake" with FD's "cake slice"
