@@ -10,6 +10,8 @@ group= "com.tarinoita.solsweetpotato"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
+project.evaluationDependsOn(":CreativeCore")
+
 minecraft {
 	mappings channel: 'official', version: "${project.property 'minecraft_version'}"
     
@@ -21,8 +23,15 @@ minecraft {
             workingDirectory project.file('run')
 			
             property 'forge.logging.console.level', 'debug'
+            arg '--mixin.config'
+            arg 'creativecore.mixins.json'
+            arg '--mixin.config'
+            arg 'creativecore.forge.mixins.json'
 
             mods {
+                creativecore {
+                    source project(':CreativeCore').sourceSets.main
+                }
                 "${mod_id}" {
                     source sourceSets.main
                 }
@@ -34,8 +43,15 @@ minecraft {
             workingDirectory project.file('run')
             
 			property 'forge.logging.console.level', 'debug'
+            arg '--mixin.config'
+            arg 'creativecore.mixins.json'
+            arg '--mixin.config'
+            arg 'creativecore.forge.mixins.json'
 
             mods {
+                creativecore {
+                    source project(':CreativeCore').sourceSets.main
+                }
                 "${mod_id}" {
                     source sourceSets.main
                 }
@@ -46,6 +62,8 @@ minecraft {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${project.property 'minecraft_version'}-${project.property 'forge_version'}"
+    
+    implementation project(':CreativeCore')
 }
 
 def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
