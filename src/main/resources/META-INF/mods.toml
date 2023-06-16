@@ -25,10 +25,3 @@ license="${mod_license}"
     versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="BOTH"
-    
-[[dependencies.${mod_id}]]
-    modId="creativecore"
-    mandatory=true
-    ordering="NONE"
-    side="BOTH"
-    versionRange="${creativecore_version}"
