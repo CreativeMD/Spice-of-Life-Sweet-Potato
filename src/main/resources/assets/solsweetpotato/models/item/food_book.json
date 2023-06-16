@@ -1,7 +1,6 @@
-
 {
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "solsweetpotato:items/food_book"
-  }
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "solsweetpotato:item/food_book"
+    }
 }

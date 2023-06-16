@@ -1,6 +1,6 @@
 {
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "solsweetpotato:items/lunchbox"
-  }
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "solsweetpotato:item/lunchbox"
+    }
 }

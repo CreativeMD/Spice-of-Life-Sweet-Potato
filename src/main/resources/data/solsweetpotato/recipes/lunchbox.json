@@ -1,19 +1,19 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " A ",
-    "ABA",
-    "AAA"
-  ],
-  "key": {
-    "A": {
-      "item": "minecraft:iron_ingot"
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " A ",
+        "ABA",
+        "AAA"
+    ],
+    "key": {
+        "A": {
+            "item": "minecraft:iron_ingot"
+        },
+        "B": {
+            "item": "solsweetpotato:lunchbag"
+        }
     },
-    "B": {
-      "item": "solsweetpotato:lunchbag"
+    "result": {
+        "item": "solsweetpotato:lunchbox"
     }
-  },
-  "result": {
-    "item": "solsweetpotato:lunchbox"
-  }
 }

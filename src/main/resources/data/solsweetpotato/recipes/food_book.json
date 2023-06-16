@@ -1,10 +1,14 @@
 {
-	"type": "minecraft:crafting_shapeless",
-	"ingredients": [
-		{ "item": "minecraft:book" },
-		{ "item": "minecraft:potato" }
-	],
-	"result": {
-		"item": "solsweetpotato:food_book"
-	}
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:book"
+        },
+        {
+            "item": "minecraft:potato"
+        }
+    ],
+    "result": {
+        "item": "solsweetpotato:food_book"
+    }
 }
