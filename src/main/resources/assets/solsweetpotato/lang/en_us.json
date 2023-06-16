@@ -17,6 +17,8 @@
     "item.solsweetpotato.container.golden_lunchbox": "Golden Lunchbox",
 	"item.solsweetpotato.lunchbag": "Lunchbag",
 	"item.solsweetpotato.container.lunchbag": "Lunchbag",
+	
+	"item.solsweetpotato.container.open": "Shift rightclick to open",
 
 	"key.solsweetpotato.open_food_book": "Open Food Book",
 	"key.solsweetpotato.category": "Spice of Life: Potato Edition",
