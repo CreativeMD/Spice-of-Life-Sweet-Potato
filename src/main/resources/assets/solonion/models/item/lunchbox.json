@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "solsweetpotato:item/lunchbox"
+        "layer0": "solonion:item/lunchbox"
     }
 }

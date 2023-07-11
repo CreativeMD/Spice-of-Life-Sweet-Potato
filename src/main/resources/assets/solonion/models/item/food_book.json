@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "solsweetpotato:item/food_book"
+        "layer0": "solonion:item/food_book"
     }
 }
