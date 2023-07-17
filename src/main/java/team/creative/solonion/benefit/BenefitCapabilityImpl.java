@@ -84,7 +84,7 @@ public class BenefitCapabilityImpl implements BenefitCapability {
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        if (!appliedAttributes.isEmpty()) {
+        if (appliedAttributes != null && !appliedAttributes.isEmpty()) {
             ListTag list = new ListTag();
             for (Entry<Attribute, AttributeModifier> entry : appliedAttributes.entrySet()) {
                 CompoundTag tag = new CompoundTag();
@@ -95,7 +95,7 @@ public class BenefitCapabilityImpl implements BenefitCapability {
             nbt.put("att", list);
         }
         
-        if (!appliedEffects.isEmpty()) {
+        if (appliedEffects != null && !appliedEffects.isEmpty()) {
             ListTag list = new ListTag();
             for (MobEffect effect : appliedEffects)
                 list.add(StringTag.valueOf(BuiltInRegistries.MOB_EFFECT.getKey(effect).toString()));
@@ -106,8 +106,13 @@ public class BenefitCapabilityImpl implements BenefitCapability {
     
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        appliedAttributes.clear();
-        appliedEffects.clear();
+        if (appliedAttributes != null)
+            appliedAttributes.clear();
+        if (appliedEffects != null)
+            appliedEffects.clear();
+        
+        if (nbt == null)
+            return;
         
         ListTag list = nbt.getList("att", Tag.TAG_COMPOUND);
         for (int i = 0; i < list.size(); i++) {

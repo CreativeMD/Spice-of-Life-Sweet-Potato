@@ -72,6 +72,8 @@ public final class FoodCapabilityImpl implements FoodCapability {
     /** used for persistent storage */
     @Override
     public void deserializeNBT(ListTag tag) {
+        if (tag == null)
+            return;
         for (int i = 0; i < lastEaten.length; i++)
             lastEaten[i] = i < tag.size() ? ItemStack.of(tag.getCompound(i)) : null;
         startIndex = 0;

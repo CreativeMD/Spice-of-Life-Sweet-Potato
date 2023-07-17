@@ -12,7 +12,7 @@ public final class SOLOnionAPI {
     public static final Capability<FoodCapability> FOOD_CAP = CapabilityManager.get(new CapabilityToken<>() {});
     public static final Capability<BenefitCapability> BENEFIT_CAP = CapabilityManager.get(new CapabilityToken<>() {});
     
-    public static final ResourceLocation FOOD = new ResourceLocation(SOLOnion.MODID, "food");
+    public static final ResourceLocation FOOD = new ResourceLocation(SOLOnion.MODID, "foodlist");
     public static final ResourceLocation BENEFIT = new ResourceLocation(SOLOnion.MODID, "benefit");
     
     public static FoodCapability getFoodCapability(Player player) {
