@@ -10,10 +10,10 @@
             "item": "minecraft:gold_ingot"
         },
         "B": {
-            "item": "solsweetpotato:lunchbox"
+            "item": "solonion:lunchbox"
         }
     },
     "result": {
-        "item": "solsweetpotato:golden_lunchbox"
+        "item": "solonion:golden_lunchbox"
     }
 }

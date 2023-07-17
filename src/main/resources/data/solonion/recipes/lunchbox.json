@@ -10,10 +10,10 @@
             "item": "minecraft:iron_ingot"
         },
         "B": {
-            "item": "solsweetpotato:lunchbag"
+            "item": "solonion:lunchbag"
         }
     },
     "result": {
-        "item": "solsweetpotato:lunchbox"
+        "item": "solonion:lunchbox"
     }
 }
