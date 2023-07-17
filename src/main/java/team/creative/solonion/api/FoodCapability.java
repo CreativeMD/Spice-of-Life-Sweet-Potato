@@ -1,14 +1,25 @@
 package team.creative.solonion.api;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.Item;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
-/** Provides a stable, (strongly) simplified view of the food list. */
-public interface FoodCapability extends ICapabilitySerializable<CompoundTag> {
-    /** @return whether or not the given food is being tracked. */
-    boolean hasEaten(Item item);
+public interface FoodCapability extends ICapabilitySerializable<ListTag>, Iterable<ItemStack> {
     
-    /** @return the food diversity score of the current food queue. */
-    double foodDiversity();
+    public void eat(ItemStack stack);
+    
+    public double simulateEat(ItemStack stack);
+    
+    public double foodDiversity();
+    
+    public void clearAll();
+    
+    public boolean hasEaten(ItemStack food);
+    
+    public int getLastEaten(ItemStack food);
+    
+    public void configChanged();
+    
+    public int trackCount();
+    
 }

@@ -1,25 +1,32 @@
 package team.creative.solonion.api;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
-import team.creative.solonion.tracking.CapabilityHandler;
-import team.creative.solonion.tracking.FoodList;
+import team.creative.solonion.SOLOnion;
 
-/** Provides a stable API for interfacing with Spice of Life: Carrot Edition. */
 public final class SOLOnionAPI {
-    public static final Capability<FoodCapability> foodCapability = CapabilityManager.get(new CapabilityToken<>() {});;
+    
+    public static final Capability<FoodCapability> FOOD_CAP = CapabilityManager.get(new CapabilityToken<>() {});
+    public static final Capability<BenefitCapability> BENEFIT_CAP = CapabilityManager.get(new CapabilityToken<>() {});
+    
+    public static final ResourceLocation FOOD = new ResourceLocation(SOLOnion.MODID, "food");
+    public static final ResourceLocation BENEFIT = new ResourceLocation(SOLOnion.MODID, "benefit");
+    
+    public static FoodCapability getFoodCapability(Player player) {
+        return player.getCapability(FOOD_CAP).orElseThrow(() -> new RuntimeException("Player must have food capability attached, but none was found."));
+    }
+    
+    public static BenefitCapability getBenefitCapability(Player player) {
+        return player.getCapability(BENEFIT_CAP).orElseThrow(() -> new RuntimeException("Player must have benefit capability attached, but none was found."));
+    }
+    
+    public static void syncFoodList(Player player) {
+        SOLOnion.EVENT.syncFoodList(player);
+    }
     
     private SOLOnionAPI() {}
     
-    /** Retrieves the {@link team.creative.solonion.api.FoodCapability} for the given player. */
-    public static FoodCapability getFoodCapability(Player player) {
-        return FoodList.get(player);
-    }
-    
-    /** Synchronizes the food list for the given player to the client, updating their max health in the process. */
-    public static void syncFoodList(Player player) {
-        CapabilityHandler.syncFoodList(player);
-    }
 }

@@ -5,13 +5,9 @@ import static team.creative.solonion.lib.Localization.localized;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.tuple.Pair;
+import com.google.common.collect.Lists;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -19,12 +15,13 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import team.creative.solonion.SOLOnion;
-import team.creative.solonion.SOLOnionConfig;
+import team.creative.solonion.api.FoodCapability;
+import team.creative.solonion.api.SOLOnionAPI;
+import team.creative.solonion.benefit.BenefitThreshold;
 import team.creative.solonion.client.gui.BenefitsPage;
 import team.creative.solonion.client.gui.DiversityPage;
 import team.creative.solonion.client.gui.FoodListPage;
@@ -33,10 +30,6 @@ import team.creative.solonion.client.gui.PageFlipButton;
 import team.creative.solonion.client.gui.elements.UIElement;
 import team.creative.solonion.client.gui.elements.UIImage;
 import team.creative.solonion.client.gui.elements.UILabel;
-import team.creative.solonion.tracking.FoodInstance;
-import team.creative.solonion.tracking.FoodList;
-import team.creative.solonion.tracking.benefits.BenefitInfo;
-import team.creative.solonion.tracking.benefits.BenefitsHandler;
 
 @OnlyIn(Dist.CLIENT)
 public final class FoodBookScreen extends Screen implements PageFlipButton.Pageable {
@@ -58,7 +51,7 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
     private PageFlipButton prevPageButton;
     
     private Player player;
-    private Set<Map.Entry<FoodInstance, Integer>> foodData;
+    private FoodCapability foodData;
     
     private final List<Page> pages = new ArrayList<>();
     private int currentPageNumber = 0;
@@ -76,7 +69,7 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
     public void init() {
         super.init();
         
-        foodData = FoodList.get(player).getData();
+        foodData = SOLOnionAPI.getFoodCapability(player);
         
         background = new UIImage(bookImage);
         background.setCenterX(width / 2);
@@ -104,44 +97,35 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
     private void initPages() {
         pages.clear();
         
-        double foodDiversity = FoodList.foodDiversity(foodData);
-        int foodEaten = FoodList.get(player).getFoodsEaten();
+        double foodDiversity = foodData.foodDiversity();
+        int foodEaten = foodData.trackCount();
         pages.add(new DiversityPage(foodDiversity, foodEaten, background.frame));
         
-        List<Map.Entry<FoodInstance, Integer>> dataList = new ArrayList<>(foodData);
-        dataList.sort(Map.Entry.comparingByValue());
-        List<Item> foods = dataList.stream().map(Map.Entry::getKey).map(FoodInstance::getItem).collect(Collectors.toList());
-        addPages("food_queue_label", foods);
+        addPages("food_queue_label", Lists.newArrayList(foodData));
         
-        Pair<List<BenefitInfo>, List<BenefitInfo>> benefits = BenefitsHandler.getBenefitInfo(foodDiversity, foodEaten);
-        List<BenefitInfo> activeBenefits = benefits.getKey().stream().filter(bi -> !bi.detriment).toList();
-        List<BenefitInfo> inactiveDetriments = benefits.getKey().stream().filter(bi -> bi.detriment).toList();
-        List<BenefitInfo> inactiveBenefits = benefits.getValue().stream().filter(bi -> !bi.detriment).toList();
-        List<BenefitInfo> activeDetriments = benefits.getValue().stream().filter(bi -> bi.detriment).toList();
+        List<BenefitThreshold> active = new ArrayList<>();
+        List<BenefitThreshold> inactive = new ArrayList<>();
+        for (BenefitThreshold threshold : SOLOnion.CONFIG.benefits)
+            if (threshold.threshold <= foodDiversity)
+                active.add(threshold);
+            else
+                inactive.add(threshold);
+            
+        addPages("active_detriments_header", active, inactiveRed);
         
-        addPages("active_detriments_header", activeDetriments, inactiveRed);
-        addPages("active_benefits_header", activeBenefits, activeGreen);
-        
-        if (SOLOnionConfig.shouldShowInactiveBenefits()) {
-            addPages("inactive_detriments_header", inactiveDetriments, activeGreen);
-            addPages("inactive_benefits_header", inactiveBenefits, inactiveRed);
-        }
+        if (SOLOnion.CONFIG.shouldShowInactiveBenefits)
+            addPages("inactive_benefits_header", inactive, activeGreen);
     }
     
-    private void addPages(String headerLocalizationPath, List<BenefitInfo> benefitInfoList, Color activeColor) {
+    private void addPages(String headerLocalizationPath, List<BenefitThreshold> benefitInfoList, Color activeColor) {
         String header = localized("gui", "food_book." + headerLocalizationPath);
         
         pages.addAll(BenefitsPage.pages(background.frame, header, benefitInfoList, activeColor));
     }
     
-    private void addPages(String headerLocalizationPath, List<Item> items) {
-        String header = localized("gui", "food_book." + headerLocalizationPath, items.size());
-        List<ItemStack> stacks = items.stream().map(ItemStack::new).collect(Collectors.toList());
-        Map<FoodInstance, Integer> foodMap = new HashMap<>();
-        for (Map.Entry<FoodInstance, Integer> entry : foodData)
-            foodMap.put(entry.getKey(), entry.getValue());
-        
-        pages.addAll(FoodListPage.pages(background.frame, header, stacks, foodMap));
+    private void addPages(String headerLocalizationPath, List<ItemStack> stacks) {
+        String header = localized("gui", "food_book." + headerLocalizationPath, stacks.size());
+        pages.addAll(FoodListPage.pages(background.frame, header, stacks));
     }
     
     @Override

@@ -1,24 +1,25 @@
 package team.creative.solonion.network;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import team.creative.creativecore.common.network.CreativePacket;
-import team.creative.solonion.tracking.FoodList;
+import team.creative.solonion.api.FoodCapability;
+import team.creative.solonion.api.SOLOnionAPI;
 
 public class FoodListMessage extends CreativePacket {
     
-    private CompoundTag nbt;
+    private ListTag list;
     
     public FoodListMessage() {}
     
-    public FoodListMessage(FoodList foodList) {
-        this.nbt = foodList.serializeNBT();
+    public FoodListMessage(FoodCapability foodList) {
+        this.list = foodList.serializeNBT();
     }
     
     @Override
     public void executeClient(Player player) {
-        FoodList.get(player).deserializeNBT(nbt);
+        SOLOnionAPI.getFoodCapability(player).deserializeNBT(list);
     }
     
     @Override

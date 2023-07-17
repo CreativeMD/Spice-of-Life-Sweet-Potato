@@ -5,7 +5,7 @@ import static team.creative.solonion.lib.Localization.localized;
 import java.awt.Color;
 import java.awt.Rectangle;
 
-import team.creative.solonion.SOLOnionConfig;
+import team.creative.solonion.SOLOnion;
 import team.creative.solonion.client.gui.elements.UIBox;
 import team.creative.solonion.client.gui.elements.UIElement;
 import team.creative.solonion.client.gui.elements.UILabel;
@@ -21,8 +21,8 @@ public class DiversityPage extends Page {
         UIElement diversityDisplay = statWithIcon(icon(FoodBookScreen.carrotImage), String.format("%.2f", foodDiversity), localized("gui", "food_book.stats.current_diversity"));
         mainStack.addChild(diversityDisplay);
         
-        if (foodEaten < SOLOnionConfig.minFoodsToActivate()) {
-            int diff = SOLOnionConfig.minFoodsToActivate() - foodEaten;
+        if (foodEaten < SOLOnion.CONFIG.minFoodsToActivate) {
+            int diff = SOLOnion.CONFIG.minFoodsToActivate - foodEaten;
             mainStack.addChild(new UIBox(new Rectangle(0, 0, 1, 10), new Color(0, 0, 0, 0)));
             UILabel minFoodLabel1 = new UILabel(localized("gui", "food_book.stats.min_warning1", diff));
             minFoodLabel1.color = FoodBookScreen.inactiveRed;

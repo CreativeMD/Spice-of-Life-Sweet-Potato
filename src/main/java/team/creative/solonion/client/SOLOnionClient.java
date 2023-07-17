@@ -14,7 +14,7 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.extensions.IForgeMenuType;
@@ -27,19 +27,18 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import team.creative.solonion.SOLOnion;
-import team.creative.solonion.SOLOnionConfig;
+import team.creative.solonion.api.FoodCapability;
+import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.client.gui.screen.FoodBookScreen;
 import team.creative.solonion.client.gui.screen.FoodContainerScreen;
 import team.creative.solonion.item.foodcontainer.FoodContainer;
 import team.creative.solonion.lib.Localization;
-import team.creative.solonion.tracking.FoodInstance;
-import team.creative.solonion.tracking.FoodList;
 
 public class SOLOnionClient {
     
     public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, SOLOnion.MODID);
-    public static final RegistryObject<MenuType<FoodContainer>> FOOD_CONTAINER = MENU_TYPES
-            .register("food_container", () -> IForgeMenuType.create(((windowId, inv, data) -> new FoodContainer(windowId, inv, inv.player))));
+    public static final RegistryObject<MenuType<FoodContainer>> FOOD_CONTAINER = MENU_TYPES.register("food_container", () -> IForgeMenuType.create(
+        ((windowId, inv, data) -> new FoodContainer(windowId, inv, inv.player))));
     
     public static KeyMapping OPEN_FOOD_BOOK;
     
@@ -56,8 +55,8 @@ public class SOLOnionClient {
     }
     
     public static void registerKeybinds(RegisterKeyMappingsEvent event) {
-        event.register(OPEN_FOOD_BOOK = new KeyMapping(Localization.localized("key", "open_food_book"), InputConstants.UNKNOWN.getValue(), Localization
-                .localized("key", "category")));
+        event.register(OPEN_FOOD_BOOK = new KeyMapping(Localization.localized("key", "open_food_book"), InputConstants.UNKNOWN.getValue(), Localization.localized("key",
+            "category")));
     }
     
     public static void handleKeypress(ClientTickEvent event) {
@@ -71,31 +70,27 @@ public class SOLOnionClient {
     }
     
     public static void onItemTooltip(ItemTooltipEvent event) {
-        if (!SOLOnionConfig.isFoodTooltipEnabled())
+        if (!SOLOnion.CONFIG.isFoodTooltipEnabled)
             return;
         
         Player player = event.getEntity();
         if (player == null)
             return;
         
-        Item food = event.getItemStack().getItem();
+        ItemStack food = event.getItemStack();
         if (!food.isEdible())
             return;
         
-        FoodList foodList = FoodList.get(player);
+        FoodCapability foodList = SOLOnionAPI.getFoodCapability(player);
         boolean hasBeenEaten = foodList.hasEaten(food);
-        boolean isAllowed = SOLOnionConfig.isAllowed(food);
+        boolean isAllowed = SOLOnion.CONFIG.isAllowed(event.getItemStack());
         
         List<Component> tooltip = event.getToolTip();
         if (!isAllowed)
             tooltip.add(localizedTooltip("disabled", ChatFormatting.DARK_GRAY));
-        else {
-            if (hasBeenEaten) {
-                int lastEaten = foodList.getLastEaten(food);
-                double contribution = FoodList.calculateDiversityContribution(new FoodInstance(food), lastEaten);
-                
-                addDiversityInfoTooltips(tooltip, contribution, lastEaten);
-            }
+        else if (hasBeenEaten) {
+            int lastEaten = foodList.getLastEaten(food);
+            addDiversityInfoTooltips(tooltip, foodList.simulateEat(food), lastEaten);
         }
     }
     

@@ -23,7 +23,8 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.NetworkHooks;
 import team.creative.solonion.SOLOnion;
-import team.creative.solonion.tracking.FoodList;
+import team.creative.solonion.api.FoodCapability;
+import team.creative.solonion.api.SOLOnionAPI;
 
 public class FoodContainerItem extends Item {
     private String displayName;
@@ -152,7 +153,7 @@ public class FoodContainerItem extends Item {
     }
     
     public static int getBestFoodSlot(ItemStackHandler handler, Player player) {
-        FoodList foodList = FoodList.get(player);
+        FoodCapability foodList = SOLOnionAPI.getFoodCapability(player);
         
         double maxDiversity = -Double.MAX_VALUE;
         int bestFoodSlot = -1;
@@ -161,7 +162,7 @@ public class FoodContainerItem extends Item {
             
             if (!food.isEdible() || food.isEmpty())
                 continue;
-            double diversityChange = foodList.simulateFoodAdd(food.getItem());
+            double diversityChange = foodList.simulateEat(food);
             if (diversityChange > maxDiversity) {
                 maxDiversity = diversityChange;
                 bestFoodSlot = i;

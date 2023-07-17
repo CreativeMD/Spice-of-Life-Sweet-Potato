@@ -16,10 +16,9 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.ModList;
+import team.creative.solonion.SOLOnion;
+import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.lib.Localization;
-import team.creative.solonion.tracking.CapabilityHandler;
-import team.creative.solonion.tracking.FoodList;
-import team.creative.solonion.tracking.benefits.BenefitsHandler;
 
 public final class FoodListCommand {
     
@@ -37,8 +36,8 @@ public final class FoodListCommand {
     
     public static ArgumentBuilder<CommandSourceStack, ?> withPlayerArgumentOrSender(ArgumentBuilder<CommandSourceStack, ?> base, CommandWithPlayer command) {
         String target = "target";
-        return base.executes((context) -> command.run(context, context.getSource().getPlayerOrException()))
-                .then(argument(target, EntityArgument.player()).executes((context) -> command.run(context, EntityArgument.getPlayer(context, target))));
+        return base.executes((context) -> command.run(context, context.getSource().getPlayerOrException())).then(argument(target, EntityArgument.player()).executes(
+            (context) -> command.run(context, EntityArgument.getPlayer(context, target))));
     }
     
     public static ArgumentBuilder<CommandSourceStack, ?> withNoArgument(ArgumentBuilder<CommandSourceStack, ?> base, CommandWithoutArgs command) {
@@ -51,14 +50,14 @@ public final class FoodListCommand {
         if (!isOp && !isTargetingSelf)
             throw new CommandRuntimeException(localizedComponent("no_permissions"));
         
-        double diversity = FoodList.get(target).foodDiversity();
+        double diversity = SOLOnionAPI.getFoodCapability(target).foodDiversity();
         MutableComponent feedback = localizedComponent("diversity_feedback", diversity);
         sendFeedback(context.getSource(), feedback);
         return Command.SINGLE_SUCCESS;
     }
     
     public static int syncFoodList(CommandContext<CommandSourceStack> context, Player target) {
-        CapabilityHandler.syncFoodList(target);
+        SOLOnion.EVENT.syncFoodList(target);
         
         sendFeedback(context.getSource(), localizedComponent("sync.success"));
         System.out.println(target.getMaxHealth());
@@ -71,11 +70,9 @@ public final class FoodListCommand {
         if (!isOp && !isTargetingSelf)
             throw new CommandRuntimeException(localizedComponent("no_permissions"));
         
-        FoodList.get(target).clearFood();
-        FoodList.get(target).resetFoodsEaten();
-        BenefitsHandler.removeAllBenefits(target);
-        BenefitsHandler.updatePlayer(target);
-        CapabilityHandler.syncFoodList(target);
+        SOLOnionAPI.getFoodCapability(target).clearAll();
+        SOLOnion.EVENT.updatePlayerBenefits(target);
+        SOLOnion.EVENT.syncFoodList(target);
         
         MutableComponent feedback = localizedComponent("clear.success");
         sendFeedback(context.getSource(), feedback);

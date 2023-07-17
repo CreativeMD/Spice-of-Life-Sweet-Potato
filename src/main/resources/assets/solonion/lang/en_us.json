@@ -29,8 +29,6 @@
 	"gui.solonion.food_book.stats.min_warning2": "to activate benefits",
 	"gui.solonion.food_book.active_benefits_header": "Active Benefits",
 	"gui.solonion.food_book.inactive_benefits_header": "Inactive Benefits",
-	"gui.solonion.food_book.active_detriments_header": "Active Detriments",
-	"gui.solonion.food_book.inactive_detriments_header": "Inactive Detriments",
 	"gui.solonion.food_book.benefits.threshold_label": "Threshold",
 	"gui.solonion.food_book.benefits.active_tooltip": "Because your food diversity is greater than this threshold, this benefit is active.",
 	"gui.solonion.food_book.benefits.inactive_tooltip": "If your food diversity becomes greater than this threshold, this benefit will activate.",
@@ -43,8 +41,9 @@
 	"gui.solonion.food_book.queue.tooltip.last_eaten_label": "Last eaten: %d meals ago",
 	"gui.solonion.food_book.queue.tooltip.last_eaten_label_singular": "Last eaten: %d meal ago",
 	
-	"config.solonion.is_food_tooltip_enabled": "Enable Food Tooltip",
-	"config.solonion.food_blacklist": "Blacklist",
-	"config.solonion.food_whitelist": "Whitelist (disables blacklist)",
-	"config.solonion.reset_on_death": "Reset on Death"
+	"config.solonion.attribute": "Attribute",
+	"config.solonion.effect": "Mob Effect",
+	
+	"config.solonion.trackCount.comment": "How many foods should be tracked.\n Note that the larger this is, the higher your potential diversity value can be, so keep this mind\n if you are defining custom thresholds/benefits above.\n If you update trackCount, and leave the other advanced options unchanged,\n make sure you change endDecay (below) to match trackCount, or else nothing will change!!!\n",
+    "config.solonion.minFoodsToActivate.comment": "The minimum number of foods a player needs to eat before any benefits are applied."
 }
