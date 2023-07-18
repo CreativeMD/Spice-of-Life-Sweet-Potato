@@ -134,7 +134,7 @@ public final class FoodCapabilityImpl implements FoodCapability {
             return 0.0;
         
         List<ItemStack> stacks = new ArrayList<>(SOLOnion.CONFIG.trackCount);
-        for (ItemStack toAdd : stacks)
+        for (ItemStack toAdd : this)
             stacks.add(toAdd);
         
         if (stacks.size() == SOLOnion.CONFIG.trackCount)
