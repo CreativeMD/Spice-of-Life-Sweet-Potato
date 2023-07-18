@@ -9,7 +9,7 @@ import team.creative.solonion.api.SOLOnionAPI;
 
 public class FoodListMessage extends CreativePacket {
     
-    private ListTag list;
+    public ListTag list;
     
     public FoodListMessage() {}
     
