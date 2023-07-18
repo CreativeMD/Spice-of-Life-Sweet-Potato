@@ -77,34 +77,34 @@ public class SOLOnionClient {
         if (player == null)
             return;
         
-        ItemStack food = event.getItemStack();
-        if (!food.isEdible())
+        ItemStack stack = event.getItemStack();
+        if (!stack.isEdible())
             return;
         
-        FoodCapability foodList = SOLOnionAPI.getFoodCapability(player);
-        boolean hasBeenEaten = foodList.hasEaten(food);
-        boolean isAllowed = SOLOnion.CONFIG.isAllowed(event.getItemStack());
+        FoodCapability food = SOLOnionAPI.getFoodCapability(player);
+        addTooltip(food.simulateEat(stack), food.getLastEaten(stack), stack, event.getToolTip());
+    }
+    
+    public static void addTooltip(double diversity, int lastEaten, ItemStack stack, List<Component> tooltip) {
+        boolean isAllowed = SOLOnion.CONFIG.isAllowed(stack);
         
-        List<Component> tooltip = event.getToolTip();
-        if (!isAllowed)
-            tooltip.add(localizedTooltip("disabled", ChatFormatting.DARK_GRAY));
-        else if (hasBeenEaten) {
-            int lastEaten = foodList.getLastEaten(food);
-            addDiversityInfoTooltips(tooltip, foodList.simulateEat(food), lastEaten);
+        if (!isAllowed) {
+            tooltip.add(localizedComponent("gui", "tooltip.disabled").withStyle(style -> style.applyFormat(ChatFormatting.DARK_GRAY)));
+            return;
         }
-    }
-    
-    private static Component localizedTooltip(String path, ChatFormatting color) {
-        return localizedComponent("tooltip", path).withStyle(style -> style.applyFormat(color));
-    }
-    
-    public static List<Component> addDiversityInfoTooltips(List<Component> tooltip, double contribution, int lastEaten) {
-        String contribution_path = "food_book.queue.tooltip.contribution_label";
-        tooltip.add(Component.literal(localized("gui", contribution_path) + ": " + String.format("%.2f", contribution)).withStyle(ChatFormatting.GRAY));
-        String last_eaten_path = "food_book.queue.tooltip.last_eaten_label";
-        if (lastEaten == 1)
-            last_eaten_path = "food_book.queue.tooltip.last_eaten_label_singular";
-        tooltip.add(Component.literal(localized("gui", last_eaten_path, lastEaten)).withStyle(ChatFormatting.GRAY));
-        return tooltip;
+        
+        ChatFormatting color = ChatFormatting.GRAY;
+        if (diversity < 0)
+            color = ChatFormatting.RED;
+        else if (diversity > 0)
+            color = ChatFormatting.GREEN;
+        tooltip.add(Component.literal(localized("gui", "tooltip.diversity") + ": " + String.format("%.2f", SOLOnion.CONFIG.getDiversity(stack))).withStyle(ChatFormatting.GRAY)
+                .append(" (").append(Component.literal(String.format("%.2f", diversity)).withStyle(color)).append(")"));
+        if (lastEaten != -1) {
+            String last_eaten_path = "tooltip.last_eaten";
+            if (lastEaten == 1)
+                last_eaten_path = "tooltip.last_eaten_singular";
+            tooltip.add(Component.literal(localized("gui", last_eaten_path, lastEaten)).withStyle(ChatFormatting.GRAY));
+        }
     }
 }

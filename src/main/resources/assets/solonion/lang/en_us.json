@@ -1,5 +1,5 @@
 {
-	"tooltip.solonion.disabled": "This food does not contribute to food diversity.",
+	
 	
 	"command.solonion.solonion.no_permissions": "You do not have the permissions necessary to apply this command to other players!",
 
@@ -37,9 +37,10 @@
 
 	"gui.solonion.food_book.fraction": "%1$s/%2$s",
 
-	"gui.solonion.food_book.queue.tooltip.contribution_label": "Diversity contribution",
-	"gui.solonion.food_book.queue.tooltip.last_eaten_label": "Last eaten: %d meals ago",
-	"gui.solonion.food_book.queue.tooltip.last_eaten_label_singular": "Last eaten: %d meal ago",
+    "gui.solonion.tooltip.disabled": "This food does not contribute to food diversity.",
+	"gui.solonion.tooltip.diversity": "Diversity",
+	"gui.solonion.tooltip.last_eaten": "Last eaten: %d meals ago",
+	"gui.solonion.tooltip.last_eaten_singular": "Last eaten: %d meal ago",
 	
 	"config.solonion.attribute": "Attribute",
 	"config.solonion.effect": "Mob Effect",
