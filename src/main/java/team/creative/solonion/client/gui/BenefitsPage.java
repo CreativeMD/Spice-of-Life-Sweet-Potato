@@ -8,10 +8,10 @@ import java.util.List;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import team.creative.creativecore.common.util.mc.LanguageUtils;
+import team.creative.creativecore.common.util.mc.TooltipUtils;
 import team.creative.solonion.client.gui.elements.UILabel;
 import team.creative.solonion.client.gui.screen.FoodBookScreen;
 import team.creative.solonion.common.benefit.BenefitThreshold;
-import team.creative.solonion.common.utils.RomanNumber;
 
 public class BenefitsPage extends Page {
     private static final int BENEFITS_PER_PAGE = 3;
@@ -42,7 +42,7 @@ public class BenefitsPage extends Page {
         if (info.benefit.property.value instanceof MobEffect m) {
             name = LanguageUtils.translate(m.getDescriptionId());
             int amplifier = (int) value;
-            name = name + " " + RomanNumber.toRoman(amplifier + 1);
+            name = name + " " + TooltipUtils.printRoman(amplifier + 1);
         } else if (info.benefit.property.value instanceof Attribute a) {
             name = LanguageUtils.translate(a.getDescriptionId());
             String op = "+";
