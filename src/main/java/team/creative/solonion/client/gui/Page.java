@@ -1,9 +1,8 @@
 package team.creative.solonion.client.gui;
 
-import static team.creative.solonion.common.lib.Localization.localized;
-
 import java.awt.Rectangle;
 
+import team.creative.creativecore.common.util.mc.LanguageUtils;
 import team.creative.solonion.client.gui.elements.UIBox;
 import team.creative.solonion.client.gui.elements.UIElement;
 import team.creative.solonion.client.gui.elements.UIImage;
@@ -43,7 +42,7 @@ public abstract class Page extends UIElement {
     }
     
     String fraction(int numerator, int denominator) {
-        return localized("gui", "food_book.fraction", numerator, denominator);
+        return LanguageUtils.translate("gui.solonion.food_book.fraction", numerator, denominator);
     }
     
     UIElement makeSeparatorLine() {

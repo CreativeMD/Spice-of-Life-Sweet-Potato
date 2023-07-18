@@ -1,14 +1,12 @@
 {
-	
-	
-	"command.solonion.solonion.no_permissions": "You do not have the permissions necessary to apply this command to other players!",
+	"command.solonion.no_permissions": "You do not have the permissions necessary to apply this command to other players!",
 
-	"command.solonion.solonion.clear.success": "Food list reset!",
-	"command.solonion.solonion.diversity_feedback": "Food Diversity: %.2f",
-	"command.solonion.solonion.sync.success": "Food list synchronized!",
-	"command.solonion.solonion.origin.invalidated": "Cached origin for player reset!",
-	"command.solonion.solonion.origin.cleared": "All cached origins cleared!",
-	"command.solonion.solonion.origin.inapplicable": "Origins mod not installed. Cleared origin data anyway.",
+	"command.solonion.clear.success": "Food list reset!",
+	"command.solonion.diversity_feedback": "Food Diversity: %.2f",
+	"command.solonion.sync.success": "Food list synchronized!",
+	"command.solonion.origin.invalidated": "Cached origin for player reset!",
+	"command.solonion.origin.cleared": "All cached origins cleared!",
+	"command.solonion.origin.inapplicable": "Origins mod not installed. Cleared origin data anyway.",
 
 	"item.solonion.food_book": "Food Book",
 	"item.solonion.lunchbox": "Lunchbox",
@@ -21,7 +19,7 @@
 	"item.solonion.container.open": "Shift rightclick to open",
 
 	"key.solonion.open_food_book": "Open Food Book",
-	"key.solonion.category": "Spice of Life: Potato Edition",
+	"key.solonion.category": "Spice of Life Onion",
 	
 	"gui.solonion.food_book.stats": "Overview",
 	"gui.solonion.food_book.stats.current_diversity": "Current Food Diversity",
@@ -33,7 +31,7 @@
 	"gui.solonion.food_book.benefits.active_tooltip": "Because your food diversity is greater than this threshold, this benefit is active.",
 	"gui.solonion.food_book.benefits.inactive_tooltip": "If your food diversity becomes greater than this threshold, this benefit will activate.",
 	"gui.solonion.food_book.food_queue_label": "Food Eaten",
-	"gui.solonion.food_book.queue.food_queue_tooltip": "A list of all foods eaten in the past that contribute to your food diversity.",
+	"gui.solonion.food_book.food_queue_tooltip": "A list of all foods eaten in the past that contribute to your food diversity.",
 
 	"gui.solonion.food_book.fraction": "%1$s/%2$s",
 
@@ -45,6 +43,6 @@
 	"config.solonion.attribute": "Attribute",
 	"config.solonion.effect": "Mob Effect",
 	
-	"config.solonion.trackCount.comment": "How many foods should be tracked.\n Note that the larger this is, the higher your potential diversity value can be, so keep this mind\n if you are defining custom thresholds/benefits above.\n If you update trackCount, and leave the other advanced options unchanged,\n make sure you change endDecay (below) to match trackCount, or else nothing will change!!!\n",
+	"config.solonion.trackCount.comment": "How many foods should be tracked.\n Note that the larger this is, the higher your potential diversity value can be, so keep this mind\n if you are defining custom thresholds/benefits above.",
     "config.solonion.minFoodsToActivate.comment": "The minimum number of foods a player needs to eat before any benefits are applied."
 }

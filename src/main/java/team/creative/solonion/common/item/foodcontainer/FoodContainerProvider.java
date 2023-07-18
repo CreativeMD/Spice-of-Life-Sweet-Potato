@@ -7,7 +7,6 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import team.creative.solonion.common.lib.Localization;
 
 public class FoodContainerProvider implements MenuProvider {
     
@@ -19,7 +18,7 @@ public class FoodContainerProvider implements MenuProvider {
     
     @Override
     public Component getDisplayName() {
-        return Component.translatable(Localization.keyString("item", "container." + displayName));
+        return Component.translatable("item.solonion.container." + displayName);
     }
     
     @Nullable

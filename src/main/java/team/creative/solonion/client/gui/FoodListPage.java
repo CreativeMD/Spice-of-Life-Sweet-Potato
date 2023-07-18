@@ -1,12 +1,11 @@
 package team.creative.solonion.client.gui;
 
-import static team.creative.solonion.common.lib.Localization.localized;
-
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.world.item.ItemStack;
+import team.creative.creativecore.common.util.mc.LanguageUtils;
 import team.creative.creativecore.common.util.type.list.Tuple;
 import team.creative.solonion.client.gui.elements.UIFoodQueueItem;
 import team.creative.solonion.client.gui.elements.UIItemStack;
@@ -17,7 +16,7 @@ public final class FoodListPage extends ItemListPage {
     private FoodListPage(Rectangle frame, String header, List<ItemStack> items) {
         super(frame, header, items);
         
-        setHeaderTooltip(localized("gui", "food_book.queue.food_queue_tooltip"));
+        setHeaderTooltip(LanguageUtils.translate("gui.solonion.food_book.food_queue_tooltip"));
         
         int minX = (1 - itemsPerRow) * itemSpacing / 2;
         int minY = (1 - rowsPerPage) * itemSpacing / 2 - 4;

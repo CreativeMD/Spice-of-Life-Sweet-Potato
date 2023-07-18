@@ -1,7 +1,5 @@
 package team.creative.solonion.client.gui.screen;
 
-import static team.creative.solonion.common.lib.Localization.localized;
-
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -18,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import team.creative.creativecore.common.util.mc.LanguageUtils;
 import team.creative.solonion.api.FoodCapability;
 import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.client.gui.BenefitsPage;
@@ -118,13 +117,13 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
     }
     
     private void addPages(String headerLocalizationPath, List<BenefitThreshold> benefitInfoList, Color activeColor) {
-        String header = localized("gui", "food_book." + headerLocalizationPath);
+        String header = LanguageUtils.translate("gui.solonion.food_book." + headerLocalizationPath);
         
         pages.addAll(BenefitsPage.pages(background.frame, header, benefitInfoList, activeColor));
     }
     
     private void addPages(String headerLocalizationPath, List<ItemStack> stacks) {
-        String header = localized("gui", "food_book." + headerLocalizationPath, stacks.size());
+        String header = LanguageUtils.translate("gui.solonion.food_book." + headerLocalizationPath, stacks.size());
         pages.addAll(FoodListPage.pages(background.frame, header, stacks));
     }
     

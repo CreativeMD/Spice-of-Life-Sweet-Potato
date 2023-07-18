@@ -1,8 +1,5 @@
 package team.creative.solonion.client;
 
-import static team.creative.solonion.common.lib.Localization.localized;
-import static team.creative.solonion.common.lib.Localization.localizedComponent;
-
 import java.util.List;
 
 import com.mojang.blaze3d.platform.InputConstants;
@@ -32,7 +29,6 @@ import team.creative.solonion.client.gui.screen.FoodBookScreen;
 import team.creative.solonion.client.gui.screen.FoodContainerScreen;
 import team.creative.solonion.common.SOLOnion;
 import team.creative.solonion.common.item.foodcontainer.FoodContainer;
-import team.creative.solonion.common.lib.Localization;
 
 public class SOLOnionClient {
     
@@ -55,8 +51,7 @@ public class SOLOnionClient {
     }
     
     public static void registerKeybinds(RegisterKeyMappingsEvent event) {
-        event.register(OPEN_FOOD_BOOK = new KeyMapping(Localization.localized("key", "open_food_book"), InputConstants.UNKNOWN.getValue(), Localization.localized("key",
-            "category")));
+        event.register(OPEN_FOOD_BOOK = new KeyMapping("key.solonion.open_food_book", InputConstants.UNKNOWN.getValue(), "key.solonion.category"));
     }
     
     public static void handleKeypress(ClientTickEvent event) {
@@ -89,7 +84,7 @@ public class SOLOnionClient {
         boolean isAllowed = SOLOnion.CONFIG.isAllowed(stack);
         
         if (!isAllowed) {
-            tooltip.add(localizedComponent("gui", "tooltip.disabled").withStyle(style -> style.applyFormat(ChatFormatting.DARK_GRAY)));
+            tooltip.add(Component.translatable("gui.solonion.tooltip.disabled").withStyle(style -> style.applyFormat(ChatFormatting.DARK_GRAY)));
             return;
         }
         
@@ -98,13 +93,13 @@ public class SOLOnionClient {
             color = ChatFormatting.RED;
         else if (diversity > 0)
             color = ChatFormatting.GREEN;
-        tooltip.add(Component.literal(localized("gui", "tooltip.diversity") + ": " + String.format("%.2f", SOLOnion.CONFIG.getDiversity(stack))).withStyle(ChatFormatting.GRAY)
-                .append(" (").append(Component.literal(String.format("%.2f", diversity)).withStyle(color)).append(")"));
+        tooltip.add(Component.translatable("gui.solonion.tooltip.diversity").append(": " + String.format("%.2f", SOLOnion.CONFIG.getDiversity(stack))).withStyle(
+            ChatFormatting.GRAY).append(" (").append(Component.literal(String.format("%.2f", diversity)).withStyle(color)).append(")"));
         if (lastEaten != -1) {
             String last_eaten_path = "tooltip.last_eaten";
             if (lastEaten == 1)
                 last_eaten_path = "tooltip.last_eaten_singular";
-            tooltip.add(Component.literal(localized("gui", last_eaten_path, lastEaten)).withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.translatable("gui.solonion." + last_eaten_path, lastEaten).withStyle(ChatFormatting.GRAY));
         }
     }
 }

@@ -1,7 +1,5 @@
 package team.creative.solonion.client.gui;
 
-import static team.creative.solonion.common.lib.Localization.localized;
-
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -55,13 +53,13 @@ public class BenefitsPage extends Page {
             name = name + " " + modifierValue;
         }
         
-        UILabel thresholdLabel = new UILabel(localized("gui", "food_book.benefits.threshold_label") + ": " + thresh);
+        UILabel thresholdLabel = new UILabel(LanguageUtils.translate("gui.solonion.food_book.benefits.threshold_label") + ": " + thresh);
         thresholdLabel.color = activeColor;
         
         if (activeColor.equals(FoodBookScreen.activeGreen))
-            thresholdLabel.tooltip = localized("gui", "food_book.benefits.active_tooltip");
+            thresholdLabel.tooltip = LanguageUtils.translate("gui.solonion.food_book.benefits.active_tooltip");
         else if (activeColor.equals((FoodBookScreen.inactiveRed)))
-            thresholdLabel.tooltip = localized("gui", "food_book.benefits.inactive_tooltip");
+            thresholdLabel.tooltip = LanguageUtils.translate("gui.solonion.food_book.benefits.inactive_tooltip");
         
         UILabel nameLabel = new UILabel(name);
         nameLabel.color = FoodBookScreen.lessBlack;
