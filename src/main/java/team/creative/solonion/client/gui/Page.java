@@ -1,6 +1,6 @@
 package team.creative.solonion.client.gui;
 
-import static team.creative.solonion.lib.Localization.localized;
+import static team.creative.solonion.common.lib.Localization.localized;
 
 import java.awt.Rectangle;
 

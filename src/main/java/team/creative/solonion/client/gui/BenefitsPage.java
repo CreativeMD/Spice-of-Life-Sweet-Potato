@@ -1,6 +1,6 @@
 package team.creative.solonion.client.gui;
 
-import static team.creative.solonion.lib.Localization.localized;
+import static team.creative.solonion.common.lib.Localization.localized;
 
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -10,10 +10,10 @@ import java.util.List;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import team.creative.creativecore.common.util.mc.LanguageUtils;
-import team.creative.solonion.benefit.BenefitThreshold;
 import team.creative.solonion.client.gui.elements.UILabel;
 import team.creative.solonion.client.gui.screen.FoodBookScreen;
-import team.creative.solonion.utils.RomanNumber;
+import team.creative.solonion.common.benefit.BenefitThreshold;
+import team.creative.solonion.common.utils.RomanNumber;
 
 public class BenefitsPage extends Page {
     private static final int BENEFITS_PER_PAGE = 3;

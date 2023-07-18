@@ -1,4 +1,4 @@
-package team.creative.solonion.network;
+package team.creative.solonion.common.network;
 
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerPlayer;

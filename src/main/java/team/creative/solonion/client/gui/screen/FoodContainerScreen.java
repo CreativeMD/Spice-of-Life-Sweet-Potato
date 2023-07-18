@@ -11,8 +11,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import team.creative.solonion.SOLOnion;
-import team.creative.solonion.item.foodcontainer.FoodContainer;
+import team.creative.solonion.common.SOLOnion;
+import team.creative.solonion.common.item.foodcontainer.FoodContainer;
 
 public class FoodContainerScreen extends AbstractContainerScreen<FoodContainer> {
     public FoodContainerScreen(FoodContainer container, Inventory playerInventory, Component title) {

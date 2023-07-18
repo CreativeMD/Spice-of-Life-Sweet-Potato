@@ -1,4 +1,4 @@
-package team.creative.solonion;
+package team.creative.solonion.common;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,12 +16,12 @@ import team.creative.creativecore.common.config.api.CreativeConfig;
 import team.creative.creativecore.common.config.api.ICreativeConfig;
 import team.creative.creativecore.common.config.converation.ConfigTypeConveration;
 import team.creative.creativecore.common.config.sync.ConfigSynchronization;
-import team.creative.creativecore.common.util.ingredient.CreativeIngredient;
 import team.creative.creativecore.common.util.ingredient.CreativeIngredientItem;
 import team.creative.creativecore.common.util.type.list.SortingList;
 import team.creative.solonion.api.SOLOnionAPI;
-import team.creative.solonion.benefit.Benefit;
-import team.creative.solonion.benefit.BenefitThreshold;
+import team.creative.solonion.common.benefit.Benefit;
+import team.creative.solonion.common.benefit.BenefitThreshold;
+import team.creative.solonion.common.food.FoodProperty;
 
 public final class SOLOnionConfig implements ICreativeConfig {
     
@@ -92,27 +92,5 @@ public final class SOLOnionConfig implements ICreativeConfig {
             if (property.ingredient.is(food))
                 return property.diversity;
         return defaultDiversity;
-    }
-    
-    public static class FoodProperty {
-        
-        @CreativeConfig
-        public CreativeIngredient ingredient;
-        
-        @CreativeConfig
-        public double diversity;
-        
-        public FoodProperty(CreativeIngredient ingredient, double diversity) {
-            this.ingredient = ingredient;
-            this.diversity = diversity;
-        }
-        
-        @Override
-        public boolean equals(Object obj) {
-            if (obj instanceof FoodProperty prop)
-                return diversity == prop.diversity && ingredient.equals(prop.ingredient);
-            return super.equals(obj);
-        }
-        
     }
 }

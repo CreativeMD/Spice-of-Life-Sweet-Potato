@@ -1,4 +1,4 @@
-package team.creative.solonion.benefit;
+package team.creative.solonion.common.benefit;
 
 import team.creative.creativecore.common.config.api.CreativeConfig;
 

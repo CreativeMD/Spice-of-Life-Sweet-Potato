@@ -1,7 +1,7 @@
 package team.creative.solonion.client;
 
-import static team.creative.solonion.lib.Localization.localized;
-import static team.creative.solonion.lib.Localization.localizedComponent;
+import static team.creative.solonion.common.lib.Localization.localized;
+import static team.creative.solonion.common.lib.Localization.localizedComponent;
 
 import java.util.List;
 
@@ -26,13 +26,13 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import team.creative.solonion.SOLOnion;
 import team.creative.solonion.api.FoodCapability;
 import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.client.gui.screen.FoodBookScreen;
 import team.creative.solonion.client.gui.screen.FoodContainerScreen;
-import team.creative.solonion.item.foodcontainer.FoodContainer;
-import team.creative.solonion.lib.Localization;
+import team.creative.solonion.common.SOLOnion;
+import team.creative.solonion.common.item.foodcontainer.FoodContainer;
+import team.creative.solonion.common.lib.Localization;
 
 public class SOLOnionClient {
     

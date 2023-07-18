@@ -1,6 +1,6 @@
 package team.creative.solonion.client.gui.screen;
 
-import static team.creative.solonion.lib.Localization.localized;
+import static team.creative.solonion.common.lib.Localization.localized;
 
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -18,10 +18,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import team.creative.solonion.SOLOnion;
 import team.creative.solonion.api.FoodCapability;
 import team.creative.solonion.api.SOLOnionAPI;
-import team.creative.solonion.benefit.BenefitThreshold;
 import team.creative.solonion.client.gui.BenefitsPage;
 import team.creative.solonion.client.gui.DiversityPage;
 import team.creative.solonion.client.gui.FoodListPage;
@@ -30,6 +28,8 @@ import team.creative.solonion.client.gui.PageFlipButton;
 import team.creative.solonion.client.gui.elements.UIElement;
 import team.creative.solonion.client.gui.elements.UIImage;
 import team.creative.solonion.client.gui.elements.UILabel;
+import team.creative.solonion.common.SOLOnion;
+import team.creative.solonion.common.benefit.BenefitThreshold;
 
 @OnlyIn(Dist.CLIENT)
 public final class FoodBookScreen extends Screen implements PageFlipButton.Pageable {

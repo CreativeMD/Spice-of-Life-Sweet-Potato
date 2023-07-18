@@ -1,4 +1,4 @@
-package team.creative.solonion.event;
+package team.creative.solonion.common.event;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,15 +22,15 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
-import team.creative.solonion.SOLOnion;
 import team.creative.solonion.api.FoodCapability;
 import team.creative.solonion.api.SOLOnionAPI;
-import team.creative.solonion.benefit.BenefitCapabilityImpl;
-import team.creative.solonion.benefit.BenefitStack;
-import team.creative.solonion.benefit.BenefitThreshold;
-import team.creative.solonion.food.FoodCapabilityImpl;
-import team.creative.solonion.item.foodcontainer.FoodContainerItem;
-import team.creative.solonion.network.FoodListMessage;
+import team.creative.solonion.common.SOLOnion;
+import team.creative.solonion.common.benefit.BenefitCapabilityImpl;
+import team.creative.solonion.common.benefit.BenefitStack;
+import team.creative.solonion.common.benefit.BenefitThreshold;
+import team.creative.solonion.common.food.FoodCapabilityImpl;
+import team.creative.solonion.common.item.foodcontainer.FoodContainerItem;
+import team.creative.solonion.common.network.FoodListMessage;
 
 public class SOLOnionEvent {
     

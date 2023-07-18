@@ -1,4 +1,4 @@
-package team.creative.solonion;
+package team.creative.solonion.common;
 
 import static net.minecraft.commands.Commands.literal;
 
@@ -21,10 +21,10 @@ import team.creative.creativecore.common.util.mc.PlayerUtils;
 import team.creative.solonion.api.BenefitCapability;
 import team.creative.solonion.api.FoodCapability;
 import team.creative.solonion.client.SOLOnionClient;
-import team.creative.solonion.command.FoodListCommand;
-import team.creative.solonion.event.SOLOnionEvent;
-import team.creative.solonion.item.SOLOnionItems;
-import team.creative.solonion.network.FoodListMessage;
+import team.creative.solonion.common.command.FoodListCommand;
+import team.creative.solonion.common.event.SOLOnionEvent;
+import team.creative.solonion.common.item.SOLOnionItems;
+import team.creative.solonion.common.network.FoodListMessage;
 
 @Mod(SOLOnion.MODID)
 public final class SOLOnion {

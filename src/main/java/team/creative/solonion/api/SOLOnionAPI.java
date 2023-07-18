@@ -5,7 +5,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
-import team.creative.solonion.SOLOnion;
+import team.creative.solonion.common.SOLOnion;
 
 public final class SOLOnionAPI {
     

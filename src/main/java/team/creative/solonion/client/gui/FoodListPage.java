@@ -1,6 +1,6 @@
 package team.creative.solonion.client.gui;
 
-import static team.creative.solonion.lib.Localization.localized;
+import static team.creative.solonion.common.lib.Localization.localized;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import team.creative.creativecore.common.util.type.list.Tuple;
 import team.creative.solonion.client.gui.elements.UIFoodQueueItem;
 import team.creative.solonion.client.gui.elements.UIItemStack;
-import team.creative.solonion.food.FoodCapabilityImpl;
+import team.creative.solonion.common.food.FoodCapabilityImpl;
 
 public final class FoodListPage extends ItemListPage {
     

@@ -1,4 +1,4 @@
-package team.creative.solonion.item;
+package team.creative.solonion.common.item;
 
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -6,8 +6,8 @@ import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import team.creative.solonion.SOLOnion;
-import team.creative.solonion.item.foodcontainer.FoodContainerItem;
+import team.creative.solonion.common.SOLOnion;
+import team.creative.solonion.common.item.foodcontainer.FoodContainerItem;
 
 public final class SOLOnionItems {
     

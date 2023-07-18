@@ -1,4 +1,4 @@
-package team.creative.solonion.command;
+package team.creative.solonion.common.command;
 
 import static net.minecraft.commands.Commands.argument;
 
@@ -16,9 +16,9 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.ModList;
-import team.creative.solonion.SOLOnion;
 import team.creative.solonion.api.SOLOnionAPI;
-import team.creative.solonion.lib.Localization;
+import team.creative.solonion.common.SOLOnion;
+import team.creative.solonion.common.lib.Localization;
 
 public final class FoodListCommand {
     

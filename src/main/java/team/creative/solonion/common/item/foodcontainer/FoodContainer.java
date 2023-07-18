@@ -3,7 +3,7 @@
  * Copyright for portions of the code are held by Samson Basset (Lothrazar)
  * as part of Cyclic, under the MIT license.
  */
-package team.creative.solonion.item.foodcontainer;
+package team.creative.solonion.common.item.foodcontainer;
 
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -26,31 +26,27 @@ public class FoodContainer extends AbstractContainerMenu {
         super(SOLOnionClient.FOOD_CONTAINER.get(), id);
         
         // When we hit the hotkey to open a food container, check held items first
-        if (player.getMainHandItem().getItem() instanceof FoodContainerItem) {
+        if (player.getMainHandItem().getItem() instanceof FoodContainerItem)
             containerItem = player.getMainHandItem();
-        } else if (player.getOffhandItem().getItem() instanceof FoodContainerItem) {
+        else if (player.getOffhandItem().getItem() instanceof FoodContainerItem)
             containerItem = player.getOffhandItem();
-        } else {
-            for (ItemStack stack : playerInventory.items) {
+        else
+            for (ItemStack stack : playerInventory.items)
                 if (stack.getItem() instanceof FoodContainerItem) {
                     containerItem = stack;
                     break;
                 }
-            }
-        }
-        
+            
         this.playerInventory = playerInventory;
         containerItem.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(h -> {
             nslots = h.getSlots();
             int slotsPerRow = h.getSlots();
-            if (h.getSlots() > 9) {
+            if (h.getSlots() > 9)
                 slotsPerRow = h.getSlots() / 2;
-            }
             int xStart = (2 * 8 + 9 * 18 - slotsPerRow * 18) / 2;
             int yStart = 17 + 18;
-            if (h.getSlots() > 9) {
+            if (h.getSlots() > 9)
                 yStart = 17 + (84 - 36 - 23) / 2;
-            }
             for (int j = 0; j < h.getSlots(); j++) {
                 int row = j / slotsPerRow;
                 int col = j % slotsPerRow;
@@ -67,10 +63,8 @@ public class FoodContainer extends AbstractContainerMenu {
     public void clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
         if (!(slotId < 0 || slotId >= this.slots.size())) {
             ItemStack clickedStack = this.slots.get(slotId).getItem();
-            if (clickedStack.getItem() instanceof FoodContainerItem) {
-                //lock the bag in place by quitting early
+            if (clickedStack.getItem() instanceof FoodContainerItem)
                 return;
-            }
         }
         
         super.clicked(slotId, dragType, clickTypeIn, player);
@@ -79,37 +73,32 @@ public class FoodContainer extends AbstractContainerMenu {
     @Override
     public ItemStack quickMoveStack(Player player, int slotId) {
         Slot clickedSlot = slots.get(slotId);
-        if (clickedSlot == null || slotId < 0 || !clickedSlot.hasItem()) {
+        if (clickedSlot == null || slotId < 0 || !clickedSlot.hasItem())
             return ItemStack.EMPTY;
-        }
         
         ItemStack clickedStack = clickedSlot.getItem();
-        if (!FoodSlot.canHold(clickedStack)) {
+        if (!FoodSlot.canHold(clickedStack))
             return ItemStack.EMPTY;
-        }
         
         final ItemStack unchangedCopy = clickedStack.copy();
         if (slotId < nslots) {
             // Item is in the FoodContainer, move it to inventory
-            if (!moveItemStackTo(clickedStack, nslots, nslots + PLAYERSIZE, false)) {
+            if (!moveItemStackTo(clickedStack, nslots, nslots + PLAYERSIZE, false))
                 return ItemStack.EMPTY;
-            }
+            
         } else {
             // Item is in the inventory, move it to the FoodContainer
-            if (!moveItemStackTo(clickedStack, 0, nslots, false)) {
+            if (!moveItemStackTo(clickedStack, 0, nslots, false))
                 return ItemStack.EMPTY;
-            }
         }
         
-        if (clickedStack.isEmpty()) {
+        if (clickedStack.isEmpty())
             clickedSlot.set(ItemStack.EMPTY);
-        } else {
+        else
             clickedSlot.setChanged();
-        }
         
-        if (clickedStack.getCount() == unchangedCopy.getCount()) {
+        if (clickedStack.getCount() == unchangedCopy.getCount())
             return ItemStack.EMPTY;
-        }
         
         clickedSlot.onTake(player, clickedStack);
         return clickedStack;

@@ -1,4 +1,4 @@
-package team.creative.solonion.item.foodcontainer;
+package team.creative.solonion.common.item.foodcontainer;
 
 import javax.annotation.Nullable;
 
@@ -7,9 +7,10 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import team.creative.solonion.lib.Localization;
+import team.creative.solonion.common.lib.Localization;
 
 public class FoodContainerProvider implements MenuProvider {
+    
     private String displayName;
     
     public FoodContainerProvider(String displayName) {

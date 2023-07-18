@@ -1,15 +1,15 @@
 package team.creative.solonion.client.gui;
 
-import static team.creative.solonion.lib.Localization.localized;
+import static team.creative.solonion.common.lib.Localization.localized;
 
 import java.awt.Color;
 import java.awt.Rectangle;
 
-import team.creative.solonion.SOLOnion;
 import team.creative.solonion.client.gui.elements.UIBox;
 import team.creative.solonion.client.gui.elements.UIElement;
 import team.creative.solonion.client.gui.elements.UILabel;
 import team.creative.solonion.client.gui.screen.FoodBookScreen;
+import team.creative.solonion.common.SOLOnion;
 
 public class DiversityPage extends Page {
     public DiversityPage(double foodDiversity, int foodEaten, Rectangle frame) {

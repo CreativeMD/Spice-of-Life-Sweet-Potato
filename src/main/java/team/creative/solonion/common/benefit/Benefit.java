@@ -1,4 +1,4 @@
-package team.creative.solonion.benefit;
+package team.creative.solonion.common.benefit;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

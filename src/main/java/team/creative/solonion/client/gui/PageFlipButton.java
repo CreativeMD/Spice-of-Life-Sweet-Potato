@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import team.creative.solonion.SOLOnion;
+import team.creative.solonion.common.SOLOnion;
 
 @OnlyIn(Dist.CLIENT)
 public final class PageFlipButton extends Button {

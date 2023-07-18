@@ -1,4 +1,4 @@
-package team.creative.solonion.benefit;
+package team.creative.solonion.common.benefit;
 
 import it.unimi.dsi.fastutil.objects.Object2DoubleArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;

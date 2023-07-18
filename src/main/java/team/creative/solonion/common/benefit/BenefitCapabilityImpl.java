@@ -1,4 +1,4 @@
-package team.creative.solonion.benefit;
+package team.creative.solonion.common.benefit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +28,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import team.creative.solonion.api.BenefitCapability;
 import team.creative.solonion.api.SOLOnionAPI;
-import team.creative.solonion.mod.FirstAidManager;
+import team.creative.solonion.common.mod.FirstAidManager;
 
 public class BenefitCapabilityImpl implements BenefitCapability {
     

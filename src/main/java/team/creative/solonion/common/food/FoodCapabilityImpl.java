@@ -1,4 +1,4 @@
-package team.creative.solonion.food;
+package team.creative.solonion.common.food;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,9 +21,9 @@ import team.creative.creativecore.common.util.type.itr.ArrayOffsetIterator;
 import team.creative.creativecore.common.util.type.itr.FilterIterator;
 import team.creative.creativecore.common.util.type.list.Tuple;
 import team.creative.creativecore.common.util.type.list.TupleList;
-import team.creative.solonion.SOLOnion;
 import team.creative.solonion.api.FoodCapability;
 import team.creative.solonion.api.SOLOnionAPI;
+import team.creative.solonion.common.SOLOnion;
 
 public final class FoodCapabilityImpl implements FoodCapability {
     

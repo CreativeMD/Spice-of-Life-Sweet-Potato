@@ -1,4 +1,4 @@
-package team.creative.solonion.item;
+package team.creative.solonion.common.item;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

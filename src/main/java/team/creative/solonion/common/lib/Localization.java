@@ -1,11 +1,11 @@
-package team.creative.solonion.lib;
+package team.creative.solonion.common.lib;
 
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import team.creative.solonion.SOLOnion;
+import team.creative.solonion.common.SOLOnion;
 
 public final class Localization {
     

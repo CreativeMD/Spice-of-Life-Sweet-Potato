@@ -3,7 +3,7 @@
  * Copyright for portions of the code are held by Samson Basset (Lothrazar)
  * as part of Cyclic, under the MIT license.
  */
-package team.creative.solonion.item.foodcontainer;
+package team.creative.solonion.common.item.foodcontainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,6 +25,7 @@ public class FoodContainerCapabilityProvider implements ICapabilitySerializable<
         public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
             return !(stack.getItem() instanceof FoodContainerItem) && super.isItemValid(slot, stack);
         }
+        
     });
     
     public FoodContainerCapabilityProvider(ItemStack stack, int slots) {
@@ -41,9 +42,8 @@ public class FoodContainerCapabilityProvider implements ICapabilitySerializable<
     
     @Override
     public CompoundTag serializeNBT() {
-        if (inventory.isPresent()) {
+        if (inventory.isPresent())
             return inventory.resolve().get().serializeNBT();
-        }
         return new CompoundTag();
     }
     

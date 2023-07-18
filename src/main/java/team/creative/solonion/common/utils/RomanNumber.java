@@ -1,4 +1,4 @@
-package team.creative.solonion.utils;
+package team.creative.solonion.common.utils;
 
 import java.util.TreeMap;
 
