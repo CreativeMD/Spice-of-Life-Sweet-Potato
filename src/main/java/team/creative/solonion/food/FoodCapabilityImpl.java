@@ -110,7 +110,7 @@ public final class FoodCapabilityImpl implements FoodCapability {
             return;
         for (int i = 0; i < lastEaten.length; i++)
             lastEaten[i] = i < tag.size() ? ItemStack.of(tag.getCompound(i)) : null;
-        startIndex = tag.size() - 1;
+        startIndex = 0;
         
         updateDiversity();
     }
@@ -207,7 +207,7 @@ public final class FoodCapabilityImpl implements FoodCapability {
                     break;
             }
             lastEaten = newLastEaten;
-            startIndex = i - 1;
+            startIndex = 0;
         }
         updateDiversity();
     }

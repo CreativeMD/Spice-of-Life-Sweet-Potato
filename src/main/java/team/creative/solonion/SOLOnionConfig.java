@@ -68,10 +68,6 @@ public final class SOLOnionConfig implements ICreativeConfig {
     @CreativeConfig(type = ConfigSynchronization.CLIENT)
     public boolean shouldShowInactiveBenefits = true;
     
-    @CreativeConfig
-    @CreativeConfig.IntRange(min = 1, max = Integer.MAX_VALUE)
-    public int benefitUpdateTimer = 100;
-    
     @Override
     public void configured(Side side) {
         Collections.sort(benefits);

@@ -13,8 +13,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.event.TickEvent.ServerTickEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
@@ -35,22 +33,6 @@ import team.creative.solonion.item.foodcontainer.FoodContainerItem;
 import team.creative.solonion.network.FoodListMessage;
 
 public class SOLOnionEvent {
-    
-    private int ticker;
-    
-    @SubscribeEvent
-    public void tickBenefits(ServerTickEvent event) {
-        if (event.phase == Phase.START)
-            return;
-        
-        ticker++;
-        if (ticker < SOLOnion.CONFIG.benefitUpdateTimer)
-            return;
-        
-        ticker = 0;
-        for (ServerPlayer player : event.getServer().getPlayerList().getPlayers())
-            updatePlayerBenefits(player);
-    }
     
     public void updatePlayerBenefits(Player player) {
         if (!SOLOnion.isActive(player) || !player.isAlive())
@@ -139,7 +121,7 @@ public class SOLOnionEvent {
         if (usedItem.getItem() instanceof FoodContainerItem)
             return;
         
-        updateFoodList(usedItem, player);
+        eat(usedItem, player);
     }
     
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -167,7 +149,7 @@ public class SOLOnionEvent {
         }
     }
     
-    public void updateFoodList(ItemStack food, Player player) {
+    public void eat(ItemStack food, Player player) {
         FoodCapability foodList = SOLOnionAPI.getFoodCapability(player);
         foodList.eat(food);
         updatePlayerBenefits(player);
