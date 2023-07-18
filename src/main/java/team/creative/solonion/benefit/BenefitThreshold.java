@@ -20,4 +20,11 @@ public class BenefitThreshold implements Comparable<BenefitThreshold> {
         return Double.compare(threshold, o.threshold);
     }
     
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof BenefitThreshold thres)
+            return benefit.equals(thres.benefit) && threshold == thres.threshold;
+        return false;
+    }
+    
 }

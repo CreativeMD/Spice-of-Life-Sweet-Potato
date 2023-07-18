@@ -67,7 +67,7 @@ public class Benefit<T> {
                     public void raiseEvent(GuiEvent event) {
                         super.raiseEvent(event);
                         GuiComboBoxMapped<ResourceLocation> box = (GuiComboBoxMapped<ResourceLocation>) parent.get("elements");
-                        Registry registry = box.getIndex() == 0 ? BuiltInRegistries.ATTRIBUTE : BuiltInRegistries.MOB_EFFECT;
+                        Registry registry = getState() == 0 ? BuiltInRegistries.ATTRIBUTE : BuiltInRegistries.MOB_EFFECT;
                         box.setLines(new TextMapBuilder<ResourceLocation>().addComponent(registry.keySet(), value -> {
                             if (value.getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE))
                                 return Component.literal(value.getPath());
@@ -142,6 +142,13 @@ public class Benefit<T> {
     public Benefit(RegistryObjectConfig<T> property, double value) {
         this.property = property;
         this.value = value;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Benefit benefit)
+            return property.equals(benefit.property) && value == benefit.value;
+        return false;
     }
     
 }

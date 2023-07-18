@@ -111,5 +111,12 @@ public final class SOLOnionConfig implements ICreativeConfig {
             this.diversity = diversity;
         }
         
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof FoodProperty prop)
+                return diversity == prop.diversity && ingredient.equals(prop.ingredient);
+            return super.equals(obj);
+        }
+        
     }
 }
