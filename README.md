@@ -1,5 +1,5 @@
 <p align="center">
-	<img width=256px src="GitHub/logo.png" />
+	<img width=256px src="src/main/resources/solonion.png" />
 </p>
 This fork requries <a href="https://modrinth.com/mod/creativecore">CreativeCore</a>.
 
