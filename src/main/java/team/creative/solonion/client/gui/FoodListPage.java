@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.world.item.ItemStack;
+import team.creative.creativecore.common.util.type.list.Tuple;
 import team.creative.solonion.client.gui.elements.UIFoodQueueItem;
 import team.creative.solonion.client.gui.elements.UIItemStack;
+import team.creative.solonion.food.FoodCapabilityImpl;
 
 public final class FoodListPage extends ItemListPage {
     
@@ -20,16 +22,17 @@ public final class FoodListPage extends ItemListPage {
         int minX = (1 - itemsPerRow) * itemSpacing / 2;
         int minY = (1 - rowsPerPage) * itemSpacing / 2 - 4;
         
-        for (int i = 0; i < items.size(); i++) {
-            ItemStack itemStack = items.get(i);
+        int i = 0;
+        for (Tuple<ItemStack, Double> tuple : FoodCapabilityImpl.calculateDiversityIndividualy(items)) {
+            ItemStack itemStack = tuple.key;
             int x = minX + itemSpacing * (i % itemsPerRow);
             int y = minY + itemSpacing * ((i / itemsPerRow) % rowsPerPage);
             
-            int lastEaten = i; // foodMap.get(new FoodInstance(itemStack.getItem()));
-            UIItemStack view = new UIFoodQueueItem(itemStack, lastEaten);
+            UIItemStack view = new UIFoodQueueItem(itemStack, tuple.value, i);
             view.setCenterX(getCenterX() + x);
             view.setCenterY(getCenterY() + y);
             children.add(view);
+            i++;
         }
     }
     

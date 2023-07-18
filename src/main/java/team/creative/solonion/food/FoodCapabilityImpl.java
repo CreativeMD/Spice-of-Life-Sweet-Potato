@@ -2,6 +2,7 @@ package team.creative.solonion.food;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,6 +19,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import team.creative.creativecore.common.util.type.itr.ArrayOffsetIterator;
 import team.creative.creativecore.common.util.type.itr.FilterIterator;
+import team.creative.creativecore.common.util.type.list.Tuple;
+import team.creative.creativecore.common.util.type.list.TupleList;
 import team.creative.solonion.SOLOnion;
 import team.creative.solonion.api.FoodCapability;
 import team.creative.solonion.api.SOLOnionAPI;
@@ -28,7 +31,7 @@ public final class FoodCapabilityImpl implements FoodCapability {
         Object2DoubleArrayMap<Item> types = new Object2DoubleArrayMap<>();
         int i = 0;
         for (ItemStack stack : stacks) {
-            double d = SOLOnion.CONFIG.getDiversity(stack) * (1 - (i / (SOLOnion.CONFIG.trackCount + 1)));
+            double d = calculateDiversity(stack, i);
             types.computeDouble(stack.getItem(), (x, y) -> {
                 if (y == null)
                     return d;
@@ -40,6 +43,37 @@ public final class FoodCapabilityImpl implements FoodCapability {
         for (Entry<Item> entry : types.object2DoubleEntrySet())
             d += entry.getDoubleValue();
         return d;
+    }
+    
+    public static TupleList<ItemStack, Double> calculateDiversityIndividualy(Iterable<ItemStack> stacks) {
+        TupleList<ItemStack, Double> results = new TupleList<>();
+        HashMap<Item, Tuple<ItemStack, Double>> types = new HashMap<>();
+        int i = 0;
+        for (ItemStack stack : stacks) {
+            double d = calculateDiversity(stack, i);
+            Tuple<ItemStack, Double> existing = types.get(stack.getItem());
+            boolean overwrite = false;
+            if (existing != null)
+                if (existing.value >= d) // If the other one is greater this one does not count
+                    d = 0;
+                else { // If this one is greater the other one does not count
+                    existing.value = 0D;
+                    overwrite = true;
+                }
+            else
+                overwrite = true;
+            
+            Tuple<ItemStack, Double> tuple = new Tuple<>(stack, d);
+            results.add(tuple);
+            if (overwrite)
+                types.put(stack.getItem(), tuple);
+            i++;
+        }
+        return results;
+    }
+    
+    public static double calculateDiversity(ItemStack stack, int index) {
+        return SOLOnion.CONFIG.getDiversity(stack) * (1D - (index / (SOLOnion.CONFIG.trackCount + 1D)));
     }
     
     private ItemStack[] lastEaten = new ItemStack[SOLOnion.CONFIG.trackCount];

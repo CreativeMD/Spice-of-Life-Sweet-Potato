@@ -23,9 +23,8 @@ public class BenefitsPage extends Page {
         super(frame, header);
         this.activeColor = activeColor;
         
-        for (BenefitThreshold info : benefitInfo) {
+        for (BenefitThreshold info : benefitInfo)
             addBenefitInfo(info);
-        }
     }
     
     public static List<BenefitsPage> pages(Rectangle frame, String header, List<BenefitThreshold> benefitInfo, Color activeColor) {

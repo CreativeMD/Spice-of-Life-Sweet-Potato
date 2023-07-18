@@ -6,19 +6,18 @@ import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import team.creative.solonion.api.FoodCapability;
-import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.client.SOLOnionClient;
 
 /** Renders an ItemStack representing a food in the FoodList. Has a unique tooltip that displays that food item's
  * contribution to the food diversity. */
 public class UIFoodQueueItem extends UIItemStack {
     private final int lastEaten;
+    private final double diversity;
     
-    public UIFoodQueueItem(ItemStack itemStack, int lastEaten) {
+    public UIFoodQueueItem(ItemStack itemStack, double diversity, int lastEaten) {
         super(itemStack);
-        
         this.lastEaten = lastEaten;
+        this.diversity = diversity;
     }
     
     @Override
@@ -36,11 +35,7 @@ public class UIFoodQueueItem extends UIItemStack {
         Component space = Component.literal("");
         tooltip.add(space);
         
-        FoodCapability food = SOLOnionAPI.getFoodCapability(mc.player);
-        
-        double contribution = food.simulateEat(itemStack);
-        
-        SOLOnionClient.addDiversityInfoTooltips(tooltip, contribution, lastEaten);
+        SOLOnionClient.addDiversityInfoTooltips(tooltip, diversity, lastEaten);
         
         return tooltip;
     }
