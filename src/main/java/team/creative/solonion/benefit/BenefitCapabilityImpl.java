@@ -78,7 +78,7 @@ public class BenefitCapabilityImpl implements BenefitCapability {
         }
         
         for (Object2IntMap.Entry<MobEffect> entry : benefits.effects()) {
-            var in = new MobEffectInstance(entry.getKey(), -1, entry.getIntValue(), false, true);
+            var in = new MobEffectInstance(entry.getKey(), -1, entry.getIntValue(), false, false);
             if (player.addEffect(in)) {
                 if (appliedEffects == null)
                     appliedEffects = new ArrayList<>();
