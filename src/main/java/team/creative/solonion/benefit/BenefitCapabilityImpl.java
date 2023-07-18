@@ -1,5 +1,6 @@
 package team.creative.solonion.benefit;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -65,6 +66,8 @@ public class BenefitCapabilityImpl implements BenefitCapability {
             if (att != null) {
                 float oldMax = player.getMaxHealth();
                 att.addPermanentModifier(modi);
+                if (appliedAttributes == null)
+                    appliedAttributes = new HashMap<>();
                 appliedAttributes.put(entry.getKey(), modi);
                 if (entry.getKey() == Attributes.MAX_HEALTH && !FirstAidManager.INSTALLED) {
                     // increase current health proportionally
@@ -76,8 +79,11 @@ public class BenefitCapabilityImpl implements BenefitCapability {
         
         for (Object2IntMap.Entry<MobEffect> entry : benefits.effects()) {
             var in = new MobEffectInstance(entry.getKey(), -1, entry.getIntValue(), false, true);
-            if (player.addEffect(in))
+            if (player.addEffect(in)) {
+                if (appliedEffects == null)
+                    appliedEffects = new ArrayList<>();
                 appliedEffects.add(entry.getKey());
+            }
         }
     }
     
@@ -115,18 +121,24 @@ public class BenefitCapabilityImpl implements BenefitCapability {
             return;
         
         ListTag list = nbt.getList("att", Tag.TAG_COMPOUND);
-        for (int i = 0; i < list.size(); i++) {
-            CompoundTag tag = list.getCompound(i);
-            Attribute att = BuiltInRegistries.ATTRIBUTE.get(new ResourceLocation(tag.getString("att")));
-            if (att != null)
-                appliedAttributes.put(att, AttributeModifier.load(tag.getCompound("mod")));
+        if (!list.isEmpty()) {
+            appliedAttributes = new HashMap<>();
+            for (int i = 0; i < list.size(); i++) {
+                CompoundTag tag = list.getCompound(i);
+                Attribute att = BuiltInRegistries.ATTRIBUTE.get(new ResourceLocation(tag.getString("att")));
+                if (att != null)
+                    appliedAttributes.put(att, AttributeModifier.load(tag.getCompound("mod")));
+            }
         }
         
         list = nbt.getList("eff", Tag.TAG_STRING);
-        for (int i = 0; i < list.size(); i++) {
-            MobEffect mob = BuiltInRegistries.MOB_EFFECT.get(new ResourceLocation(list.getString(i)));
-            if (mob != null)
-                appliedEffects.add(mob);
+        if (!list.isEmpty()) {
+            appliedEffects = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                MobEffect mob = BuiltInRegistries.MOB_EFFECT.get(new ResourceLocation(list.getString(i)));
+                if (mob != null)
+                    appliedEffects.add(mob);
+            }
         }
     }
     
