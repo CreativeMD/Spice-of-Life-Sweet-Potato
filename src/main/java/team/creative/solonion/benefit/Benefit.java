@@ -25,6 +25,7 @@ import team.creative.creativecore.common.gui.controls.simple.GuiStateButton;
 import team.creative.creativecore.common.gui.controls.simple.GuiTextfield;
 import team.creative.creativecore.common.gui.event.GuiControlChangedEvent;
 import team.creative.creativecore.common.gui.event.GuiEvent;
+import team.creative.creativecore.common.gui.flow.GuiFlow;
 import team.creative.creativecore.common.util.text.TextListBuilder;
 import team.creative.creativecore.common.util.text.TextMapBuilder;
 
@@ -61,6 +62,7 @@ public class Benefit<T> {
             @OnlyIn(Dist.CLIENT)
             @Environment(EnvType.CLIENT)
             public void createControls(GuiParent parent, IGuiConfigParent configParent, ConfigKeyField key, Class clazz) {
+                parent.flow = GuiFlow.STACK_Y;
                 parent.add(new GuiStateButton("state", 0, new TextListBuilder().addTranslated("config.solonion.", "attribute", "effect")) {
                     
                     @Override
@@ -76,7 +78,7 @@ public class Benefit<T> {
                     }
                     
                 });
-                parent.add(new GuiComboBoxMapped<ResourceLocation>("elements", new TextMapBuilder<ResourceLocation>()));
+                parent.add(new GuiComboBoxMapped<ResourceLocation>("elements", new TextMapBuilder<ResourceLocation>()).setSearchbar(true));
                 parent.add(new GuiTextfield("value").setFloatOnly().setDim(20, 6));
             }
             
