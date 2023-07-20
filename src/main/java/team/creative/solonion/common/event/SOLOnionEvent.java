@@ -111,6 +111,9 @@ public class SOLOnionEvent {
     
     @SubscribeEvent
     public void onFoodEaten(LivingEntityUseItemEvent.Finish event) {
+        if (!(event.getEntity() instanceof Player))
+            return;
+        
         Player player = (Player) event.getEntity();
         if (!SOLOnion.isActive(player))
             return;
