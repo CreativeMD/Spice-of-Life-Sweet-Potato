@@ -75,11 +75,13 @@ public final class SOLOnionConfig implements ICreativeConfig {
         if (side.isClient())
             return;
         
-        PlayerList players = ServerLifecycleHooks.getCurrentServer().getPlayerList();
-        for (Player player : players.getPlayers()) {
-            SOLOnionAPI.getFoodCapability(player).configChanged();
-            SOLOnion.EVENT.updatePlayerBenefits(player);
-            SOLOnion.EVENT.syncFoodList(player);
+        if (ServerLifecycleHooks.getCurrentServer() != null) {
+            PlayerList players = ServerLifecycleHooks.getCurrentServer().getPlayerList();
+            for (Player player : players.getPlayers()) {
+                SOLOnionAPI.getFoodCapability(player).configChanged();
+                SOLOnion.EVENT.updatePlayerBenefits(player);
+                SOLOnion.EVENT.syncFoodList(player);
+            }
         }
     }
     
