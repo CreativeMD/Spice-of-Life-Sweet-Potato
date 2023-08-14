@@ -44,6 +44,7 @@ public final class SOLOnion {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerCapabilities);
         SOLOnionItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        SOLOnionItems.MENU_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SOLOnionItems::registerTabs);
         MinecraftForge.EVENT_BUS.addListener(this::command);
     }

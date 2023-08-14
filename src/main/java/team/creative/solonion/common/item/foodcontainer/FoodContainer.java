@@ -12,7 +12,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import team.creative.solonion.client.SOLOnionClient;
+import team.creative.solonion.common.item.SOLOnionItems;
 
 public class FoodContainer extends AbstractContainerMenu {
     public static final int PLAYERSIZE = 4 * 9;
@@ -23,7 +23,7 @@ public class FoodContainer extends AbstractContainerMenu {
     private Inventory playerInventory;
     
     public FoodContainer(int id, Inventory playerInventory, Player player) {
-        super(SOLOnionClient.FOOD_CONTAINER.get(), id);
+        super(SOLOnionItems.FOOD_CONTAINER.get(), id);
         
         // When we hit the hotkey to open a food container, check held items first
         if (player.getMainHandItem().getItem() instanceof FoodContainerItem)
