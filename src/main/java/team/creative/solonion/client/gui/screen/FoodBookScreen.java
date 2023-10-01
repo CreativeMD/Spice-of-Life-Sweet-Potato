@@ -129,7 +129,7 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
     
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        renderBackground(graphics);
+        renderBackground(graphics, mouseX, mouseY, partialTicks);
         
         UIElement.render(graphics, background, mouseX, mouseY);
         

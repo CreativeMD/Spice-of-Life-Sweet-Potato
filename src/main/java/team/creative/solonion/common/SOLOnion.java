@@ -35,7 +35,7 @@ public final class SOLOnion {
     
     public static final String MODID = "solonion";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
-    public static CreativeNetwork NETWORK = new CreativeNetwork("1.0", LOGGER, new ResourceLocation(SOLOnion.MODID, "main"));
+    public static CreativeNetwork NETWORK = new CreativeNetwork(1, LOGGER, new ResourceLocation(SOLOnion.MODID, "main"));
     public static SOLOnionConfig CONFIG;
     public static SOLOnionEvent EVENT;
     
