@@ -47,7 +47,7 @@ public class BenefitCapabilityImpl implements BenefitCapability {
     public void updateStack(Player player, BenefitStack benefits) {
         if (appliedAttributes != null && !appliedAttributes.isEmpty()) {
             for (Entry<Attribute, AttributeModifier> entry : appliedAttributes.entrySet())
-                player.getAttribute(entry.getKey()).removeModifier(entry.getValue().getId());
+                player.getAttribute(entry.getKey()).removeModifier(entry.getValue());
             appliedAttributes.clear();
         }
         

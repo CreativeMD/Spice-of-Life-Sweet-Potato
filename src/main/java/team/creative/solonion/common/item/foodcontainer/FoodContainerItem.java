@@ -21,6 +21,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.network.NetworkHooks;
 import team.creative.solonion.api.FoodCapability;
 import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.common.SOLOnion;
@@ -50,7 +51,7 @@ public class FoodContainerItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         if (!world.isClientSide && player.isCrouching())
-            ((ServerPlayer) player).openMenu(new FoodContainerProvider(displayName), player.blockPosition());
+            NetworkHooks.openScreen((ServerPlayer) player, new FoodContainerProvider(displayName), player.blockPosition());
         
         if (!player.isCrouching())
             return processRightClick(world, player, hand);
