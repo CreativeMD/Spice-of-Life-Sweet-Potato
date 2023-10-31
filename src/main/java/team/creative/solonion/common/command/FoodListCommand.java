@@ -136,7 +136,7 @@ public final class FoodListCommand {
     }
     
     public static MutableComponent localizedComponent(String path, Object... args) {
-        return Component.translatable("command" + localizationPath(path), args);
+        return Component.translatable("command." + localizationPath(path), args);
     }
     
     public static String localizationPath(String path) {
