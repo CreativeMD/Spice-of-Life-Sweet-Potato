@@ -50,7 +50,7 @@ public class SOLOnionEvent {
             return;
         
         BenefitStack stack = new BenefitStack();
-        double d = foodList.foodDiversity();
+        double d = foodList.foodDiversity(player);
         for (BenefitThreshold threshold : SOLOnion.CONFIG.benefits) {
             if (threshold.threshold <= d)
                 stack.add(threshold.benefit);
@@ -154,7 +154,7 @@ public class SOLOnionEvent {
     
     public void eat(ItemStack food, Player player) {
         FoodCapability foodList = SOLOnionAPI.getFoodCapability(player);
-        foodList.eat(food);
+        foodList.eat(player, food);
         updatePlayerBenefits(player);
         syncFoodList(player);
     }

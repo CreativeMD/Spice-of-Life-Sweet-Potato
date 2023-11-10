@@ -4,10 +4,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.mojang.datafixers.util.Pair;
+
 import net.minecraft.server.players.PlayerList;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.server.ServerLifecycleHooks;
@@ -57,7 +63,19 @@ public final class SOLOnionConfig implements ICreativeConfig {
     public boolean shouldExcludedCount = true;
     
     @CreativeConfig
-    public double defaultDiversity = 1;
+    public double complexityStandardNutrition = 5;
+    
+    @CreativeConfig
+    public double complexityStandardSaturation = 0.6;
+    
+    @CreativeConfig
+    public double complexityBenefitEffectModifier = 0.2;
+    
+    @CreativeConfig
+    public double complexityNeutralEffectModifier = 0;
+    
+    @CreativeConfig
+    public double complexityHarmEffectModifier = -0.2;
     
     @CreativeConfig
     public List<FoodProperty> foodDiversity = Arrays.asList(new FoodProperty(new CreativeIngredientItem(Items.GOLDEN_CARROT), 2),
@@ -89,10 +107,25 @@ public final class SOLOnionConfig implements ICreativeConfig {
         return foodItems.canPass(food);
     }
     
-    public double getDiversity(ItemStack food) {
+    public double getDiversity(LivingEntity entity, ItemStack food) {
         for (FoodProperty property : foodDiversity)
             if (property.ingredient.is(food))
                 return property.diversity;
-        return defaultDiversity;
+        FoodProperties prop = food.getItem().getFoodProperties(food, entity);
+        if (prop != null) {
+            double diversity = (prop.getNutrition() / complexityStandardNutrition) * (prop.getSaturationModifier() / complexityStandardSaturation);
+            for (Pair<MobEffectInstance, Float> pair : prop.getEffects())
+                diversity += (pair.getFirst().getAmplifier() + 1) * getModifierPerCategory(pair.getFirst().getEffect().getCategory()) * pair.getSecond();
+            return diversity;
+        }
+        return 0;
+    }
+    
+    public double getModifierPerCategory(MobEffectCategory category) {
+        return switch (category) {
+            case BENEFICIAL -> complexityBenefitEffectModifier;
+            case NEUTRAL -> complexityNeutralEffectModifier;
+            case HARMFUL -> complexityHarmEffectModifier;
+        };
     }
 }

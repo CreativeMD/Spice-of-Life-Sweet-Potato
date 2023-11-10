@@ -68,10 +68,10 @@ public class SOLOnionClient {
             return;
         
         FoodCapability food = SOLOnionAPI.getFoodCapability(player);
-        addTooltip(food.simulateEat(stack), food.getLastEaten(stack), stack, event.getToolTip());
+        addTooltip(food.simulateEat(player, stack), food.getLastEaten(player, stack), stack, event.getToolTip(), player);
     }
     
-    public static void addTooltip(double diversity, int lastEaten, ItemStack stack, List<Component> tooltip) {
+    public static void addTooltip(double diversity, int lastEaten, ItemStack stack, List<Component> tooltip, Player player) {
         boolean isAllowed = SOLOnion.CONFIG.isAllowed(stack);
         
         if (!isAllowed) {
@@ -84,7 +84,7 @@ public class SOLOnionClient {
             color = ChatFormatting.RED;
         else if (diversity > 0)
             color = ChatFormatting.GREEN;
-        tooltip.add(Component.translatable("gui.solonion.tooltip.diversity").append(": " + String.format("%.2f", SOLOnion.CONFIG.getDiversity(stack))).withStyle(
+        tooltip.add(Component.translatable("gui.solonion.tooltip.diversity").append(": " + String.format("%.2f", SOLOnion.CONFIG.getDiversity(player, stack))).withStyle(
             ChatFormatting.GRAY).append(" (").append(Component.literal(String.format("%.2f", diversity)).withStyle(color)).append(")"));
         if (lastEaten != -1) {
             String last_eaten_path = "tooltip.last_eaten";

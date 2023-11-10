@@ -4,6 +4,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import team.creative.creativecore.common.util.mc.LanguageUtils;
 import team.creative.creativecore.common.util.type.list.Tuple;
@@ -13,7 +14,7 @@ import team.creative.solonion.common.food.FoodCapabilityImpl;
 
 public final class FoodListPage extends ItemListPage {
     
-    private FoodListPage(Rectangle frame, String header, List<ItemStack> items) {
+    private FoodListPage(Rectangle frame, String header, List<ItemStack> items, Player player) {
         super(frame, header, items);
         
         setHeaderTooltip(LanguageUtils.translate("gui.solonion.food_book.food_queue_tooltip"));
@@ -22,7 +23,7 @@ public final class FoodListPage extends ItemListPage {
         int minY = (1 - rowsPerPage) * itemSpacing / 2 - 4;
         
         int i = 0;
-        for (Tuple<ItemStack, Double> tuple : FoodCapabilityImpl.calculateDiversityIndividualy(items)) {
+        for (Tuple<ItemStack, Double> tuple : FoodCapabilityImpl.calculateDiversityIndividualy(items, player)) {
             ItemStack itemStack = tuple.key;
             int x = minX + itemSpacing * (i % itemsPerRow);
             int y = minY + itemSpacing * ((i / itemsPerRow) % rowsPerPage);
@@ -35,11 +36,11 @@ public final class FoodListPage extends ItemListPage {
         }
     }
     
-    public static List<ItemListPage> pages(Rectangle frame, String header, List<ItemStack> items) {
+    public static List<ItemListPage> pages(Rectangle frame, String header, List<ItemStack> items, Player player) {
         List<ItemListPage> pages = new ArrayList<>();
         for (int startIndex = 0; startIndex < items.size(); startIndex += ItemListPage.itemsPerPage) {
             int endIndex = Math.min(startIndex + ItemListPage.itemsPerPage, items.size());
-            pages.add(new FoodListPage(frame, header, items.subList(startIndex, endIndex)));
+            pages.add(new FoodListPage(frame, header, items.subList(startIndex, endIndex), player));
         }
         return pages;
     }

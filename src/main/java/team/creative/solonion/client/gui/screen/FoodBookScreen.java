@@ -96,11 +96,11 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
     private void initPages() {
         pages.clear();
         
-        double foodDiversity = foodData.foodDiversity();
+        double foodDiversity = foodData.foodDiversity(player);
         int foodEaten = foodData.trackCount();
         pages.add(new DiversityPage(foodDiversity, foodEaten, background.frame));
         
-        addPages("food_queue_label", Lists.newArrayList(foodData));
+        addPages("food_queue_label", Lists.newArrayList(foodData), player);
         
         List<BenefitThreshold> active = new ArrayList<>();
         List<BenefitThreshold> inactive = new ArrayList<>();
@@ -122,9 +122,9 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
         pages.addAll(BenefitsPage.pages(background.frame, header, benefitInfoList, activeColor));
     }
     
-    private void addPages(String headerLocalizationPath, List<ItemStack> stacks) {
+    private void addPages(String headerLocalizationPath, List<ItemStack> stacks, Player player) {
         String header = LanguageUtils.translate("gui.solonion.food_book." + headerLocalizationPath, stacks.size());
-        pages.addAll(FoodListPage.pages(background.frame, header, stacks));
+        pages.addAll(FoodListPage.pages(background.frame, header, stacks, player));
     }
     
     @Override

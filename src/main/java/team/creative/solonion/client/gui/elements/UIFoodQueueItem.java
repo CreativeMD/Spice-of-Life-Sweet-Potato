@@ -35,7 +35,7 @@ public class UIFoodQueueItem extends UIItemStack {
         Component space = Component.literal("");
         tooltip.add(space);
         
-        SOLOnionClient.addTooltip(diversity, lastEaten, itemStack, tooltip);
+        SOLOnionClient.addTooltip(diversity, lastEaten, itemStack, tooltip, mc.player);
         
         return tooltip;
     }

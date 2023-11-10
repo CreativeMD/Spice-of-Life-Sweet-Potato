@@ -13,6 +13,7 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleMap.Entry;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
@@ -27,11 +28,11 @@ import team.creative.solonion.common.SOLOnion;
 
 public final class FoodCapabilityImpl implements FoodCapability {
     
-    private static double calculateDiversity(Iterable<ItemStack> stacks) {
+    private static double calculateDiversity(Iterable<ItemStack> stacks, LivingEntity entity) {
         Object2DoubleArrayMap<Item> types = new Object2DoubleArrayMap<>();
         int i = 0;
         for (ItemStack stack : stacks) {
-            double d = calculateDiversity(stack, i);
+            double d = calculateDiversity(entity, stack, i);
             types.computeDouble(stack.getItem(), (x, y) -> {
                 if (y == null)
                     return d;
@@ -45,12 +46,12 @@ public final class FoodCapabilityImpl implements FoodCapability {
         return d;
     }
     
-    public static TupleList<ItemStack, Double> calculateDiversityIndividualy(Iterable<ItemStack> stacks) {
+    public static TupleList<ItemStack, Double> calculateDiversityIndividualy(Iterable<ItemStack> stacks, LivingEntity entity) {
         TupleList<ItemStack, Double> results = new TupleList<>();
         HashMap<Item, Tuple<ItemStack, Double>> types = new HashMap<>();
         int i = 0;
         for (ItemStack stack : stacks) {
-            double d = calculateDiversity(stack, i);
+            double d = calculateDiversity(entity, stack, i);
             Tuple<ItemStack, Double> existing = types.get(stack.getItem());
             boolean overwrite = false;
             if (existing != null)
@@ -72,13 +73,13 @@ public final class FoodCapabilityImpl implements FoodCapability {
         return results;
     }
     
-    public static double calculateDiversity(ItemStack stack, int index) {
-        return SOLOnion.CONFIG.getDiversity(stack) * (1D - (index / (SOLOnion.CONFIG.trackCount + 1D)));
+    public static double calculateDiversity(LivingEntity entity, ItemStack stack, int index) {
+        return SOLOnion.CONFIG.getDiversity(entity, stack) * (1D - (index / (SOLOnion.CONFIG.trackCount + 1D)));
     }
     
     private ItemStack[] lastEaten = new ItemStack[SOLOnion.CONFIG.trackCount];
     private int startIndex = lastEaten.length - 1;
-    private double diversityCache;
+    private double diversityCache = -1;
     
     private final LazyOptional<FoodCapabilityImpl> capabilityOptional = LazyOptional.of(() -> this);
     
@@ -89,8 +90,8 @@ public final class FoodCapabilityImpl implements FoodCapability {
         return capability == SOLOnionAPI.FOOD_CAP ? capabilityOptional.cast() : LazyOptional.empty();
     }
     
-    private void updateDiversity() {
-        diversityCache = calculateDiversity(this);
+    private void updateDiversity(LivingEntity entity) {
+        diversityCache = calculateDiversity(this, entity);
     }
     
     /** used for persistent storage */
@@ -112,11 +113,11 @@ public final class FoodCapabilityImpl implements FoodCapability {
             lastEaten[i] = i < tag.size() ? ItemStack.of(tag.getCompound(i)) : null;
         startIndex = 0;
         
-        updateDiversity();
+        diversityCache = -1;
     }
     
     @Override
-    public void eat(ItemStack stack) {
+    public void eat(LivingEntity entity, ItemStack stack) {
         if (!SOLOnion.CONFIG.isAllowed(stack) && !SOLOnion.CONFIG.shouldExcludedCount)
             return;
         
@@ -125,11 +126,11 @@ public final class FoodCapabilityImpl implements FoodCapability {
             startIndex = lastEaten.length - 1;
         
         lastEaten[startIndex] = stack.copy();
-        updateDiversity();
+        updateDiversity(entity);
     }
     
     @Override
-    public double simulateEat(ItemStack stack) {
+    public double simulateEat(LivingEntity entity, ItemStack stack) {
         if (!SOLOnion.CONFIG.isAllowed(stack) && !SOLOnion.CONFIG.shouldExcludedCount)
             return 0.0;
         
@@ -140,11 +141,13 @@ public final class FoodCapabilityImpl implements FoodCapability {
         if (stacks.size() == SOLOnion.CONFIG.trackCount)
             stacks.remove(stacks.size() - 1);
         stacks.add(0, stack);
-        return calculateDiversity(stacks) - diversityCache;
+        return calculateDiversity(stacks, entity) - foodDiversity(entity);
     }
     
     @Override
-    public double foodDiversity() {
+    public double foodDiversity(LivingEntity entity) {
+        if (diversityCache == -1)
+            updateDiversity(entity);
         return diversityCache;
     }
     
@@ -158,14 +161,14 @@ public final class FoodCapabilityImpl implements FoodCapability {
     }
     
     @Override
-    public int getLastEaten(ItemStack food) {
+    public int getLastEaten(LivingEntity entity, ItemStack food) {
         if (!food.isEdible())
             return -1;
         
-        double d = SOLOnion.CONFIG.getDiversity(food);
+        double d = SOLOnion.CONFIG.getDiversity(entity, food);
         int i = 0;
         for (ItemStack stack : this) {
-            if (stack.getItem() == food.getItem() && SOLOnion.CONFIG.getDiversity(stack) == d)
+            if (stack.getItem() == food.getItem() && SOLOnion.CONFIG.getDiversity(entity, stack) == d)
                 return i;
             i++;
         }
@@ -173,12 +176,12 @@ public final class FoodCapabilityImpl implements FoodCapability {
     }
     
     @Override
-    public boolean hasEaten(ItemStack food) {
+    public boolean hasEaten(LivingEntity entity, ItemStack food) {
         if (!food.isEdible())
             return false;
-        double d = SOLOnion.CONFIG.getDiversity(food);
+        double d = SOLOnion.CONFIG.getDiversity(entity, food);
         for (ItemStack stack : this)
-            if (stack.getItem() == food.getItem() && SOLOnion.CONFIG.getDiversity(stack) == d)
+            if (stack.getItem() == food.getItem() && SOLOnion.CONFIG.getDiversity(entity, stack) == d)
                 return true;
         return false;
     }
@@ -209,6 +212,6 @@ public final class FoodCapabilityImpl implements FoodCapability {
             lastEaten = newLastEaten;
             startIndex = 0;
         }
-        updateDiversity();
+        diversityCache = -1;
     }
 }

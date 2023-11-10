@@ -44,5 +44,11 @@
 	"config.solonion.effect": "Mob Effect",
 	
 	"config.solonion.trackCount.comment": "How many foods should be tracked.\n Note that the larger this is, the higher your potential diversity value can be, so keep this mind\n if you are defining custom thresholds/benefits above.",
-    "config.solonion.minFoodsToActivate.comment": "The minimum number of foods a player needs to eat before any benefits are applied."
+    "config.solonion.minFoodsToActivate.comment": "The minimum number of foods a player needs to eat before any benefits are applied.",
+    
+    "config.solonion.complexityStandardNutrition.comment": "By default this is the nutration value of bread.\nEvery food is compared to it and calculated accordingly.",
+    "config.solonion.complexityStandardSaturation.comment": "By default this is the saturation value of bread.\nEvery food is compared to it and calculated accordingly.",
+    "config.solonion.complexityBenefitEffectModifier.comment": "How much complexity is added per positive effect (including level) to the food.\nThe chance of the effect will be considered.",
+    "config.solonion.complexityNeutralEffectModifier.comment": "How much complexity is added per neutral effect (including level) to the food.\nThe chance of the effect will be considered.",
+    "config.solonion.complexityHarmEffectModifier.comment": "How much complexity is added per negative effect (including level) to the food.\nThe chance of the effect will be considered."
 }

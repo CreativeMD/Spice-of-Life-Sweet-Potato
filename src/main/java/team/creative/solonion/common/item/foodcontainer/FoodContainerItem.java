@@ -152,7 +152,7 @@ public class FoodContainerItem extends Item {
             if (!food.isEdible() || food.isEmpty())
                 continue;
             
-            double diversityChange = foodList.simulateEat(food);
+            double diversityChange = foodList.simulateEat(player, food);
             if (diversityChange > maxDiversity) {
                 maxDiversity = diversityChange;
                 bestFoodSlot = i;

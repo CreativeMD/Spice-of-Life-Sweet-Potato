@@ -50,7 +50,7 @@ public final class FoodListCommand {
         if (!isOp && !isTargetingSelf)
             throw new CommandRuntimeException(localizedComponent("no_permissions"));
         
-        double diversity = SOLOnionAPI.getFoodCapability(target).foodDiversity();
+        double diversity = SOLOnionAPI.getFoodCapability(target).foodDiversity(target);
         MutableComponent feedback = localizedComponent("diversity_feedback", diversity);
         sendFeedback(context.getSource(), feedback);
         return Command.SINGLE_SUCCESS;
