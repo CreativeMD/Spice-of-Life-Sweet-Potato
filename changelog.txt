@@ -1,2 +1,5 @@
+1.2.0
+Added automatic calculation of food diversity based on nutrition, saturation and mob effects (suggested by NanoAi)
+
 1.1.4
 Fixed command translations not working
