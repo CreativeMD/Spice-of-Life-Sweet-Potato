@@ -195,7 +195,7 @@ public final class FoodCapabilityImpl implements FoodCapability {
     
     @Override
     public Iterator<ItemStack> iterator() {
-        return new FilterIterator<>(new ArrayOffsetIterator<>(startIndex, lastEaten), x -> x != null);
+        return new FilterIterator<>(new ArrayOffsetIterator<>(startIndex, lastEaten).iterator(), x -> x != null);
     }
     
     @Override
