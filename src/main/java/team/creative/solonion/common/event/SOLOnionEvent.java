@@ -1,9 +1,9 @@
 package team.creative.solonion.common.event;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -11,24 +11,20 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent.PlayerRespawnEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerRespawnEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import team.creative.solonion.api.FoodCapability;
 import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.common.SOLOnion;
-import team.creative.solonion.common.benefit.BenefitCapabilityImpl;
 import team.creative.solonion.common.benefit.BenefitStack;
 import team.creative.solonion.common.benefit.BenefitThreshold;
-import team.creative.solonion.common.food.FoodCapabilityImpl;
 import team.creative.solonion.common.item.foodcontainer.FoodContainerItem;
 import team.creative.solonion.common.network.FoodListMessage;
 
@@ -68,15 +64,6 @@ public class SOLOnionEvent {
     }
     
     @SubscribeEvent
-    public void attachPlayerCapability(AttachCapabilitiesEvent<Entity> event) {
-        if (!(event.getObject() instanceof Player))
-            return;
-        
-        event.addCapability(SOLOnionAPI.FOOD, new FoodCapabilityImpl());
-        event.addCapability(SOLOnionAPI.BENEFIT, new BenefitCapabilityImpl());
-    }
-    
-    @SubscribeEvent
     public void onPlayerDimensionChange(PlayerChangedDimensionEvent event) {
         syncFoodList(event.getEntity());
     }
@@ -87,14 +74,14 @@ public class SOLOnionEvent {
             return;
         
         Player originalPlayer = event.getOriginal();
-        originalPlayer.reviveCaps(); // so we can access the capabilities; entity will get removed either way
+        //originalPlayer.reviveCaps(); // so we can access the capabilities; entity will get removed either way
         FoodCapability original = SOLOnionAPI.getFoodCapability(originalPlayer);
         FoodCapability newInstance = SOLOnionAPI.getFoodCapability(event.getEntity());
         newInstance.deserializeNBT(original.serializeNBT());
         // can't sync yet; client hasn't attached capabilities yet
         
         updatePlayerBenefits(event.getEntity());
-        originalPlayer.invalidateCaps();
+        //originalPlayer.invalidateCaps();
     }
     
     @SubscribeEvent
@@ -140,15 +127,14 @@ public class SOLOnionEvent {
         
         Item eatenItem = Items.CAKE;
         // If Farmer's Delight is installed, replace "cake" with FD's "cake slice"
-        if (ModList.get().isLoaded("farmersdelight")) {
-            eatenItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation("farmersdelight:cake_slice"));
-        }
+        if (ModList.get().isLoaded("farmersdelight"))
+            eatenItem = BuiltInRegistries.ITEM.get(new ResourceLocation("farmersdelight:cake_slice"));
         ItemStack eatenItemStack = new ItemStack(eatenItem);
         
         if (clickedBlock == Blocks.CAKE && player.canEat(false) && event.getHand() == InteractionHand.MAIN_HAND && !event.getLevel().isClientSide) {
             // Fire an event instead of directly updating the food list, so that
             // SoL: Carrot Edition registers the eaten food too.
-            ForgeEventFactory.onItemUseFinish(player, eatenItemStack, 0, ItemStack.EMPTY);
+            EventHooks.onItemUseFinish(player, eatenItemStack, 0, ItemStack.EMPTY);
         }
     }
     

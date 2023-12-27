@@ -5,12 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -24,30 +20,19 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 import team.creative.solonion.api.BenefitCapability;
-import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.common.mod.FirstAidManager;
 
 public class BenefitCapabilityImpl implements BenefitCapability {
     
-    private final LazyOptional<BenefitCapabilityImpl> capabilityOptional = LazyOptional.of(() -> this);
-    
     private HashMap<Attribute, AttributeModifier> appliedAttributes;
     private List<MobEffect> appliedEffects;
-    
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction side) {
-        return capability == SOLOnionAPI.BENEFIT_CAP ? capabilityOptional.cast() : LazyOptional.empty();
-    }
     
     @Override
     public void updateStack(Player player, BenefitStack benefits) {
         if (appliedAttributes != null && !appliedAttributes.isEmpty()) {
             for (Entry<Attribute, AttributeModifier> entry : appliedAttributes.entrySet())
-                player.getAttribute(entry.getKey()).removeModifier(entry.getValue());
+                player.getAttribute(entry.getKey()).removeModifier(entry.getValue().getId());
             appliedAttributes.clear();
         }
         

@@ -10,13 +10,12 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
 import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.common.SOLOnion;
 
@@ -47,8 +46,10 @@ public final class FoodListCommand {
     public static int displayDiversity(CommandContext<CommandSourceStack> context, Player target) {
         boolean isOp = context.getSource().hasPermission(2);
         boolean isTargetingSelf = isTargetingSelf(context, target);
-        if (!isOp && !isTargetingSelf)
-            throw new CommandRuntimeException(localizedComponent("no_permissions"));
+        if (!isOp && !isTargetingSelf) {
+            context.getSource().sendFailure(localizedComponent("no_permissions"));
+            return -1;
+        }
         
         double diversity = SOLOnionAPI.getFoodCapability(target).foodDiversity(target);
         MutableComponent feedback = localizedComponent("diversity_feedback", diversity);
@@ -67,8 +68,10 @@ public final class FoodListCommand {
     public static int clearFoodList(CommandContext<CommandSourceStack> context, Player target) {
         boolean isOp = context.getSource().hasPermission(2);
         boolean isTargetingSelf = isTargetingSelf(context, target);
-        if (!isOp && !isTargetingSelf)
-            throw new CommandRuntimeException(localizedComponent("no_permissions"));
+        if (!isOp && !isTargetingSelf) {
+            context.getSource().sendFailure(localizedComponent("no_permissions"));
+            return -1;
+        }
         
         SOLOnionAPI.getFoodCapability(target).clearAll();
         SOLOnion.EVENT.updatePlayerBenefits(target);
@@ -86,8 +89,10 @@ public final class FoodListCommand {
     public static int resetPlayerOrigin(CommandContext<CommandSourceStack> context, Player target) {
         boolean isOp = context.getSource().hasPermission(2);
         boolean isTargetingSelf = isTargetingSelf(context, target);
-        if (!isOp && !isTargetingSelf)
-            throw new CommandRuntimeException(localizedComponent("no_permissions"));
+        if (!isOp && !isTargetingSelf) {
+            context.getSource().sendFailure(localizedComponent("no_permissions"));
+            return -1;
+        }
         
         //Origins.cacheInvalidate(target);
         
@@ -107,8 +112,10 @@ public final class FoodListCommand {
     
     public static int resetAllOrigins(CommandContext<CommandSourceStack> context) {
         boolean isOp = context.getSource().hasPermission(2);
-        if (!isOp)
-            throw new CommandRuntimeException(localizedComponent("no_permissions"));
+        if (!isOp) {
+            context.getSource().sendFailure(localizedComponent("no_permissions"));
+            return -1;
+        }
         
         //Origins.clearCache();
         

@@ -6,24 +6,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import it.unimi.dsi.fastutil.objects.Object2DoubleArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap.Entry;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 import team.creative.creativecore.common.util.type.itr.ArrayOffsetIterator;
 import team.creative.creativecore.common.util.type.itr.FilterIterator;
 import team.creative.creativecore.common.util.type.list.Tuple;
 import team.creative.creativecore.common.util.type.list.TupleList;
 import team.creative.solonion.api.FoodCapability;
-import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.common.SOLOnion;
 
 public final class FoodCapabilityImpl implements FoodCapability {
@@ -81,14 +75,7 @@ public final class FoodCapabilityImpl implements FoodCapability {
     private int startIndex = lastEaten.length - 1;
     private double diversityCache = -1;
     
-    private final LazyOptional<FoodCapabilityImpl> capabilityOptional = LazyOptional.of(() -> this);
-    
     public FoodCapabilityImpl() {}
-    
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction side) {
-        return capability == SOLOnionAPI.FOOD_CAP ? capabilityOptional.cast() : LazyOptional.empty();
-    }
     
     private void updateDiversity(LivingEntity entity) {
         diversityCache = calculateDiversity(this, entity);

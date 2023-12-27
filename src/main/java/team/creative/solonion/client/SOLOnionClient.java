@@ -11,13 +11,13 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent.ClientTickEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.TickEvent.ClientTickEvent;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import team.creative.solonion.api.FoodCapability;
 import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.client.gui.screen.FoodBookScreen;
@@ -32,8 +32,8 @@ public class SOLOnionClient {
     public static void load(IEventBus bus) {
         bus.addListener(SOLOnionClient::setupClient);
         bus.addListener(SOLOnionClient::registerKeybinds);
-        MinecraftForge.EVENT_BUS.addListener(SOLOnionClient::handleKeypress);
-        MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, SOLOnionClient::onItemTooltip);
+        NeoForge.EVENT_BUS.addListener(SOLOnionClient::handleKeypress);
+        NeoForge.EVENT_BUS.addListener(EventPriority.LOW, SOLOnionClient::onItemTooltip);
         
     }
     

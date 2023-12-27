@@ -10,7 +10,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import team.creative.solonion.common.SOLOnion;
 import team.creative.solonion.common.item.foodcontainer.FoodContainer;
 
@@ -21,7 +21,7 @@ public class FoodContainerScreen extends AbstractContainerScreen<FoodContainer> 
     
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(graphics);
+        this.renderBackground(graphics, mouseX, mouseY, partialTicks);
         super.render(graphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(graphics, mouseX, mouseY);
     }
@@ -29,7 +29,8 @@ public class FoodContainerScreen extends AbstractContainerScreen<FoodContainer> 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int x, int y) {
         this.drawBackground(graphics, new ResourceLocation(SOLOnion.MODID, "textures/gui/inventory.png"));
-        this.menu.containerItem.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(h -> {
+        var h = this.menu.containerItem.getCapability(Capabilities.ItemHandler.ITEM);
+        if (h != null) {
             int slotsPerRow = h.getSlots();
             if (h.getSlots() > 9) {
                 slotsPerRow = h.getSlots() / 2;
@@ -47,7 +48,7 @@ public class FoodContainerScreen extends AbstractContainerScreen<FoodContainer> 
                 
                 this.drawSlot(graphics, xPos, yPos);
             }
-        });
+        }
     }
     
     protected void drawBackground(GuiGraphics graphics, ResourceLocation gui) {

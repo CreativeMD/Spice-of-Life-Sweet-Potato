@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -16,12 +15,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.network.NetworkHooks;
 import team.creative.solonion.api.FoodCapability;
 import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.common.SOLOnion;
@@ -29,7 +27,7 @@ import team.creative.solonion.common.SOLOnion;
 public class FoodContainerItem extends Item {
     
     private String displayName;
-    private int nslots;
+    public final int nslots;
     
     public FoodContainerItem(int nslots, String displayName) {
         super(new Properties().stacksTo(1).setNoRepair());
@@ -90,16 +88,8 @@ public class FoodContainerItem extends Item {
     }
     
     @Nullable
-    @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-        return new FoodContainerCapabilityProvider(stack, nslots);
-    }
-    
-    @Nullable
     public static ItemStackHandler getInventory(ItemStack bag) {
-        if (bag.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent())
-            return (ItemStackHandler) bag.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().get();
-        return null;
+        return (ItemStackHandler) bag.getCapability(Capabilities.ItemHandler.ITEM);
     }
     
     @Override
@@ -130,7 +120,7 @@ public class FoodContainerItem extends Item {
             }
             
             if (!world.isClientSide)
-                ForgeEventFactory.onItemUseFinish(player, foodCopy, 0, result);
+                EventHooks.onItemUseFinish(player, foodCopy, 0, result);
         }
         
         return stack;

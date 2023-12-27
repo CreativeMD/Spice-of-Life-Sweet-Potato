@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import team.creative.solonion.common.item.SOLOnionItems;
 
 public class FoodContainer extends AbstractContainerMenu {
@@ -38,23 +38,24 @@ public class FoodContainer extends AbstractContainerMenu {
                 }
             
         this.playerInventory = playerInventory;
-        containerItem.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(h -> {
-            nslots = h.getSlots();
-            int slotsPerRow = h.getSlots();
-            if (h.getSlots() > 9)
-                slotsPerRow = h.getSlots() / 2;
+        var itemHandler = containerItem.getCapability(Capabilities.ItemHandler.ITEM);
+        if (itemHandler != null) {
+            nslots = itemHandler.getSlots();
+            int slotsPerRow = itemHandler.getSlots();
+            if (itemHandler.getSlots() > 9)
+                slotsPerRow = itemHandler.getSlots() / 2;
             int xStart = (2 * 8 + 9 * 18 - slotsPerRow * 18) / 2;
             int yStart = 17 + 18;
-            if (h.getSlots() > 9)
+            if (itemHandler.getSlots() > 9)
                 yStart = 17 + (84 - 36 - 23) / 2;
-            for (int j = 0; j < h.getSlots(); j++) {
+            for (int j = 0; j < itemHandler.getSlots(); j++) {
                 int row = j / slotsPerRow;
                 int col = j % slotsPerRow;
                 int xPos = xStart + col * 18;
                 int yPos = yStart + row * 18;
-                this.addSlot(new FoodSlot(h, j, xPos, yPos));
+                this.addSlot(new FoodSlot(itemHandler, j, xPos, yPos));
             }
-        });
+        }
         
         layoutPlayerInventorySlots(8, 84);
     }
