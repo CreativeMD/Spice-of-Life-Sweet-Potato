@@ -20,6 +20,7 @@ import team.creative.creativecore.common.network.CreativeNetwork;
 import team.creative.creativecore.common.util.mc.PlayerUtils;
 import team.creative.solonion.api.BenefitCapability;
 import team.creative.solonion.api.FoodCapability;
+import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.client.SOLOnionClient;
 import team.creative.solonion.common.command.FoodListCommand;
 import team.creative.solonion.common.event.SOLOnionEvent;
@@ -30,7 +31,7 @@ import team.creative.solonion.common.network.FoodListMessage;
 public final class SOLOnion {
     
     public static boolean isActive(Player player) {
-        return !SOLOnion.CONFIG.limitProgressionToSurvival || PlayerUtils.getGameType(player).isSurvival();
+        return (!SOLOnion.CONFIG.limitProgressionToSurvival || PlayerUtils.getGameType(player).isSurvival()) && SOLOnionAPI.isPresent(player);
     }
     
     public static final String MODID = "solonion";

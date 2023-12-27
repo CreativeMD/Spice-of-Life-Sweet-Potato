@@ -23,6 +23,10 @@ public final class SOLOnionAPI {
         return player.getCapability(BENEFIT_CAP).orElseThrow(() -> new RuntimeException("Player must have benefit capability attached, but none was found."));
     }
     
+    public static boolean isPresent(Player player) {
+        return player.getCapability(FOOD_CAP).isPresent() && player.getCapability(BENEFIT_CAP).isPresent();
+    }
+    
     public static void syncFoodList(Player player) {
         SOLOnion.EVENT.syncFoodList(player);
     }
