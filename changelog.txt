@@ -1,3 +1,6 @@
+1.2.2
+Fixed potential crash when capabilities are not available
+
 1.2.1
 Adapted to CreativeCore Iterable changes
 
