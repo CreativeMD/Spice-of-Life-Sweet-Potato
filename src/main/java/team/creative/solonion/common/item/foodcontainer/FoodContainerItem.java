@@ -23,10 +23,11 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.NetworkHooks;
 import team.creative.solonion.api.FoodCapability;
+import team.creative.solonion.api.OnionFoodContainer;
 import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.common.SOLOnion;
 
-public class FoodContainerItem extends Item {
+public class FoodContainerItem extends Item implements OnionFoodContainer {
     
     private String displayName;
     private int nslots;
@@ -100,6 +101,18 @@ public class FoodContainerItem extends Item {
         if (bag.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent())
             return (ItemStackHandler) bag.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve().get();
         return null;
+    }
+    
+    @Override
+    public ItemStack getActualFood(Player player, ItemStack stack) {
+        ItemStackHandler handler = getInventory(stack);
+        if (handler == null)
+            return ItemStack.EMPTY;
+        
+        int bestFoodSlot = getBestFoodSlot(handler, player);
+        if (bestFoodSlot < 0)
+            return ItemStack.EMPTY;
+        return handler.getStackInSlot(bestFoodSlot).copy();
     }
     
     @Override

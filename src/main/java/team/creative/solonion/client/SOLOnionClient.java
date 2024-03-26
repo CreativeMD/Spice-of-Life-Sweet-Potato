@@ -19,6 +19,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import team.creative.solonion.api.FoodCapability;
+import team.creative.solonion.api.OnionFoodContainer;
 import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.client.gui.screen.FoodBookScreen;
 import team.creative.solonion.client.gui.screen.FoodContainerScreen;
@@ -64,6 +65,9 @@ public class SOLOnionClient {
             return;
         
         ItemStack stack = event.getItemStack();
+        if (stack.getItem() instanceof OnionFoodContainer c)
+            stack = c.getActualFood(player, stack);
+        
         if (!stack.isEdible())
             return;
         
