@@ -1,5 +1,8 @@
 1.2.3
 Added compatibility with neoforge 20.4.80-beta
+Added OnionFoodContainer interface
+Fixed lunchbox incorrect tooltip
+Added showDisabledTooltip to client config
 
 1.2.2
 Fixed potential crash when capabilities are not available
