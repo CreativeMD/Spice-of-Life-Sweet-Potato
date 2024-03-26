@@ -20,10 +20,11 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import team.creative.solonion.api.FoodCapability;
+import team.creative.solonion.api.OnionFoodContainer;
 import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.common.SOLOnion;
 
-public class FoodContainerItem extends Item {
+public class FoodContainerItem extends Item implements OnionFoodContainer {
     
     private String displayName;
     public final int nslots;
@@ -89,6 +90,18 @@ public class FoodContainerItem extends Item {
     @Nullable
     public static ItemStackHandler getInventory(ItemStack bag) {
         return (ItemStackHandler) bag.getCapability(Capabilities.ItemHandler.ITEM);
+    }
+    
+    @Override
+    public ItemStack getActualFood(Player player, ItemStack stack) {
+        ItemStackHandler handler = getInventory(stack);
+        if (handler == null)
+            return ItemStack.EMPTY;
+        
+        int bestFoodSlot = getBestFoodSlot(handler, player);
+        if (bestFoodSlot < 0)
+            return ItemStack.EMPTY;
+        return handler.getStackInSlot(bestFoodSlot).copy();
     }
     
     @Override
