@@ -1,3 +1,8 @@
+1.2.3
+Added OnionFoodContainer interface
+Fixed lunchbox incorrect tooltip
+Added showDisabledTooltip to client config
+
 1.2.2
 Fixed potential crash when capabilities are not available
 
