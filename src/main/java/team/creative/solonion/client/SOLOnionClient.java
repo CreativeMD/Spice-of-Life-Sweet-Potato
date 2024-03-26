@@ -75,7 +75,8 @@ public class SOLOnionClient {
         boolean isAllowed = SOLOnion.CONFIG.isAllowed(stack);
         
         if (!isAllowed) {
-            tooltip.add(Component.translatable("gui.solonion.tooltip.disabled").withStyle(style -> style.applyFormat(ChatFormatting.DARK_GRAY)));
+            if (SOLOnion.CONFIG.showDisabledTooltip)
+                tooltip.add(Component.translatable("gui.solonion.tooltip.disabled").withStyle(style -> style.applyFormat(ChatFormatting.DARK_GRAY)));
             return;
         }
         
