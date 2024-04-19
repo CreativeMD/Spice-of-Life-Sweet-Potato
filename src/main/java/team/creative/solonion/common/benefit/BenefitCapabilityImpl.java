@@ -26,6 +26,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.entity.living.MobEffectEvent;
 import team.creative.solonion.api.BenefitCapability;
 import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.common.mod.FirstAidManager;
@@ -41,6 +42,12 @@ public class BenefitCapabilityImpl implements BenefitCapability {
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction side) {
         return capability == SOLOnionAPI.BENEFIT_CAP ? capabilityOptional.cast() : LazyOptional.empty();
+    }
+    
+    @Override
+    public void onEffectRemove(MobEffectEvent.Remove event) {
+        if (appliedEffects.contains(event.getEffect()))
+            event.setCanceled(true);
     }
     
     @Override
