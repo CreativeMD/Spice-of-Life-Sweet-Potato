@@ -145,4 +145,10 @@ public class SOLOnionEvent {
         syncFoodList(player);
     }
     
+    @SubscribeEvent
+    public void onEffectRemove(MobEffectEvent.Remove event) {
+        if (event.getEntity() instanceof Player player)
+            SOLOnionAPI.getBenefitCapability(player).onEffectRemove(event);
+    }
+    
 }

@@ -9,4 +9,6 @@ public interface BenefitCapability extends INBTSerializable<CompoundTag> {
     
     public void updateStack(Player player, BenefitStack benefits);
     
+    public void onEffectRemove(MobEffectEvent.Remove event);
+    
 }

@@ -29,6 +29,12 @@ public class BenefitCapabilityImpl implements BenefitCapability {
     private List<MobEffect> appliedEffects;
     
     @Override
+    public void onEffectRemove(MobEffectEvent.Remove event) {
+        if (appliedEffects.contains(event.getEffect()))
+            event.setCanceled(true);
+    }
+    
+    @Override
     public void updateStack(Player player, BenefitStack benefits) {
         if (appliedAttributes != null && !appliedAttributes.isEmpty()) {
             for (Entry<Attribute, AttributeModifier> entry : appliedAttributes.entrySet())
