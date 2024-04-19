@@ -23,6 +23,7 @@ import team.creative.solonion.api.FoodCapability;
 import team.creative.solonion.api.OnionFoodContainer;
 import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.common.SOLOnion;
+import team.creative.solonion.common.mod.OriginsManager;
 
 public class FoodContainerItem extends Item implements OnionFoodContainer {
     
@@ -58,7 +59,7 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
     
     private InteractionResultHolder<ItemStack> processRightClick(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (isInventoryEmpty(stack) || (ModList.get().isLoaded("origins")/* && Origins.hasRestrictedDiet(player)*/))
+        if (isInventoryEmpty(player, stack))
             return InteractionResultHolder.pass(stack);
         
         if (player.canEat(false)) {
@@ -68,14 +69,14 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
         return InteractionResultHolder.fail(stack);
     }
     
-    private static boolean isInventoryEmpty(ItemStack container) {
+    private static boolean isInventoryEmpty(Player player, ItemStack container) {
         ItemStackHandler handler = getInventory(container);
         if (handler == null)
             return true;
         
         for (int i = 0; i < handler.getSlots(); i++) {
             ItemStack stack = handler.getStackInSlot(i);
-            if (!stack.isEmpty() && stack.isEdible())
+            if (!stack.isEmpty() && stack.isEdible() && OriginsManager.isEdible(player, stack))
                 return false;
         }
         return true;
@@ -120,7 +121,7 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
         
         ItemStack bestFood = handler.getStackInSlot(bestFoodSlot);
         ItemStack foodCopy = bestFood.copy();
-        if (bestFood.isEdible() && !bestFood.isEmpty()) {
+        if (bestFood.isEdible() && !bestFood.isEmpty() && OriginsManager.isEdible(player, foodCopy)) {
             ItemStack result = bestFood.finishUsingItem(world, entity);
             // put bowls/bottles etc. into player inventory
             if (!result.isEdible()) {
@@ -151,7 +152,7 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
         for (int i = 0; i < handler.getSlots(); i++) {
             ItemStack food = handler.getStackInSlot(i);
             
-            if (!food.isEdible() || food.isEmpty())
+            if (!food.isEdible() || food.isEmpty() || !OriginsManager.isEdible(player, food))
                 continue;
             
             double diversityChange = foodList.simulateEat(player, food);
