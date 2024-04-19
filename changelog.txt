@@ -1,3 +1,6 @@
+1.2.4
+Fixed drinking milk removing all beneficial effects
+
 1.2.3
 Added compatibility with neoforge 20.4.80-beta
 Added OnionFoodContainer interface
