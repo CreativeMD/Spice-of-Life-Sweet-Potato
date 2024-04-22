@@ -46,7 +46,7 @@ public class BenefitCapabilityImpl implements BenefitCapability {
     
     @Override
     public void onEffectRemove(MobEffectEvent.Remove event) {
-        if (appliedEffects.contains(event.getEffect()))
+        if (appliedEffects != null && appliedEffects.contains(event.getEffect()))
             event.setCanceled(true);
     }
     
