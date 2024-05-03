@@ -1,3 +1,6 @@
+1.2.6
+Fixed Origins Forge compatibility (by MerchantPug)
+
 1.2.5
 Fixed game crashing when removing mob effect
 
