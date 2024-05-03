@@ -32,7 +32,7 @@ public class OriginsManager {
         if (isUsagePrevented == null)
             return true;
         try {
-            return (boolean) isUsagePrevented.invoke(null, player, food);
+            return !(boolean) isUsagePrevented.invoke(null, player, food);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             SOLOnion.LOGGER.error("Something went wrong with Origins compatibility layer!", e);
             return false;
