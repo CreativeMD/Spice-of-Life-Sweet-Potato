@@ -6,9 +6,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jetbrains.annotations.UnknownNullability;
+
 import it.unimi.dsi.fastutil.objects.Object2DoubleArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap.Entry;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -17,10 +19,10 @@ import team.creative.creativecore.common.util.type.itr.ArrayOffsetIterator;
 import team.creative.creativecore.common.util.type.itr.FilterIterator;
 import team.creative.creativecore.common.util.type.list.Tuple;
 import team.creative.creativecore.common.util.type.list.TupleList;
-import team.creative.solonion.api.FoodCapability;
+import team.creative.solonion.api.FoodPlayerData;
 import team.creative.solonion.common.SOLOnion;
 
-public final class FoodCapabilityImpl implements FoodCapability {
+public final class FoodPlayerDataImpl implements FoodPlayerData {
     
     private static double calculateDiversity(Iterable<ItemStack> stacks, LivingEntity entity) {
         Object2DoubleArrayMap<Item> types = new Object2DoubleArrayMap<>();
@@ -75,29 +77,27 @@ public final class FoodCapabilityImpl implements FoodCapability {
     private int startIndex = lastEaten.length - 1;
     private double diversityCache = -1;
     
-    public FoodCapabilityImpl() {}
+    public FoodPlayerDataImpl() {}
     
     private void updateDiversity(LivingEntity entity) {
         diversityCache = calculateDiversity(this, entity);
     }
     
-    /** used for persistent storage */
     @Override
-    public ListTag serializeNBT() {
+    public @UnknownNullability ListTag serializeNBT(Provider provider) {
         ListTag list = new ListTag();
         for (ItemStack stack : this)
-            list.add(stack.save(new CompoundTag()));
+            list.add(stack.save(provider));
         
         return list;
     }
     
-    /** used for persistent storage */
     @Override
-    public void deserializeNBT(ListTag tag) {
+    public void deserializeNBT(Provider provider, ListTag tag) {
         if (tag == null)
             return;
         for (int i = 0; i < lastEaten.length; i++)
-            lastEaten[i] = i < tag.size() ? ItemStack.of(tag.getCompound(i)) : null;
+            lastEaten[i] = i < tag.size() ? ItemStack.parseOptional(provider, tag.getCompound(i)) : null;
         startIndex = 0;
         
         diversityCache = -1;
@@ -149,7 +149,7 @@ public final class FoodCapabilityImpl implements FoodCapability {
     
     @Override
     public int getLastEaten(LivingEntity entity, ItemStack food) {
-        if (!food.isEdible())
+        if (food.getFoodProperties(entity) == null)
             return -1;
         
         double d = SOLOnion.CONFIG.getDiversity(entity, food);
@@ -164,7 +164,7 @@ public final class FoodCapabilityImpl implements FoodCapability {
     
     @Override
     public boolean hasEaten(LivingEntity entity, ItemStack food) {
-        if (!food.isEdible())
+        if (food.getFoodProperties(entity) == null)
             return false;
         double d = SOLOnion.CONFIG.getDiversity(entity, food);
         for (ItemStack stack : this)

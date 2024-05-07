@@ -21,7 +21,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerRespawnEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import team.creative.solonion.api.FoodCapability;
+import team.creative.solonion.api.FoodPlayerData;
 import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.common.SOLOnion;
 import team.creative.solonion.common.benefit.BenefitStack;
@@ -42,7 +42,7 @@ public class SOLOnionEvent {
         if (player.getCommandSenderWorld().isClientSide)
             return;
         
-        FoodCapability foodList = SOLOnionAPI.getFoodCapability(player);
+        FoodPlayerData foodList = SOLOnionAPI.getFoodCapability(player);
         if (foodList.trackCount() < SOLOnion.CONFIG.minFoodsToActivate)
             return;
         
@@ -76,9 +76,9 @@ public class SOLOnionEvent {
         
         Player originalPlayer = event.getOriginal();
         //originalPlayer.reviveCaps(); // so we can access the capabilities; entity will get removed either way
-        FoodCapability original = SOLOnionAPI.getFoodCapability(originalPlayer);
-        FoodCapability newInstance = SOLOnionAPI.getFoodCapability(event.getEntity());
-        newInstance.deserializeNBT(original.serializeNBT());
+        FoodPlayerData original = SOLOnionAPI.getFoodCapability(originalPlayer);
+        FoodPlayerData newInstance = SOLOnionAPI.getFoodCapability(event.getEntity());
+        newInstance.deserializeNBT(event.getEntity().registryAccess(), original.serializeNBT(event.getEntity().registryAccess()));
         // can't sync yet; client hasn't attached capabilities yet
         
         updatePlayerBenefits(event.getEntity());
@@ -94,7 +94,7 @@ public class SOLOnionEvent {
         if (player.level().isClientSide)
             return;
         
-        SOLOnion.NETWORK.sendToClient(new FoodListMessage(SOLOnionAPI.getFoodCapability(player)), (ServerPlayer) player);
+        SOLOnion.NETWORK.sendToClient(new FoodListMessage(player.registryAccess(), SOLOnionAPI.getFoodCapability(player)), (ServerPlayer) player);
     }
     
     @SubscribeEvent
@@ -107,7 +107,7 @@ public class SOLOnionEvent {
             return;
         
         ItemStack usedItem = event.getItem();
-        if (!usedItem.isEdible() && usedItem.getItem() != Items.CAKE)
+        if (usedItem.getFoodProperties(player) == null && usedItem.getItem() != Items.CAKE)
             return;
         if (usedItem.getItem() instanceof FoodContainerItem)
             return;
@@ -140,7 +140,7 @@ public class SOLOnionEvent {
     }
     
     public void eat(ItemStack food, Player player) {
-        FoodCapability foodList = SOLOnionAPI.getFoodCapability(player);
+        FoodPlayerData foodList = SOLOnionAPI.getFoodCapability(player);
         foodList.eat(player, food);
         updatePlayerBenefits(player);
         syncFoodList(player);

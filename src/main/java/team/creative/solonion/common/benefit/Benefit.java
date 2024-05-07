@@ -1,10 +1,14 @@
 package team.creative.solonion.common.benefit;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -32,12 +36,12 @@ import team.creative.creativecore.common.util.text.TextMapBuilder;
 public class Benefit<T> {
     
     static {
-        ConfigTypeConveration.registerTypeCreator(Benefit.class, () -> create(Attributes.MAX_HEALTH, 2));
+        ConfigTypeConveration.registerTypeCreator(Benefit.class, () -> createAttribute(Attributes.MAX_HEALTH, 2));
         
         ConfigTypeConveration.registerType(Benefit.class, new ConfigTypeConveration<Benefit>() {
             
             @Override
-            public Benefit readElement(Benefit defaultValue, boolean loadDefault, boolean ignoreRestart, JsonElement element, Side side, ConfigKeyField key) {
+            public Benefit readElement(Provider provider, Benefit defaultValue, boolean loadDefault, boolean ignoreRestart, JsonElement element, Side side, @Nullable ConfigKeyField key) {
                 if (element.isJsonObject()) {
                     JsonObject object = element.getAsJsonObject();
                     if (object.has("attribute"))
@@ -48,7 +52,7 @@ public class Benefit<T> {
             }
             
             @Override
-            public JsonElement writeElement(Benefit value, Benefit defaultValue, boolean saveDefault, boolean ignoreRestart, Side side, ConfigKeyField key) {
+            public JsonElement writeElement(Provider provider, Benefit value, Benefit defaultValue, boolean saveDefault, boolean ignoreRestart, Side side, @Nullable ConfigKeyField key) {
                 JsonObject object = new JsonObject();
                 if (value.property.registry == BuiltInRegistries.ATTRIBUTE)
                     object.addProperty("attribute", value.property.location.toString());
@@ -119,18 +123,16 @@ public class Benefit<T> {
         });
     }
     
-    public static Benefit<Attribute> create(Attribute attribute, double value) {
-        Registry<Attribute> reg = BuiltInRegistries.ATTRIBUTE;
-        return new Benefit<>(new RegistryObjectConfig<>(reg, reg.getKey(attribute)), value);
+    public static Benefit<Attribute> createAttribute(Holder<Attribute> attribute, double value) {
+        return new Benefit<>(new RegistryObjectConfig<>(BuiltInRegistries.ATTRIBUTE, attribute.unwrapKey().get().location()), value);
     }
     
     public static Benefit<Attribute> createAttribute(ResourceLocation location, double value) {
         return new Benefit<>(new RegistryObjectConfig<>(BuiltInRegistries.ATTRIBUTE, location), value);
     }
     
-    public static Benefit<MobEffect> create(MobEffect mob, double value) {
-        Registry<MobEffect> reg = BuiltInRegistries.MOB_EFFECT;
-        return new Benefit<>(new RegistryObjectConfig<>(reg, reg.getKey(mob)), value);
+    public static Benefit<MobEffect> createMobEffect(Holder<MobEffect> mob, double value) {
+        return new Benefit<>(new RegistryObjectConfig<>(BuiltInRegistries.MOB_EFFECT, mob.unwrapKey().get().location()), value);
     }
     
     public static Benefit<MobEffect> createMobEffect(ResourceLocation location, double value) {

@@ -6,7 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -23,10 +22,8 @@ import team.creative.creativecore.common.network.CreativeNetwork;
 import team.creative.creativecore.common.util.mc.PlayerUtils;
 import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.client.SOLOnionClient;
-import team.creative.solonion.common.benefit.BenefitCapabilityImpl;
 import team.creative.solonion.common.command.FoodListCommand;
 import team.creative.solonion.common.event.SOLOnionEvent;
-import team.creative.solonion.common.food.FoodCapabilityImpl;
 import team.creative.solonion.common.item.SOLOnionItems;
 import team.creative.solonion.common.item.foodcontainer.FoodContainerItem;
 import team.creative.solonion.common.network.FoodListMessage;
@@ -35,7 +32,7 @@ import team.creative.solonion.common.network.FoodListMessage;
 public final class SOLOnion {
     
     public static boolean isActive(Player player) {
-        return (!SOLOnion.CONFIG.limitProgressionToSurvival || PlayerUtils.getGameType(player).isSurvival()) && SOLOnionAPI.isPresent(player);
+        return (!SOLOnion.CONFIG.limitProgressionToSurvival || PlayerUtils.getGameType(player).isSurvival());
     }
     
     public static final String MODID = "solonion";
@@ -52,6 +49,7 @@ public final class SOLOnion {
         SOLOnionItems.MENU_TYPES.register(bus);
         bus.addListener(SOLOnionItems::registerTabs);
         NeoForge.EVENT_BUS.addListener(this::command);
+        SOLOnionAPI.ATTACHMENT_TYPES.register(bus);
     }
     
     public void setup(FMLCommonSetupEvent event) {
@@ -62,9 +60,6 @@ public final class SOLOnion {
     }
     
     public void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerEntity(SOLOnionAPI.BENEFIT_CAP, EntityType.PLAYER, (x, y) -> new BenefitCapabilityImpl());
-        event.registerEntity(SOLOnionAPI.FOOD_CAP, EntityType.PLAYER, (x, y) -> new FoodCapabilityImpl());
-        
         event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new ItemStackHandler(((FoodContainerItem) itemStack.getItem()).nslots), SOLOnionItems.LUNCHBOX
                 .get(), SOLOnionItems.LUNCHBAG.get(), SOLOnionItems.GOLDEN_LUNCHBOX.get());
     }

@@ -20,6 +20,6 @@ public class FoodSlot extends SlotItemHandler {
     }
     
     public static boolean canHold(@Nonnull ItemStack stack) {
-        return stack.isEdible();
+        return stack.getFoodProperties(null) != null;
     }
 }

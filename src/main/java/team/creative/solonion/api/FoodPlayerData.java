@@ -5,7 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
-public interface FoodCapability extends INBTSerializable<ListTag>, Iterable<ItemStack> {
+public interface FoodPlayerData extends INBTSerializable<ListTag>, Iterable<ItemStack> {
     
     public void eat(LivingEntity entity, ItemStack stack);
     

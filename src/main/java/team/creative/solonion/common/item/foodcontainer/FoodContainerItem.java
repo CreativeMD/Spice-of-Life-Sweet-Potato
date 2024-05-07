@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.items.ItemStackHandler;
-import team.creative.solonion.api.FoodCapability;
+import team.creative.solonion.api.FoodPlayerData;
 import team.creative.solonion.api.OnionFoodContainer;
 import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.common.SOLOnion;
@@ -30,20 +30,10 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
     public final int nslots;
     
     public FoodContainerItem(int nslots, String displayName) {
-        super(new Properties().stacksTo(1).setNoRepair());
+        super(new Properties().stacksTo(1).setNoRepair().food(new FoodProperties.Builder().build()));
         
         this.displayName = displayName;
         this.nslots = nslots;
-    }
-    
-    @Override
-    public boolean isEdible() {
-        return true;
-    }
-    
-    @Override
-    public FoodProperties getFoodProperties() {
-        return new FoodProperties.Builder().build();
     }
     
     @Override
@@ -75,16 +65,16 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
         
         for (int i = 0; i < handler.getSlots(); i++) {
             ItemStack stack = handler.getStackInSlot(i);
-            if (!stack.isEmpty() && stack.isEdible() && OriginsManager.isEdible(player, stack))
+            if (!stack.isEmpty() && stack.getFoodProperties(player) != null && OriginsManager.isEdible(player, stack))
                 return false;
         }
         return true;
     }
     
     @Override
-    public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         tooltip.add(Component.translatable("item." + SOLOnion.MODID + ".container.open"));
-        super.appendHoverText(stack, level, tooltip, flag);
+        super.appendHoverText(stack, context, tooltip, flag);
     }
     
     @Nullable
@@ -120,10 +110,10 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
         
         ItemStack bestFood = handler.getStackInSlot(bestFoodSlot);
         ItemStack foodCopy = bestFood.copy();
-        if (bestFood.isEdible() && !bestFood.isEmpty() && OriginsManager.isEdible(player, foodCopy)) {
+        if (bestFood.getFoodProperties(player) != null && !bestFood.isEmpty() && OriginsManager.isEdible(player, foodCopy)) {
             ItemStack result = bestFood.finishUsingItem(world, entity);
             // put bowls/bottles etc. into player inventory
-            if (!result.isEdible()) {
+            if (result.getFoodProperties(player) == null) {
                 handler.setStackInSlot(bestFoodSlot, ItemStack.EMPTY);
                 Player playerEntity = (Player) entity;
                 
@@ -144,14 +134,14 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
     }
     
     public static int getBestFoodSlot(ItemStackHandler handler, Player player) {
-        FoodCapability foodList = SOLOnionAPI.getFoodCapability(player);
+        FoodPlayerData foodList = SOLOnionAPI.getFoodCapability(player);
         
         double maxDiversity = -Double.MAX_VALUE;
         int bestFoodSlot = -1;
         for (int i = 0; i < handler.getSlots(); i++) {
             ItemStack food = handler.getStackInSlot(i);
             
-            if (!food.isEdible() || food.isEmpty() || !OriginsManager.isEdible(player, food))
+            if (food.getFoodProperties(player) == null || food.isEmpty() || !OriginsManager.isEdible(player, food))
                 continue;
             
             double diversityChange = foodList.simulateEat(player, food);

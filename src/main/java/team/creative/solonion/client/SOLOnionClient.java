@@ -7,18 +7,19 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.TickEvent.ClientTickEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
-import team.creative.solonion.api.FoodCapability;
+import team.creative.solonion.api.FoodPlayerData;
 import team.creative.solonion.api.OnionFoodContainer;
 import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.client.gui.screen.FoodBookScreen;
@@ -32,6 +33,7 @@ public class SOLOnionClient {
     
     public static void load(IEventBus bus) {
         bus.addListener(SOLOnionClient::setupClient);
+        bus.addListener(SOLOnionClient::registerMenu);
         bus.addListener(SOLOnionClient::registerKeybinds);
         NeoForge.EVENT_BUS.addListener(SOLOnionClient::handleKeypress);
         NeoForge.EVENT_BUS.addListener(EventPriority.LOW, SOLOnionClient::onItemTooltip);
@@ -39,14 +41,18 @@ public class SOLOnionClient {
     }
     
     public static void setupClient(FMLClientSetupEvent event) {
-        event.enqueueWork(() -> MenuScreens.register(SOLOnionItems.FOOD_CONTAINER.get(), FoodContainerScreen::new));
+        
+    }
+    
+    public static void registerMenu(RegisterMenuScreensEvent event) {
+        event.register(SOLOnionItems.FOOD_CONTAINER.get(), FoodContainerScreen::new);
     }
     
     public static void registerKeybinds(RegisterKeyMappingsEvent event) {
         event.register(OPEN_FOOD_BOOK = new KeyMapping("key.solonion.open_food_book", InputConstants.UNKNOWN.getValue(), "key.solonion.category"));
     }
     
-    public static void handleKeypress(ClientTickEvent event) {
+    public static void handleKeypress(ClientTickEvent.Post event) {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
         if (player == null)
@@ -68,10 +74,11 @@ public class SOLOnionClient {
         if (stack.getItem() instanceof OnionFoodContainer c)
             stack = c.getActualFood(player, stack);
         
-        if (!stack.isEdible())
+        FoodProperties foodproperties = stack.getFoodProperties(player);
+        if (foodproperties == null)
             return;
         
-        FoodCapability food = SOLOnionAPI.getFoodCapability(player);
+        FoodPlayerData food = SOLOnionAPI.getFoodCapability(player);
         addTooltip(food.simulateEat(player, stack), food.getLastEaten(player, stack), stack, event.getToolTip(), player);
     }
     

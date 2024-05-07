@@ -4,16 +4,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.mojang.datafixers.util.Pair;
-
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.food.FoodProperties.PossibleEffect;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
@@ -32,7 +30,7 @@ import team.creative.solonion.common.food.FoodProperty;
 public final class SOLOnionConfig implements ICreativeConfig {
     
     static {
-        ConfigTypeConveration.registerTypeCreator(BenefitThreshold.class, () -> new BenefitThreshold(3, Benefit.create(Attributes.MAX_HEALTH, 2)));
+        ConfigTypeConveration.registerTypeCreator(BenefitThreshold.class, () -> new BenefitThreshold(3, Benefit.createAttribute(Attributes.MAX_HEALTH, 2)));
         ConfigTypeConveration.registerTypeCreator(FoodProperty.class, () -> new FoodProperty(new CreativeIngredientItem(Items.GOLDEN_CARROT), 2));
     }
     
@@ -54,10 +52,11 @@ public final class SOLOnionConfig implements ICreativeConfig {
     public int minFoodsToActivate = 0;
     
     @CreativeConfig
-    public List<BenefitThreshold> benefits = Arrays.asList(new BenefitThreshold(3, Benefit.create(Attributes.MAX_HEALTH, 2)), new BenefitThreshold(5, Benefit.create(
-        MobEffects.DAMAGE_BOOST, 0)), new BenefitThreshold(7, Benefit.create(MobEffects.REGENERATION, 0)), new BenefitThreshold(10, Benefit.create(MobEffects.MOVEMENT_SPEED, 0)),
-        new BenefitThreshold(13, Benefit.create(Attributes.ARMOR_TOUGHNESS, 2)), new BenefitThreshold(18, Benefit.create(MobEffects.DAMAGE_BOOST, 1)),
-        new BenefitThreshold(25, Benefit.create(Attributes.MAX_HEALTH, 4)), new BenefitThreshold(31, Benefit.create(Attributes.MAX_HEALTH, 6)));
+    public List<BenefitThreshold> benefits = Arrays.asList(new BenefitThreshold(3, Benefit.createAttribute(Attributes.MAX_HEALTH, 2)), new BenefitThreshold(5, Benefit
+            .createMobEffect(MobEffects.DAMAGE_BOOST, 0)), new BenefitThreshold(7, Benefit.createMobEffect(MobEffects.REGENERATION, 0)), new BenefitThreshold(10, Benefit
+                    .createMobEffect(MobEffects.MOVEMENT_SPEED, 0)), new BenefitThreshold(13, Benefit.createAttribute(Attributes.ARMOR_TOUGHNESS, 2)),
+        new BenefitThreshold(18, Benefit.createMobEffect(MobEffects.DAMAGE_BOOST, 1)), new BenefitThreshold(25, Benefit.createAttribute(Attributes.MAX_HEALTH, 4)),
+        new BenefitThreshold(31, Benefit.createAttribute(Attributes.MAX_HEALTH, 6)));
     
     @CreativeConfig
     public boolean shouldExcludedCount = true;
@@ -115,9 +114,9 @@ public final class SOLOnionConfig implements ICreativeConfig {
                 return property.diversity;
         FoodProperties prop = food.getItem().getFoodProperties(food, entity);
         if (prop != null) {
-            double diversity = (prop.getNutrition() / complexityStandardNutrition) * (prop.getSaturationModifier() / complexityStandardSaturation);
-            for (Pair<MobEffectInstance, Float> pair : prop.getEffects())
-                diversity += (pair.getFirst().getAmplifier() + 1) * getModifierPerCategory(pair.getFirst().getEffect().getCategory()) * pair.getSecond();
+            double diversity = (prop.nutrition() / complexityStandardNutrition) * (prop.saturation() / complexityStandardSaturation);
+            for (PossibleEffect effect : prop.effects())
+                diversity += (effect.effect().getAmplifier() + 1) * getModifierPerCategory(effect.effect().getEffect().value().getCategory()) * effect.probability();
             return diversity;
         }
         return 0;

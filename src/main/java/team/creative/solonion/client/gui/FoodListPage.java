@@ -10,7 +10,7 @@ import team.creative.creativecore.common.util.mc.LanguageUtils;
 import team.creative.creativecore.common.util.type.list.Tuple;
 import team.creative.solonion.client.gui.elements.UIFoodQueueItem;
 import team.creative.solonion.client.gui.elements.UIItemStack;
-import team.creative.solonion.common.food.FoodCapabilityImpl;
+import team.creative.solonion.common.food.FoodPlayerDataImpl;
 
 public final class FoodListPage extends ItemListPage {
     
@@ -23,7 +23,7 @@ public final class FoodListPage extends ItemListPage {
         int minY = (1 - rowsPerPage) * itemSpacing / 2 - 4;
         
         int i = 0;
-        for (Tuple<ItemStack, Double> tuple : FoodCapabilityImpl.calculateDiversityIndividualy(items, player)) {
+        for (Tuple<ItemStack, Double> tuple : FoodPlayerDataImpl.calculateDiversityIndividualy(items, player)) {
             ItemStack itemStack = tuple.key;
             int x = minX + itemSpacing * (i % itemsPerRow);
             int y = minY + itemSpacing * ((i / itemsPerRow) % rowsPerPage);
