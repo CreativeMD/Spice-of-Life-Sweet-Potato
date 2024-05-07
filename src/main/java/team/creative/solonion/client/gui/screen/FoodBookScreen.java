@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import team.creative.creativecore.common.util.mc.LanguageUtils;
-import team.creative.solonion.api.FoodCapability;
+import team.creative.solonion.api.FoodPlayerData;
 import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.client.gui.BenefitsPage;
 import team.creative.solonion.client.gui.DiversityPage;
@@ -50,7 +50,7 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
     private PageFlipButton prevPageButton;
     
     private Player player;
-    private FoodCapability foodData;
+    private FoodPlayerData foodData;
     
     private final List<Page> pages = new ArrayList<>();
     private int currentPageNumber = 0;
@@ -128,8 +128,11 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
     }
     
     @Override
+    protected void renderBlurredBackground(float partialTicks) {}
+    
+    @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        renderBackground(graphics, mouseX, mouseY, partialTicks);
+        //renderBackground(graphics, mouseX, mouseY, partialTicks);
         
         UIElement.render(graphics, background, mouseX, mouseY);
         

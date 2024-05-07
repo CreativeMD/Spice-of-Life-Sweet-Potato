@@ -8,6 +8,7 @@ import java.util.List;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item.TooltipContext;
 import net.minecraft.world.item.ItemStack;
 
 public class UIItemStack extends UIElement {
@@ -35,7 +36,7 @@ public class UIItemStack extends UIElement {
     
     @Override
     protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
-        List<Component> tooltip = itemStack.getTooltipLines(mc.player, mc.options.advancedItemTooltips ? ADVANCED : NORMAL);
+        List<Component> tooltip = itemStack.getTooltipLines(TooltipContext.of(mc.level), mc.player, mc.options.advancedItemTooltips ? ADVANCED : NORMAL);
         graphics.renderComponentTooltip(mc.font, tooltip, mouseX, mouseY);
     }
 }
