@@ -1,3 +1,6 @@
+1.2.7
+Added showDiversityChangeInTooltip config option
+
 1.2.6
 Fixed Origins Forge compatibility (by MerchantPug)
 
