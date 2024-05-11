@@ -96,8 +96,11 @@ public class SOLOnionClient {
             color = ChatFormatting.RED;
         else if (diversity > 0)
             color = ChatFormatting.GREEN;
-        tooltip.add(Component.translatable("gui.solonion.tooltip.diversity").append(": " + String.format("%.2f", SOLOnion.CONFIG.getDiversity(player, stack))).withStyle(
-            ChatFormatting.GRAY).append(" (").append(Component.literal(String.format("%.2f", diversity)).withStyle(color)).append(")"));
+        var text = Component.translatable("gui.solonion.tooltip.diversity").append(": " + String.format("%.2f", SOLOnion.CONFIG.getDiversity(player, stack))).withStyle(
+            ChatFormatting.GRAY);
+        if (SOLOnion.CONFIG.showDiversityChangeInTooltip)
+            text = text.append(" (").append(Component.literal(String.format("%.2f", diversity)).withStyle(color)).append(")");
+        tooltip.add(text);
         if (lastEaten != -1) {
             String last_eaten_path = "tooltip.last_eaten";
             if (lastEaten == 1)
