@@ -84,6 +84,8 @@ public final class SOLOnionConfig implements ICreativeConfig {
     @CreativeConfig(type = ConfigSynchronization.CLIENT)
     public boolean isFoodTooltipEnabled = true;
     @CreativeConfig(type = ConfigSynchronization.CLIENT)
+    public boolean showDiversityChangeInTooltip = true;
+    @CreativeConfig(type = ConfigSynchronization.CLIENT)
     public boolean showDisabledTooltip = true;
     @CreativeConfig(type = ConfigSynchronization.CLIENT)
     public boolean shouldShowInactiveBenefits = true;
