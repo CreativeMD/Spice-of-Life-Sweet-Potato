@@ -7,9 +7,6 @@ import java.util.Map.Entry;
 
 import org.jetbrains.annotations.UnknownNullability;
 
-import net.minecraft.core.Holder;
-import net.minecraft.core.Holder.Reference;
-import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -29,8 +26,8 @@ import team.creative.solonion.common.mod.FirstAidManager;
 
 public class BenefitPlayerDataImpl implements BenefitPlayerData {
     
-    private HashMap<Holder<Attribute>, AttributeModifier> appliedAttributes;
-    private List<Holder<MobEffect>> appliedEffects;
+    private HashMap<Attribute, AttributeModifier> appliedAttributes;
+    private List<MobEffect> appliedEffects;
     
     @Override
     public void onEffectRemove(MobEffectEvent.Remove event) {
@@ -41,13 +38,13 @@ public class BenefitPlayerDataImpl implements BenefitPlayerData {
     @Override
     public void updateStack(Player player, BenefitStack benefits) {
         if (appliedAttributes != null && !appliedAttributes.isEmpty()) {
-            for (Entry<Holder<Attribute>, AttributeModifier> entry : appliedAttributes.entrySet())
-                player.getAttribute(entry.getKey()).removeModifier(entry.getValue().id());
+            for (Entry<Attribute, AttributeModifier> entry : appliedAttributes.entrySet())
+                player.getAttribute(entry.getKey()).removeModifier(entry.getValue().getId());
             appliedAttributes.clear();
         }
         
         if (appliedEffects != null && !appliedEffects.isEmpty()) {
-            for (Holder<MobEffect> effect : appliedEffects)
+            for (MobEffect effect : appliedEffects)
                 player.removeEffect(effect);
             appliedEffects.clear();
         }
@@ -55,8 +52,8 @@ public class BenefitPlayerDataImpl implements BenefitPlayerData {
         if (benefits.isEmpty())
             return;
         
-        for (it.unimi.dsi.fastutil.objects.Object2DoubleMap.Entry<Holder<Attribute>> entry : benefits.attributes()) {
-            var modi = new AttributeModifier(entry.getKey().value().getDescriptionId(), entry.getDoubleValue(), Operation.ADD_VALUE);
+        for (it.unimi.dsi.fastutil.objects.Object2DoubleMap.Entry<Attribute> entry : benefits.attributes()) {
+            var modi = new AttributeModifier(entry.getKey().getDescriptionId(), entry.getDoubleValue(), Operation.ADDITION);
             var att = player.getAttribute(entry.getKey());
             if (att != null) {
                 float oldMax = player.getMaxHealth();
@@ -72,7 +69,7 @@ public class BenefitPlayerDataImpl implements BenefitPlayerData {
             }
         }
         
-        for (it.unimi.dsi.fastutil.objects.Object2IntMap.Entry<Holder<MobEffect>> entry : benefits.effects()) {
+        for (it.unimi.dsi.fastutil.objects.Object2IntMap.Entry<MobEffect> entry : benefits.effects()) {
             var in = new MobEffectInstance(entry.getKey(), -1, entry.getIntValue(), false, false);
             if (player.addEffect(in)) {
                 if (appliedEffects == null)
@@ -83,13 +80,13 @@ public class BenefitPlayerDataImpl implements BenefitPlayerData {
     }
     
     @Override
-    public @UnknownNullability CompoundTag serializeNBT(Provider provider) {
+    public @UnknownNullability CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         if (appliedAttributes != null && !appliedAttributes.isEmpty()) {
             ListTag list = new ListTag();
-            for (Entry<Holder<Attribute>, AttributeModifier> entry : appliedAttributes.entrySet()) {
+            for (Entry<Attribute, AttributeModifier> entry : appliedAttributes.entrySet()) {
                 CompoundTag tag = new CompoundTag();
-                tag.putString("att", entry.getKey().unwrapKey().get().location().toString());
+                tag.putString("att", BuiltInRegistries.ATTRIBUTE.getKey(entry.getKey()).toString());
                 tag.put("mod", entry.getValue().save());
                 list.add(tag);
             }
@@ -98,15 +95,15 @@ public class BenefitPlayerDataImpl implements BenefitPlayerData {
         
         if (appliedEffects != null && !appliedEffects.isEmpty()) {
             ListTag list = new ListTag();
-            for (Holder<MobEffect> effect : appliedEffects)
-                list.add(StringTag.valueOf(effect.unwrapKey().get().location().toString()));
+            for (MobEffect effect : appliedEffects)
+                list.add(StringTag.valueOf(effect.builtInRegistryHolder().key().location().toString()));
             nbt.put("eff", list);
         }
         return nbt;
     }
     
     @Override
-    public void deserializeNBT(Provider provider, CompoundTag nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         if (appliedAttributes != null)
             appliedAttributes.clear();
         if (appliedEffects != null)
@@ -120,7 +117,7 @@ public class BenefitPlayerDataImpl implements BenefitPlayerData {
             appliedAttributes = new HashMap<>();
             for (int i = 0; i < list.size(); i++) {
                 CompoundTag tag = list.getCompound(i);
-                Reference<Attribute> att = BuiltInRegistries.ATTRIBUTE.getHolder(new ResourceLocation(tag.getString("att"))).get();
+                Attribute att = BuiltInRegistries.ATTRIBUTE.get(new ResourceLocation(tag.getString("att")));
                 if (att != null)
                     appliedAttributes.put(att, AttributeModifier.load(tag.getCompound("mod")));
             }
@@ -130,7 +127,7 @@ public class BenefitPlayerDataImpl implements BenefitPlayerData {
         if (!list.isEmpty()) {
             appliedEffects = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
-                Reference<MobEffect> mob = BuiltInRegistries.MOB_EFFECT.getHolder(new ResourceLocation(list.getString(i))).get();
+                MobEffect mob = BuiltInRegistries.MOB_EFFECT.get(new ResourceLocation(list.getString(i)));
                 if (mob != null)
                     appliedEffects.add(mob);
             }

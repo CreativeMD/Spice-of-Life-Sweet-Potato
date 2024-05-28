@@ -10,7 +10,7 @@ import org.jetbrains.annotations.UnknownNullability;
 
 import it.unimi.dsi.fastutil.objects.Object2DoubleArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap.Entry;
-import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -84,20 +84,20 @@ public final class FoodPlayerDataImpl implements FoodPlayerData {
     }
     
     @Override
-    public @UnknownNullability ListTag serializeNBT(Provider provider) {
+    public @UnknownNullability ListTag serializeNBT() {
         ListTag list = new ListTag();
         for (ItemStack stack : this)
-            list.add(stack.save(provider));
+            list.add(stack.save(new CompoundTag()));
         
         return list;
     }
     
     @Override
-    public void deserializeNBT(Provider provider, ListTag tag) {
+    public void deserializeNBT(ListTag tag) {
         if (tag == null)
             return;
         for (int i = 0; i < lastEaten.length; i++)
-            lastEaten[i] = i < tag.size() ? ItemStack.parseOptional(provider, tag.getCompound(i)) : null;
+            lastEaten[i] = i < tag.size() ? ItemStack.of(tag.getCompound(i)) : null;
         startIndex = 0;
         
         diversityCache = -1;

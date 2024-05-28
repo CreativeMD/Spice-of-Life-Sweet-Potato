@@ -14,10 +14,10 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.TickEvent.ClientTickEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import team.creative.solonion.api.FoodPlayerData;
 import team.creative.solonion.api.OnionFoodContainer;
@@ -52,7 +52,7 @@ public class SOLOnionClient {
         event.register(OPEN_FOOD_BOOK = new KeyMapping("key.solonion.open_food_book", InputConstants.UNKNOWN.getValue(), "key.solonion.category"));
     }
     
-    public static void handleKeypress(ClientTickEvent.Post event) {
+    public static void handleKeypress(ClientTickEvent event) {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
         if (player == null)

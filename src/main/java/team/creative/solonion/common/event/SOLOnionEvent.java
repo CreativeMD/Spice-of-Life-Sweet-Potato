@@ -78,7 +78,7 @@ public class SOLOnionEvent {
         //originalPlayer.reviveCaps(); // so we can access the capabilities; entity will get removed either way
         FoodPlayerData original = SOLOnionAPI.getFoodCapability(originalPlayer);
         FoodPlayerData newInstance = SOLOnionAPI.getFoodCapability(event.getEntity());
-        newInstance.deserializeNBT(event.getEntity().registryAccess(), original.serializeNBT(event.getEntity().registryAccess()));
+        newInstance.deserializeNBT(original.serializeNBT());
         // can't sync yet; client hasn't attached capabilities yet
         
         updatePlayerBenefits(event.getEntity());
@@ -94,7 +94,7 @@ public class SOLOnionEvent {
         if (player.level().isClientSide)
             return;
         
-        SOLOnion.NETWORK.sendToClient(new FoodListMessage(player.registryAccess(), SOLOnionAPI.getFoodCapability(player)), (ServerPlayer) player);
+        SOLOnion.NETWORK.sendToClient(new FoodListMessage(SOLOnionAPI.getFoodCapability(player)), (ServerPlayer) player);
     }
     
     @SubscribeEvent

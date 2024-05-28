@@ -4,14 +4,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.mojang.datafixers.util.Pair;
+
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.food.FoodProperties.PossibleEffect;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
@@ -114,9 +116,9 @@ public final class SOLOnionConfig implements ICreativeConfig {
                 return property.diversity;
         FoodProperties prop = food.getItem().getFoodProperties(food, entity);
         if (prop != null) {
-            double diversity = (prop.nutrition() / complexityStandardNutrition) * (prop.saturation() / complexityStandardSaturation);
-            for (PossibleEffect effect : prop.effects())
-                diversity += (effect.effect().getAmplifier() + 1) * getModifierPerCategory(effect.effect().getEffect().value().getCategory()) * effect.probability();
+            double diversity = (prop.getNutrition() / complexityStandardNutrition) * (prop.getSaturationModifier() / complexityStandardSaturation);
+            for (Pair<MobEffectInstance, Float> pair : prop.getEffects())
+                diversity += (pair.getFirst().getAmplifier() + 1) * getModifierPerCategory(pair.getFirst().getEffect().getCategory()) * pair.getSecond();
             return diversity;
         }
         return 0;
