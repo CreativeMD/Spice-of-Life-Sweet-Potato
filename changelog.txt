@@ -1,3 +1,6 @@
+1.2.7
+Fixed not loading mod
+
 1.2.6
 Fixed Origins Forge compatibility (by MerchantPug)
 
