@@ -56,7 +56,7 @@ public class BenefitPlayerDataImpl implements BenefitPlayerData {
             return;
         
         for (it.unimi.dsi.fastutil.objects.Object2DoubleMap.Entry<Holder<Attribute>> entry : benefits.attributes()) {
-            var modi = new AttributeModifier(entry.getKey().value().getDescriptionId(), entry.getDoubleValue(), Operation.ADD_VALUE);
+            var modi = new AttributeModifier(ResourceLocation.parse(entry.getKey().value().getDescriptionId()), entry.getDoubleValue(), Operation.ADD_VALUE);
             var att = player.getAttribute(entry.getKey());
             if (att != null) {
                 float oldMax = player.getMaxHealth();
@@ -120,7 +120,7 @@ public class BenefitPlayerDataImpl implements BenefitPlayerData {
             appliedAttributes = new HashMap<>();
             for (int i = 0; i < list.size(); i++) {
                 CompoundTag tag = list.getCompound(i);
-                Reference<Attribute> att = BuiltInRegistries.ATTRIBUTE.getHolder(new ResourceLocation(tag.getString("att"))).get();
+                Reference<Attribute> att = BuiltInRegistries.ATTRIBUTE.getHolder(ResourceLocation.parse(tag.getString("att"))).get();
                 if (att != null)
                     appliedAttributes.put(att, AttributeModifier.load(tag.getCompound("mod")));
             }
@@ -130,7 +130,7 @@ public class BenefitPlayerDataImpl implements BenefitPlayerData {
         if (!list.isEmpty()) {
             appliedEffects = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
-                Reference<MobEffect> mob = BuiltInRegistries.MOB_EFFECT.getHolder(new ResourceLocation(list.getString(i))).get();
+                Reference<MobEffect> mob = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.parse(list.getString(i))).get();
                 if (mob != null)
                     appliedEffects.add(mob);
             }

@@ -16,7 +16,7 @@ import team.creative.solonion.common.SOLOnion;
 @OnlyIn(Dist.CLIENT)
 public final class PageFlipButton extends Button {
     
-    private static final ResourceLocation texture = new ResourceLocation(SOLOnion.MODID, "textures/gui/food_book.png");
+    private static final ResourceLocation texture = ResourceLocation.tryBuild(SOLOnion.MODID, "textures/gui/food_book.png");
     public static final int width = 23;
     public static final int height = 13;
     

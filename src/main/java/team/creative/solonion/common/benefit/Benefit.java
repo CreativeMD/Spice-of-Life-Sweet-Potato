@@ -45,8 +45,8 @@ public class Benefit<T> {
                 if (element.isJsonObject()) {
                     JsonObject object = element.getAsJsonObject();
                     if (object.has("attribute"))
-                        return createAttribute(new ResourceLocation(object.get("attribute").getAsString()), object.get("value").getAsDouble());
-                    return createMobEffect(new ResourceLocation(object.get("effect").getAsString()), object.get("value").getAsDouble());
+                        return createAttribute(ResourceLocation.parse(object.get("attribute").getAsString()), object.get("value").getAsDouble());
+                    return createMobEffect(ResourceLocation.parse(object.get("effect").getAsString()), object.get("value").getAsDouble());
                 }
                 return defaultValue;
             }

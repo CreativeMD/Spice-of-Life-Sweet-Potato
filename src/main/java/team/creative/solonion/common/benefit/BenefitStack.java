@@ -20,10 +20,10 @@ public class BenefitStack {
     }
     
     public void add(Benefit benefit) {
-        if (benefit.property.value instanceof Attribute a) {
-            attributes.compute(Holder.direct(a), (x, y) -> y != null ? Math.max(y, benefit.value) : benefit.value);
-        } else if (benefit.property.value instanceof MobEffect m)
-            effects.compute(Holder.direct(m), (x, y) -> y != null ? Math.max(y, (int) benefit.value) : (int) benefit.value);
+        if (benefit.property.value instanceof Attribute) {
+            attributes.compute(benefit.property.getHolder(), (x, y) -> y != null ? Math.max(y, benefit.value) : benefit.value);
+        } else if (benefit.property.value instanceof MobEffect)
+            effects.compute(benefit.property.getHolder(), (x, y) -> y != null ? Math.max(y, (int) benefit.value) : (int) benefit.value);
     }
     
     public void addAll(Iterable<Benefit> benefits) {

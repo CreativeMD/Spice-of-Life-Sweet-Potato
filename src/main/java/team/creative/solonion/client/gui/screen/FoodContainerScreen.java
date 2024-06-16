@@ -28,7 +28,7 @@ public class FoodContainerScreen extends AbstractContainerScreen<FoodContainer> 
     
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int x, int y) {
-        this.drawBackground(graphics, new ResourceLocation(SOLOnion.MODID, "textures/gui/inventory.png"));
+        this.drawBackground(graphics, ResourceLocation.tryBuild(SOLOnion.MODID, "textures/gui/inventory.png"));
         var h = this.menu.containerItem.getCapability(Capabilities.ItemHandler.ITEM);
         if (h != null) {
             int slotsPerRow = h.getSlots();
@@ -62,6 +62,6 @@ public class FoodContainerScreen extends AbstractContainerScreen<FoodContainer> 
     }
     
     protected void drawSlot(GuiGraphics graphics, int x, int y) {
-        drawSlot(graphics, x, y, new ResourceLocation(SOLOnion.MODID, "textures/gui/slot.png"), 18);
+        drawSlot(graphics, x, y, ResourceLocation.tryBuild(SOLOnion.MODID, "textures/gui/slot.png"), 18);
     }
 }

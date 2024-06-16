@@ -32,7 +32,7 @@ import team.creative.solonion.common.benefit.BenefitThreshold;
 
 @OnlyIn(Dist.CLIENT)
 public final class FoodBookScreen extends Screen implements PageFlipButton.Pageable {
-    private static final ResourceLocation texture = new ResourceLocation(SOLOnion.MODID, "textures/gui/food_book.png");
+    private static final ResourceLocation texture = ResourceLocation.tryBuild(SOLOnion.MODID, "textures/gui/food_book.png");
     private static final UIImage.Image bookImage = new UIImage.Image(texture, new Rectangle(0, 0, 186, 192));
     public static final UIImage.Image carrotImage = new UIImage.Image(texture, new Rectangle(0, 240, 16, 16));
     

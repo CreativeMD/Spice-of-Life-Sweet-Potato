@@ -65,7 +65,7 @@ public final class SOLOnionConfig implements ICreativeConfig {
     public double complexityStandardNutrition = 5;
     
     @CreativeConfig
-    public double complexityStandardSaturation = 0.6;
+    public double complexityStandardSaturation = 6;
     
     @CreativeConfig
     public double complexityBenefitEffectModifier = 0.2;

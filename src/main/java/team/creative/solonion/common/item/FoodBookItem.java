@@ -8,7 +8,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.DistExecutor;
+import net.neoforged.api.distmarker.OnlyIn;
 import team.creative.solonion.client.gui.screen.FoodBookScreen;
 
 public final class FoodBookItem extends Item {
@@ -19,7 +19,12 @@ public final class FoodBookItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         if (player.isLocalPlayer())
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FoodBookScreen.open(player));
+            openOnClient(player);
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
+    }
+    
+    @OnlyIn(Dist.CLIENT)
+    private void openOnClient(Player player) {
+        FoodBookScreen.open(player);
     }
 }

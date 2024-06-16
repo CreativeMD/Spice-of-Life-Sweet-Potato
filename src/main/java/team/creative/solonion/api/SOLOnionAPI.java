@@ -15,8 +15,8 @@ public final class SOLOnionAPI {
     
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, SOLOnion.MODID);
     
-    public static final ResourceLocation FOOD = new ResourceLocation(SOLOnion.MODID, "foodlist");
-    public static final ResourceLocation BENEFIT = new ResourceLocation(SOLOnion.MODID, "benefit");
+    public static final ResourceLocation FOOD = ResourceLocation.tryBuild(SOLOnion.MODID, "foodlist");
+    public static final ResourceLocation BENEFIT = ResourceLocation.tryBuild(SOLOnion.MODID, "benefit");
     
     public static final Supplier<AttachmentType<FoodPlayerDataImpl>> FOOD_DATA = ATTACHMENT_TYPES.register(FOOD.getPath(), () -> AttachmentType.serializable(
         () -> new FoodPlayerDataImpl()).build());

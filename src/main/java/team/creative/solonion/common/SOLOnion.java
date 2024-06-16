@@ -9,9 +9,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.DistExecutor;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -37,12 +37,13 @@ public final class SOLOnion {
     
     public static final String MODID = "solonion";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
-    public static CreativeNetwork NETWORK = new CreativeNetwork(1, LOGGER, new ResourceLocation(SOLOnion.MODID, "main"));
+    public static CreativeNetwork NETWORK = new CreativeNetwork(1, LOGGER, ResourceLocation.tryBuild(SOLOnion.MODID, "main"));
     public static SOLOnionConfig CONFIG;
     public static SOLOnionEvent EVENT;
     
     public SOLOnion(IEventBus bus) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> SOLOnionClient.load(bus));
+        if (FMLLoader.getDist() == Dist.CLIENT)
+            SOLOnionClient.load(bus);
         bus.addListener(this::setup);
         bus.addListener(this::registerCapabilities);
         SOLOnionItems.ITEMS.register(bus);
