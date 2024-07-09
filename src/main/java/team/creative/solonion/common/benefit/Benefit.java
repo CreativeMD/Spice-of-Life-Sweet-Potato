@@ -1,7 +1,5 @@
 package team.creative.solonion.common.benefit;
 
-import org.jetbrains.annotations.Nullable;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -21,8 +19,8 @@ import net.neoforged.api.distmarker.OnlyIn;
 import team.creative.creativecore.Side;
 import team.creative.creativecore.common.config.converation.ConfigTypeConveration;
 import team.creative.creativecore.common.config.gui.IGuiConfigParent;
-import team.creative.creativecore.common.config.holder.ConfigKey.ConfigKeyField;
-import team.creative.creativecore.common.config.premade.RegistryObjectConfig;
+import team.creative.creativecore.common.config.key.ConfigKey;
+import team.creative.creativecore.common.config.premade.registry.RegistryObjectConfig;
 import team.creative.creativecore.common.gui.GuiParent;
 import team.creative.creativecore.common.gui.controls.collection.GuiComboBoxMapped;
 import team.creative.creativecore.common.gui.controls.simple.GuiStateButton;
@@ -41,7 +39,7 @@ public class Benefit<T> {
         ConfigTypeConveration.registerType(Benefit.class, new ConfigTypeConveration<Benefit>() {
             
             @Override
-            public Benefit readElement(Provider provider, Benefit defaultValue, boolean loadDefault, boolean ignoreRestart, JsonElement element, Side side, @Nullable ConfigKeyField key) {
+            public Benefit readElement(Provider provider, Benefit defaultValue, boolean loadDefault, boolean ignoreRestart, JsonElement element, Side side, ConfigKey key) {
                 if (element.isJsonObject()) {
                     JsonObject object = element.getAsJsonObject();
                     if (object.has("attribute"))
@@ -52,7 +50,7 @@ public class Benefit<T> {
             }
             
             @Override
-            public JsonElement writeElement(Provider provider, Benefit value, Benefit defaultValue, boolean saveDefault, boolean ignoreRestart, Side side, @Nullable ConfigKeyField key) {
+            public JsonElement writeElement(Provider provider, Benefit value, boolean saveDefault, boolean ignoreRestart, Side side, ConfigKey key) {
                 JsonObject object = new JsonObject();
                 if (value.property.registry == BuiltInRegistries.ATTRIBUTE)
                     object.addProperty("attribute", value.property.location.toString());
@@ -65,7 +63,7 @@ public class Benefit<T> {
             @Override
             @OnlyIn(Dist.CLIENT)
             @Environment(EnvType.CLIENT)
-            public void createControls(GuiParent parent, IGuiConfigParent configParent, ConfigKeyField key, Class clazz) {
+            public void createControls(GuiParent parent, IGuiConfigParent configParent, ConfigKey key) {
                 parent.flow = GuiFlow.STACK_Y;
                 parent.add(new GuiStateButton("state", 0, new TextListBuilder().addTranslated("config.solonion.", "attribute", "effect")) {
                     
@@ -89,7 +87,7 @@ public class Benefit<T> {
             @Override
             @OnlyIn(Dist.CLIENT)
             @Environment(EnvType.CLIENT)
-            public void loadValue(Benefit value, GuiParent parent, IGuiConfigParent configParent, ConfigKeyField key) {
+            public void loadValue(Benefit value, Benefit defaultValue, GuiParent parent, IGuiConfigParent configParent, ConfigKey key) {
                 GuiStateButton state = parent.get("state");
                 state.setState(value.property.registry == BuiltInRegistries.ATTRIBUTE ? 0 : 1);
                 state.raiseEvent(new GuiControlChangedEvent(state));
@@ -104,7 +102,7 @@ public class Benefit<T> {
             @Override
             @OnlyIn(Dist.CLIENT)
             @Environment(EnvType.CLIENT)
-            protected Benefit saveValue(GuiParent parent, IGuiConfigParent configParent, Class clazz, ConfigKeyField key) {
+            protected Benefit saveValue(GuiParent parent, IGuiConfigParent configParent, ConfigKey key) {
                 GuiStateButton state = parent.get("state");
                 GuiComboBoxMapped<ResourceLocation> box = (GuiComboBoxMapped<ResourceLocation>) parent.get("elements");
                 GuiTextfield text = parent.get("value");
@@ -116,7 +114,7 @@ public class Benefit<T> {
             }
             
             @Override
-            public Benefit set(ConfigKeyField key, Benefit value) {
+            public Benefit set(ConfigKey key, Benefit value) {
                 return value;
             }
             
