@@ -63,7 +63,7 @@ public class Benefit<T> {
             @Override
             @OnlyIn(Dist.CLIENT)
             @Environment(EnvType.CLIENT)
-            public void createControls(GuiParent parent, IGuiConfigParent configParent, ConfigKey key) {
+            public void createControls(GuiParent parent, IGuiConfigParent configParent, ConfigKey key, Side side) {
                 parent.flow = GuiFlow.STACK_Y;
                 parent.add(new GuiStateButton("state", 0, new TextListBuilder().addTranslated("config.solonion.", "attribute", "effect")) {
                     
@@ -87,7 +87,7 @@ public class Benefit<T> {
             @Override
             @OnlyIn(Dist.CLIENT)
             @Environment(EnvType.CLIENT)
-            public void loadValue(Benefit value, Benefit defaultValue, GuiParent parent, IGuiConfigParent configParent, ConfigKey key) {
+            public void loadValue(Benefit value, Benefit defaultValue, GuiParent parent, IGuiConfigParent configParent, ConfigKey key, Side side) {
                 GuiStateButton state = parent.get("state");
                 state.setState(value.property.registry == BuiltInRegistries.ATTRIBUTE ? 0 : 1);
                 state.raiseEvent(new GuiControlChangedEvent(state));
@@ -102,7 +102,7 @@ public class Benefit<T> {
             @Override
             @OnlyIn(Dist.CLIENT)
             @Environment(EnvType.CLIENT)
-            protected Benefit saveValue(GuiParent parent, IGuiConfigParent configParent, ConfigKey key) {
+            protected Benefit saveValue(GuiParent parent, IGuiConfigParent configParent, ConfigKey key, Side side) {
                 GuiStateButton state = parent.get("state");
                 GuiComboBoxMapped<ResourceLocation> box = (GuiComboBoxMapped<ResourceLocation>) parent.get("elements");
                 GuiTextfield text = parent.get("value");
