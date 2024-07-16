@@ -16,7 +16,7 @@
 	"item.solonion.lunchbag": "Lunchbag",
 	"item.solonion.container.lunchbag": "Lunchbag",
 	
-	"item.solonion.container.open": "Shift rightclick to open",
+	"item.solonion.container.open": "%s + %s to open",
 
 	"key.solonion.open_food_book": "Open Food Book",
 	"key.solonion.category": "Spice of Life Onion",
