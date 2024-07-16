@@ -1,3 +1,7 @@
+1.2.9
+Fixed tooltip of food container not showing actual keybinds
+Adapted CreativeCore changes 2.12.3
+
 1.2.8
 Fixed not removing benefit mob effects when going under the threshold again
 Fixed not getting capability causing a crash
