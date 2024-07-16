@@ -86,7 +86,7 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
     
     @Override
     public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable("item." + SOLOnion.MODID + ".container.open"));
+        tooltip.add(Component.translatable("item." + SOLOnion.MODID + ".container.open", Component.keybind("key.sneak"), Component.keybind("key.use")));
         super.appendHoverText(stack, level, tooltip, flag);
     }
     
