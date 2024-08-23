@@ -37,6 +37,7 @@ public class BenefitCapabilityImpl implements BenefitCapability {
     
     private HashMap<Attribute, AttributeModifier> appliedAttributes;
     private List<MobEffect> appliedEffects;
+    private boolean reseting = false;
     
     @Nonnull
     @Override
@@ -46,7 +47,7 @@ public class BenefitCapabilityImpl implements BenefitCapability {
     
     @Override
     public void onEffectRemove(MobEffectEvent.Remove event) {
-        if (appliedEffects != null && appliedEffects.contains(event.getEffect()))
+        if (!reseting && appliedEffects != null && appliedEffects.contains(event.getEffect()))
             event.setCanceled(true);
     }
     
@@ -58,11 +59,13 @@ public class BenefitCapabilityImpl implements BenefitCapability {
             appliedAttributes.clear();
         }
         
+        reseting = true;
         if (appliedEffects != null && !appliedEffects.isEmpty()) {
             for (MobEffect effect : appliedEffects)
                 player.removeEffect(effect);
             appliedEffects.clear();
         }
+        reseting = false;
         
         if (benefits.isEmpty())
             return;
