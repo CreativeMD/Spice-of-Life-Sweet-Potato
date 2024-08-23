@@ -5,12 +5,18 @@
  */
 package team.creative.solonion.common.item.foodcontainer;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerListener;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import team.creative.solonion.common.item.SOLOnionItems;
 
@@ -56,6 +62,23 @@ public class FoodContainer extends AbstractContainerMenu {
                 this.addSlot(new FoodSlot(itemHandler, j, xPos, yPos));
             }
         }
+        
+        addSlotListener(new ContainerListener() {
+            
+            @Override
+            public void slotChanged(AbstractContainerMenu menu, int slot, ItemStack stack) {
+                if (slot < itemHandler.getSlots()) {
+                    List<ItemStack> stacks = new ArrayList<>(itemHandler.getSlots());
+                    for (int i = 0; i < itemHandler.getSlots(); i++)
+                        stacks.add(itemHandler.getStackInSlot(i));
+                    containerItem.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(stacks));
+                }
+                
+            }
+            
+            @Override
+            public void dataChanged(AbstractContainerMenu p_150524_, int p_150525_, int p_150526_) {}
+        });
         
         layoutPlayerInventorySlots(8, 84);
     }

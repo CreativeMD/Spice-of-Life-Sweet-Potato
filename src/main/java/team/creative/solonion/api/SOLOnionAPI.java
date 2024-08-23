@@ -17,6 +17,7 @@ public final class SOLOnionAPI {
     
     public static final ResourceLocation FOOD = ResourceLocation.tryBuild(SOLOnion.MODID, "foodlist");
     public static final ResourceLocation BENEFIT = ResourceLocation.tryBuild(SOLOnion.MODID, "benefit");
+    public static final ResourceLocation FOODCONTAINER = ResourceLocation.tryBuild(SOLOnion.MODID, "food_container");
     
     public static final Supplier<AttachmentType<FoodPlayerDataImpl>> FOOD_DATA = ATTACHMENT_TYPES.register(FOOD.getPath(), () -> AttachmentType.serializable(
         () -> new FoodPlayerDataImpl()).build());

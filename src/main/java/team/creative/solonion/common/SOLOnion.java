@@ -5,6 +5,7 @@ import static net.minecraft.commands.Commands.literal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
@@ -61,8 +62,18 @@ public final class SOLOnion {
     }
     
     public void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new ItemStackHandler(((FoodContainerItem) itemStack.getItem()).nslots), SOLOnionItems.LUNCHBOX
-                .get(), SOLOnionItems.LUNCHBAG.get(), SOLOnionItems.GOLDEN_LUNCHBOX.get());
+        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> {
+            var handler = new ItemStackHandler(((FoodContainerItem) itemStack.getItem()).nslots);
+            if (itemStack.has(DataComponents.CONTAINER)) {
+                var container = itemStack.get(DataComponents.CONTAINER);
+                for (int i = 0; i < handler.getSlots(); i++) {
+                    if (container.getSlots() <= i)
+                        break;
+                    handler.setStackInSlot(i, container.getStackInSlot(i));
+                }
+            }
+            return handler;
+        }, SOLOnionItems.LUNCHBOX.get(), SOLOnionItems.LUNCHBAG.get(), SOLOnionItems.GOLDEN_LUNCHBOX.get());
     }
     
     public void command(RegisterCommandsEvent event) {
