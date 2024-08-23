@@ -1,3 +1,7 @@
+1.2.8
+Fixed not removing benefit mob effects when going under the threshold again
+Fixed not getting capability causing a crash
+
 1.2.7
 Added showDiversityChangeInTooltip config option
 
