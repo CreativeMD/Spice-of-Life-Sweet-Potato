@@ -31,10 +31,11 @@ public class BenefitPlayerDataImpl implements BenefitPlayerData {
     
     private HashMap<Holder<Attribute>, AttributeModifier> appliedAttributes;
     private List<Holder<MobEffect>> appliedEffects;
+    private boolean reseting = false;
     
     @Override
     public void onEffectRemove(MobEffectEvent.Remove event) {
-        if (appliedEffects != null && appliedEffects.contains(event.getEffect()))
+        if (!reseting && appliedEffects != null && appliedEffects.contains(event.getEffect()))
             event.setCanceled(true);
     }
     
@@ -46,11 +47,13 @@ public class BenefitPlayerDataImpl implements BenefitPlayerData {
             appliedAttributes.clear();
         }
         
+        reseting = true;
         if (appliedEffects != null && !appliedEffects.isEmpty()) {
             for (Holder<MobEffect> effect : appliedEffects)
                 player.removeEffect(effect);
             appliedEffects.clear();
         }
+        reseting = false;
         
         if (benefits.isEmpty())
             return;
