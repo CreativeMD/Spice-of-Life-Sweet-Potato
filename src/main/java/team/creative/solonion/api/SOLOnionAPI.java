@@ -6,6 +6,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import team.creative.solonion.common.SOLOnion;
+import team.creative.solonion.common.benefit.BenefitCapabilityImpl;
+import team.creative.solonion.common.food.FoodCapabilityImpl;
 
 public final class SOLOnionAPI {
     
@@ -16,11 +18,11 @@ public final class SOLOnionAPI {
     public static final ResourceLocation BENEFIT = new ResourceLocation(SOLOnion.MODID, "benefit");
     
     public static FoodCapability getFoodCapability(Player player) {
-        return player.getCapability(FOOD_CAP).orElseThrow(() -> new RuntimeException("Player must have food capability attached, but none was found."));
+        return player.getCapability(FOOD_CAP).orElseGet(() -> new FoodCapabilityImpl());
     }
     
     public static BenefitCapability getBenefitCapability(Player player) {
-        return player.getCapability(BENEFIT_CAP).orElseThrow(() -> new RuntimeException("Player must have benefit capability attached, but none was found."));
+        return player.getCapability(BENEFIT_CAP).orElseGet(() -> new BenefitCapabilityImpl());
     }
     
     public static boolean isPresent(Player player) {
