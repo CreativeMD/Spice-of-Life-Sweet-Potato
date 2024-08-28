@@ -16,7 +16,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
-import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerRespawnEvent;
@@ -144,12 +143,6 @@ public class SOLOnionEvent {
         foodList.eat(player, food);
         updatePlayerBenefits(player);
         syncFoodList(player);
-    }
-    
-    @SubscribeEvent
-    public void onEffectRemove(MobEffectEvent.Remove event) {
-        if (event.getEntity() instanceof Player player)
-            SOLOnionAPI.getBenefitCapability(player).onEffectRemove(event);
     }
     
 }

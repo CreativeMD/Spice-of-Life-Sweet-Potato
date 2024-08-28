@@ -1,17 +1,10 @@
 package team.creative.solonion.common.benefit;
 
-import it.unimi.dsi.fastutil.objects.Object2DoubleArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
-import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.minecraft.core.Holder;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.ai.attributes.Attribute;
+import java.util.HashMap;
 
 public class BenefitStack {
     
-    private final Object2DoubleArrayMap<Holder<Attribute>> attributes = new Object2DoubleArrayMap<>();
-    private final Object2IntArrayMap<Holder<MobEffect>> effects = new Object2IntArrayMap<>();
+    private final HashMap<BenefitType, Object> typeStack = new HashMap<>();
     
     public BenefitStack() {}
     
@@ -20,10 +13,11 @@ public class BenefitStack {
     }
     
     public void add(Benefit benefit) {
-        if (benefit.property.value instanceof Attribute) {
-            attributes.compute(benefit.property.getHolder(), (x, y) -> y != null ? Math.max(y, benefit.value) : benefit.value);
-        } else if (benefit.property.value instanceof MobEffect)
-            effects.compute(benefit.property.getHolder(), (x, y) -> y != null ? Math.max(y, (int) benefit.value) : (int) benefit.value);
+        var type = BenefitType.getType(benefit);
+        var stack = typeStack.get(type);
+        if (stack == null)
+            typeStack.put(type, stack = type.createStack());
+        type.addToStack(benefit, stack);
     }
     
     public void addAll(Iterable<Benefit> benefits) {
@@ -31,16 +25,15 @@ public class BenefitStack {
             add(benefit);
     }
     
-    public Iterable<Object2DoubleMap.Entry<Holder<Attribute>>> attributes() {
-        return attributes.object2DoubleEntrySet();
-    }
-    
-    public Iterable<Object2IntMap.Entry<Holder<MobEffect>>> effects() {
-        return effects.object2IntEntrySet();
-    }
-    
     public boolean isEmpty() {
-        return attributes.isEmpty() && effects.isEmpty();
+        for (var entry : typeStack.entrySet())
+            if (!entry.getKey().isEmpty(entry.getValue()))
+                return false;
+        return false;
+    }
+    
+    public <T> T get(BenefitType<?, T, ?> type) {
+        return (T) typeStack.get(type);
     }
     
 }

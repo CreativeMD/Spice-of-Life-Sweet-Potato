@@ -23,14 +23,15 @@ import team.creative.creativecore.common.config.sync.ConfigSynchronization;
 import team.creative.creativecore.common.util.ingredient.CreativeIngredientItem;
 import team.creative.creativecore.common.util.type.list.SortingList;
 import team.creative.solonion.api.SOLOnionAPI;
-import team.creative.solonion.common.benefit.Benefit;
+import team.creative.solonion.common.benefit.BenefitAttribute;
+import team.creative.solonion.common.benefit.BenefitMobEffect;
 import team.creative.solonion.common.benefit.BenefitThreshold;
 import team.creative.solonion.common.food.FoodProperty;
 
 public final class SOLOnionConfig implements ICreativeConfig {
     
     static {
-        ConfigTypeConveration.registerTypeCreator(BenefitThreshold.class, () -> new BenefitThreshold(3, Benefit.createAttribute(Attributes.MAX_HEALTH, 2)));
+        ConfigTypeConveration.registerTypeCreator(BenefitThreshold.class, () -> new BenefitThreshold(3, new BenefitAttribute(Attributes.MAX_HEALTH, 2)));
         ConfigTypeConveration.registerTypeCreator(FoodProperty.class, () -> new FoodProperty(new CreativeIngredientItem(Items.GOLDEN_CARROT), 2));
     }
     
@@ -52,11 +53,11 @@ public final class SOLOnionConfig implements ICreativeConfig {
     public int minFoodsToActivate = 0;
     
     @CreativeConfig
-    public List<BenefitThreshold> benefits = Arrays.asList(new BenefitThreshold(3, Benefit.createAttribute(Attributes.MAX_HEALTH, 2)), new BenefitThreshold(5, Benefit
-            .createMobEffect(MobEffects.DAMAGE_BOOST, 0)), new BenefitThreshold(7, Benefit.createMobEffect(MobEffects.REGENERATION, 0)), new BenefitThreshold(10, Benefit
-                    .createMobEffect(MobEffects.MOVEMENT_SPEED, 0)), new BenefitThreshold(13, Benefit.createAttribute(Attributes.ARMOR_TOUGHNESS, 2)),
-        new BenefitThreshold(18, Benefit.createMobEffect(MobEffects.DAMAGE_BOOST, 1)), new BenefitThreshold(25, Benefit.createAttribute(Attributes.MAX_HEALTH, 4)),
-        new BenefitThreshold(31, Benefit.createAttribute(Attributes.MAX_HEALTH, 6)));
+    public List<BenefitThreshold> benefits = Arrays.asList(new BenefitThreshold(3, new BenefitAttribute(Attributes.MAX_HEALTH, 2)),
+        new BenefitThreshold(5, new BenefitMobEffect(MobEffects.DAMAGE_BOOST, 0)), new BenefitThreshold(7, new BenefitMobEffect(MobEffects.REGENERATION, 0)),
+        new BenefitThreshold(10, new BenefitMobEffect(MobEffects.MOVEMENT_SPEED, 0)), new BenefitThreshold(13, new BenefitAttribute(Attributes.ARMOR_TOUGHNESS, 2)),
+        new BenefitThreshold(18, new BenefitMobEffect(MobEffects.DAMAGE_BOOST, 1)), new BenefitThreshold(25, new BenefitAttribute(Attributes.MAX_HEALTH, 4)),
+        new BenefitThreshold(31, new BenefitAttribute(Attributes.MAX_HEALTH, 6)));
     
     @CreativeConfig
     public boolean shouldExcludedCount = true;
