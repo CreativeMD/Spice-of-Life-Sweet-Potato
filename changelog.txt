@@ -1,3 +1,6 @@
+1.3.1
+Fixed recipe, tag and advancement not working
+
 1.3.0
 Reworked benefit system
 Added operation type to attribute benefit
