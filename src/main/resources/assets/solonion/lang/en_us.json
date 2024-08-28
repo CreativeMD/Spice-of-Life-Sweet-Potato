@@ -40,8 +40,12 @@
 	"gui.solonion.tooltip.last_eaten": "Last eaten: %d meals ago",
 	"gui.solonion.tooltip.last_eaten_singular": "Last eaten: %d meal ago",
 	
-	"config.solonion.attribute": "Attribute",
-	"config.solonion.effect": "Mob Effect",
+	"config.solonion.att": "Attribute",
+	"config.solonion.eff": "Mob Effect",
+	
+	"config.solonion.addition": "Add",
+	"config.solonion.multiply_base": "Mulitply Base",
+	"config.solonion.multiply_total": "Mulitply Total",
 	
 	"config.solonion.trackCount.comment": "How many foods should be tracked.\n Note that the larger this is, the higher your potential diversity value can be, so keep this mind\n if you are defining custom thresholds/benefits above.",
     "config.solonion.minFoodsToActivate.comment": "The minimum number of foods a player needs to eat before any benefits are applied.",

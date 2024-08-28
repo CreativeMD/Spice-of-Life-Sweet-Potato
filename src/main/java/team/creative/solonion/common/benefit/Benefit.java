@@ -2,92 +2,99 @@ package team.creative.solonion.common.benefit;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import team.creative.creativecore.Side;
 import team.creative.creativecore.common.config.converation.ConfigTypeConveration;
 import team.creative.creativecore.common.config.gui.IGuiConfigParent;
-import team.creative.creativecore.common.config.holder.ConfigKey.ConfigKeyField;
-import team.creative.creativecore.common.config.premade.RegistryObjectConfig;
+import team.creative.creativecore.common.config.key.ConfigKey;
+import team.creative.creativecore.common.config.premade.registry.RegistryObjectConfig;
 import team.creative.creativecore.common.gui.GuiParent;
 import team.creative.creativecore.common.gui.controls.collection.GuiComboBoxMapped;
-import team.creative.creativecore.common.gui.controls.simple.GuiStateButton;
+import team.creative.creativecore.common.gui.controls.simple.GuiStateButtonMapped;
 import team.creative.creativecore.common.gui.controls.simple.GuiTextfield;
 import team.creative.creativecore.common.gui.event.GuiControlChangedEvent;
 import team.creative.creativecore.common.gui.event.GuiEvent;
 import team.creative.creativecore.common.gui.flow.GuiFlow;
-import team.creative.creativecore.common.util.text.TextListBuilder;
 import team.creative.creativecore.common.util.text.TextMapBuilder;
 
-public class Benefit<T> {
+public abstract class Benefit<T> {
     
     static {
-        ConfigTypeConveration.registerTypeCreator(Benefit.class, () -> create(Attributes.MAX_HEALTH, 2));
+        ConfigTypeConveration.registerTypeCreator(Benefit.class, () -> new BenefitAttribute(Attributes.MAX_HEALTH, 2));
         
         ConfigTypeConveration.registerType(Benefit.class, new ConfigTypeConveration<Benefit>() {
             
             @Override
-            public Benefit readElement(Benefit defaultValue, boolean loadDefault, boolean ignoreRestart, JsonElement element, Side side, ConfigKeyField key) {
+            public Benefit readElement(Provider provider, Benefit defaultValue, boolean loadDefault, boolean ignoreRestart, JsonElement element, Side side, ConfigKey key) {
                 if (element.isJsonObject()) {
                     JsonObject object = element.getAsJsonObject();
                     if (object.has("attribute"))
-                        return createAttribute(new ResourceLocation(object.get("attribute").getAsString()), object.get("value").getAsDouble());
-                    return createMobEffect(new ResourceLocation(object.get("effect").getAsString()), object.get("value").getAsDouble());
+                        return new BenefitAttribute(new ResourceLocation(object.get("attribute").getAsString()), object.get("value").getAsDouble());
+                    return new BenefitMobEffect(new ResourceLocation(object.get("effect").getAsString()), object.get("value").getAsDouble());
+                } else if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
+                    try {
+                        return BenefitType.load(TagParser.parseTag(element.getAsString()));
+                    } catch (CommandSyntaxException e) {
+                        e.printStackTrace();
+                    }
                 }
                 return defaultValue;
             }
             
             @Override
-            public JsonElement writeElement(Benefit value, Benefit defaultValue, boolean saveDefault, boolean ignoreRestart, Side side, ConfigKeyField key) {
-                JsonObject object = new JsonObject();
-                if (value.property.registry == BuiltInRegistries.ATTRIBUTE)
-                    object.addProperty("attribute", value.property.location.toString());
-                else
-                    object.addProperty("effect", value.property.location.toString());
-                object.addProperty("value", value.value);
-                return object;
+            public JsonElement writeElement(Provider provider, Benefit value, boolean saveDefault, boolean ignoreRestart, Side side, ConfigKey key) {
+                return new JsonPrimitive(value.save().toString());
             }
             
             @Override
             @OnlyIn(Dist.CLIENT)
             @Environment(EnvType.CLIENT)
-            public void createControls(GuiParent parent, IGuiConfigParent configParent, ConfigKeyField key, Class clazz) {
+            public void createControls(GuiParent parent, IGuiConfigParent configParent, ConfigKey key, Side side) {
                 parent.flow = GuiFlow.STACK_Y;
-                parent.add(new GuiStateButton("state", 0, new TextListBuilder().addTranslated("config.solonion.", "attribute", "effect")) {
+                parent.add(new GuiStateButtonMapped<BenefitType>("state", 0, BenefitType.typeMap()) {
                     
                     @Override
                     public void raiseEvent(GuiEvent event) {
-                        super.raiseEvent(event);
+                        
                         GuiComboBoxMapped<ResourceLocation> box = (GuiComboBoxMapped<ResourceLocation>) parent.get("elements");
-                        Registry registry = getState() == 0 ? BuiltInRegistries.ATTRIBUTE : BuiltInRegistries.MOB_EFFECT;
+                        Registry registry = getSelected().registry();
+                        GuiParent subConfig = parent.get("subConfig");
+                        subConfig.clear();
+                        getSelected().createControls(subConfig, configParent);
                         box.setLines(new TextMapBuilder<ResourceLocation>().addComponent(registry.keySet(), value -> {
                             if (value.getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE))
                                 return Component.literal(value.getPath());
                             return Component.literal(value.toString());
                         }));
+                        super.raiseEvent(event);
+                        reflow();
                     }
                     
                 });
                 parent.add(new GuiComboBoxMapped<ResourceLocation>("elements", new TextMapBuilder<ResourceLocation>()).setSearchbar(true));
                 parent.add(new GuiTextfield("value").setFloatOnly().setDim(20, 6));
+                parent.add(new GuiParent("subConfig"));
             }
             
             @Override
             @OnlyIn(Dist.CLIENT)
             @Environment(EnvType.CLIENT)
-            public void loadValue(Benefit value, GuiParent parent, IGuiConfigParent configParent, ConfigKeyField key) {
-                GuiStateButton state = parent.get("state");
-                state.setState(value.property.registry == BuiltInRegistries.ATTRIBUTE ? 0 : 1);
+            public void loadValue(Benefit value, Benefit defaultValue, GuiParent parent, IGuiConfigParent configParent, ConfigKey key, Side side) {
+                GuiStateButtonMapped<BenefitType> state = parent.get("state");
+                state.select(BenefitType.getType(value));
                 state.raiseEvent(new GuiControlChangedEvent(state));
                 
                 GuiComboBoxMapped<ResourceLocation> box = (GuiComboBoxMapped<ResourceLocation>) parent.get("elements");
@@ -95,46 +102,27 @@ public class Benefit<T> {
                 
                 GuiTextfield text = parent.get("value");
                 text.setText(value.value + "");
+                
+                GuiParent subConfig = parent.get("subConfig");
+                state.getSelected().loadValue(value, subConfig, configParent);
             }
             
             @Override
             @OnlyIn(Dist.CLIENT)
             @Environment(EnvType.CLIENT)
-            protected Benefit saveValue(GuiParent parent, IGuiConfigParent configParent, Class clazz, ConfigKeyField key) {
-                GuiStateButton state = parent.get("state");
+            protected Benefit saveValue(GuiParent parent, IGuiConfigParent configParent, ConfigKey key, Side side) {
+                GuiStateButtonMapped<BenefitType> state = parent.get("state");
                 GuiComboBoxMapped<ResourceLocation> box = (GuiComboBoxMapped<ResourceLocation>) parent.get("elements");
                 GuiTextfield text = parent.get("value");
-                double value = text.parseDouble();
-                
-                if (state.getState() == 0)
-                    return createAttribute(box.getSelected(), value);
-                return createMobEffect(box.getSelected(), value);
+                return state.getSelected().saveValue(box.getSelected(), text.parseDouble(), parent.get("subConfig"), configParent);
             }
             
             @Override
-            public Benefit set(ConfigKeyField key, Benefit value) {
+            public Benefit set(ConfigKey key, Benefit value) {
                 return value;
             }
             
         });
-    }
-    
-    public static Benefit<Attribute> create(Attribute attribute, double value) {
-        Registry<Attribute> reg = BuiltInRegistries.ATTRIBUTE;
-        return new Benefit<>(new RegistryObjectConfig<>(reg, reg.getKey(attribute)), value);
-    }
-    
-    public static Benefit<Attribute> createAttribute(ResourceLocation location, double value) {
-        return new Benefit<>(new RegistryObjectConfig<>(BuiltInRegistries.ATTRIBUTE, location), value);
-    }
-    
-    public static Benefit<MobEffect> create(MobEffect mob, double value) {
-        Registry<MobEffect> reg = BuiltInRegistries.MOB_EFFECT;
-        return new Benefit<>(new RegistryObjectConfig<>(reg, reg.getKey(mob)), value);
-    }
-    
-    public static Benefit<MobEffect> createMobEffect(ResourceLocation location, double value) {
-        return new Benefit<>(new RegistryObjectConfig<>(BuiltInRegistries.MOB_EFFECT, location), value);
     }
     
     public final RegistryObjectConfig<T> property;
@@ -146,11 +134,24 @@ public class Benefit<T> {
         this.value = value;
     }
     
+    public Benefit(Registry<T> registry, CompoundTag nbt) {
+        this.property = new RegistryObjectConfig<>(registry, ResourceLocation.tryParse(nbt.getString("key")));
+        this.value = nbt.getDouble("val");
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Benefit benefit)
             return property.equals(benefit.property) && value == benefit.value;
         return false;
+    }
+    
+    public CompoundTag save() {
+        CompoundTag nbt = new CompoundTag();
+        nbt.putString("type", BenefitType.getId(this));
+        nbt.putString("key", property.location.toString());
+        nbt.putDouble("val", value);
+        return nbt;
     }
     
 }

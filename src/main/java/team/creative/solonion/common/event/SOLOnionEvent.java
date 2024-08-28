@@ -14,7 +14,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
-import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerRespawnEvent;
@@ -26,7 +25,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import team.creative.solonion.api.FoodCapability;
 import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.common.SOLOnion;
-import team.creative.solonion.common.benefit.BenefitCapabilityImpl;
+import team.creative.solonion.common.benefit.BenefitPlayerDataImpl;
 import team.creative.solonion.common.benefit.BenefitStack;
 import team.creative.solonion.common.benefit.BenefitThreshold;
 import team.creative.solonion.common.food.FoodCapabilityImpl;
@@ -74,7 +73,7 @@ public class SOLOnionEvent {
             return;
         
         event.addCapability(SOLOnionAPI.FOOD, new FoodCapabilityImpl());
-        event.addCapability(SOLOnionAPI.BENEFIT, new BenefitCapabilityImpl());
+        event.addCapability(SOLOnionAPI.BENEFIT, new BenefitPlayerDataImpl());
     }
     
     @SubscribeEvent
@@ -158,12 +157,6 @@ public class SOLOnionEvent {
         foodList.eat(player, food);
         updatePlayerBenefits(player);
         syncFoodList(player);
-    }
-    
-    @SubscribeEvent
-    public void onEffectRemove(MobEffectEvent.Remove event) {
-        if (event.getEntity() instanceof Player player)
-            SOLOnionAPI.getBenefitCapability(player).onEffectRemove(event);
     }
     
 }

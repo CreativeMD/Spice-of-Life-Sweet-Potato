@@ -6,7 +6,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import team.creative.solonion.common.SOLOnion;
-import team.creative.solonion.common.benefit.BenefitCapabilityImpl;
+import team.creative.solonion.common.benefit.BenefitPlayerDataImpl;
 import team.creative.solonion.common.food.FoodCapabilityImpl;
 
 public final class SOLOnionAPI {
@@ -22,7 +22,7 @@ public final class SOLOnionAPI {
     }
     
     public static BenefitCapability getBenefitCapability(Player player) {
-        return player.getCapability(BENEFIT_CAP).orElseGet(() -> new BenefitCapabilityImpl());
+        return player.getCapability(BENEFIT_CAP).orElseGet(() -> new BenefitPlayerDataImpl());
     }
     
     public static boolean isPresent(Player player) {
