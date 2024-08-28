@@ -1,3 +1,7 @@
+1.3.0
+Reworked benefit system
+Added operation type to attribute benefit
+
 1.2.10
 Fixed not removing benefit mob effects when going under the threshold again
 Fixed lunchboxes not saving and loading inventory
