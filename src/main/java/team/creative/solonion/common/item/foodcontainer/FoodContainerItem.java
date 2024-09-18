@@ -21,6 +21,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import team.creative.creativecore.common.util.type.list.TupleList;
 import team.creative.solonion.api.FoodPlayerData;
@@ -72,20 +73,12 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
         bestStacks.sort((x, y) -> y.key.compareTo(x.key));
         
         for (int slot : bestStacks.values()) {
-            boolean hasSpace = false;
-            for (int j = 0; j < inv.getSlots(); j++) {
-                if (!inv.getStackInSlot(j).isEmpty())
-                    continue;
-                hasSpace = true;
-                int maxStackSize = Math.min(handler.getStackInSlot(slot).getMaxStackSize(), handler.getSlotLimit(slot));
-                var remain = inv.insertItem(j, handler.extractItem(slot, maxStackSize, false), false);
-                if (!remain.isEmpty())
-                    handler.insertItem(slot, remain, false);
-                if (handler.getStackInSlot(slot).isEmpty())
-                    break;
-            }
-            if (!hasSpace)
+            var stack = handler.extractItem(slot, handler.getStackInSlot(slot).getCount(), false);
+            var result = ItemHandlerHelper.insertItem(inv, stack, false);
+            if (!result.isEmpty()) {
+                handler.insertItem(slot, result, false);
                 break;
+            }
         }
         
         List<ItemStack> stacks = new ArrayList<>(inv.getSlots());
