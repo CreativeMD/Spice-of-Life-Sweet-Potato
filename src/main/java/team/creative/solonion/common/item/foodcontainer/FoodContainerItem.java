@@ -1,12 +1,14 @@
 package team.creative.solonion.common.item.foodcontainer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -14,10 +16,13 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import team.creative.creativecore.common.util.type.list.TupleList;
 import team.creative.solonion.api.FoodPlayerData;
 import team.creative.solonion.api.OnionFoodContainer;
 import team.creative.solonion.api.SOLOnionAPI;
@@ -37,9 +42,64 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
     }
     
     @Override
+    public InteractionResult useOn(UseOnContext context) {
+        var handler = Capabilities.ItemHandler.BLOCK.getCapability(context.getLevel(), context.getClickedPos(), null, null, context.getClickedFace());
+        if (handler == null)
+            return super.useOn(context);
+        
+        ItemStackHandler inv = getInventory(context.getItemInHand());
+        if (inv == null)
+            return super.useOn(context);
+        TupleList<Double, Integer> bestStacks = new TupleList<Double, Integer>();
+        for (int i = 0; i < handler.getSlots(); i++) {
+            ItemStack stack = handler.getStackInSlot(i);
+            if (!stack.isEmpty() && stack.getFoodProperties(context.getPlayer()) != null && OriginsManager.isEdible(context.getPlayer(), stack)) {
+                for (int j = 0; j < inv.getSlots(); j++) { // Fill up the slots which are already taken
+                    var toBeStacked = inv.getStackInSlot(j);
+                    if (ItemStack.isSameItem(stack, toBeStacked) && ItemStack.isSameItemSameComponents(stack, toBeStacked)) {
+                        int maxStackSize = Math.min(stack.getMaxStackSize(), inv.getSlotLimit(j));
+                        if (!toBeStacked.isEmpty() && toBeStacked.getCount() < maxStackSize)
+                            toBeStacked.grow(handler.extractItem(i, maxStackSize - toBeStacked.getCount(), false).getCount());
+                        stack = handler.getStackInSlot(i);
+                        if (stack.isEmpty())
+                            break;
+                    }
+                }
+                bestStacks.add(SOLOnion.CONFIG.getDiversity(context.getPlayer(), stack), i);
+            }
+        }
+        
+        bestStacks.sort((x, y) -> y.key.compareTo(x.key));
+        
+        for (int slot : bestStacks.values()) {
+            boolean hasSpace = false;
+            for (int j = 0; j < inv.getSlots(); j++) {
+                if (!inv.getStackInSlot(j).isEmpty())
+                    continue;
+                hasSpace = true;
+                int maxStackSize = Math.min(handler.getStackInSlot(slot).getMaxStackSize(), handler.getSlotLimit(slot));
+                var remain = inv.insertItem(j, handler.extractItem(slot, maxStackSize, false), false);
+                if (!remain.isEmpty())
+                    handler.insertItem(slot, remain, false);
+                if (handler.getStackInSlot(slot).isEmpty())
+                    break;
+            }
+            if (!hasSpace)
+                break;
+        }
+        
+        List<ItemStack> stacks = new ArrayList<>(inv.getSlots());
+        for (int i = 0; i < inv.getSlots(); i++)
+            stacks.add(inv.getStackInSlot(i));
+        context.getItemInHand().set(DataComponents.CONTAINER, ItemContainerContents.fromItems(stacks));
+        
+        return InteractionResult.SUCCESS;
+    }
+    
+    @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         if (!world.isClientSide && player.isCrouching())
-            ((ServerPlayer) player).openMenu(new FoodContainerProvider(displayName), player.blockPosition());
+            player.openMenu(new FoodContainerProvider(displayName), player.blockPosition());
         
         if (!player.isCrouching())
             return processRightClick(world, player, hand);
