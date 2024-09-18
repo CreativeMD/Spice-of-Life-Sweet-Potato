@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -15,12 +16,14 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.NetworkHooks;
+import team.creative.creativecore.common.util.type.list.TupleList;
 import team.creative.solonion.api.FoodCapability;
 import team.creative.solonion.api.OnionFoodContainer;
 import team.creative.solonion.api.SOLOnionAPI;
@@ -47,6 +50,60 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
     @Override
     public FoodProperties getFoodProperties() {
         return new FoodProperties.Builder().build();
+    }
+    
+    @Override
+    public InteractionResult useOn(UseOnContext context) {
+        var blockEntity = context.getLevel().getBlockEntity(context.getClickedPos());
+        if (blockEntity == null)
+            return super.useOn(context);
+        
+        var handler = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+        if (handler == null)
+            return super.useOn(context);
+        
+        ItemStackHandler inv = getInventory(context.getItemInHand());
+        if (inv == null)
+            return super.useOn(context);
+        TupleList<Double, Integer> bestStacks = new TupleList<Double, Integer>();
+        for (int i = 0; i < handler.getSlots(); i++) {
+            ItemStack stack = handler.getStackInSlot(i);
+            if (!stack.isEmpty() && stack.getFoodProperties(context.getPlayer()) != null && OriginsManager.isEdible(context.getPlayer(), stack)) {
+                for (int j = 0; j < inv.getSlots(); j++) { // Fill up the slots which are already taken
+                    var toBeStacked = inv.getStackInSlot(j);
+                    if (ItemStack.isSameItem(stack, toBeStacked) && ItemStack.isSameItemSameTags(stack, toBeStacked)) {
+                        int maxStackSize = Math.min(stack.getMaxStackSize(), inv.getSlotLimit(j));
+                        if (!toBeStacked.isEmpty() && toBeStacked.getCount() < maxStackSize)
+                            toBeStacked.grow(handler.extractItem(i, maxStackSize - toBeStacked.getCount(), false).getCount());
+                        stack = handler.getStackInSlot(i);
+                        if (stack.isEmpty())
+                            break;
+                    }
+                }
+                bestStacks.add(SOLOnion.CONFIG.getDiversity(context.getPlayer(), stack), i);
+            }
+        }
+        
+        bestStacks.sort((x, y) -> y.key.compareTo(x.key));
+        
+        for (int slot : bestStacks.values()) {
+            boolean hasSpace = false;
+            for (int j = 0; j < inv.getSlots(); j++) {
+                if (!inv.getStackInSlot(j).isEmpty())
+                    continue;
+                hasSpace = true;
+                int maxStackSize = Math.min(handler.getStackInSlot(slot).getMaxStackSize(), handler.getSlotLimit(slot));
+                var remain = inv.insertItem(j, handler.extractItem(slot, maxStackSize, false), false);
+                if (!remain.isEmpty())
+                    handler.insertItem(slot, remain, false);
+                if (handler.getStackInSlot(slot).isEmpty())
+                    break;
+            }
+            if (!hasSpace)
+                break;
+        }
+        
+        return InteractionResult.SUCCESS;
     }
     
     @Override
