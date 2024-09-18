@@ -1,3 +1,6 @@
+1.4.1
+Fixed not merging added stacks properly when using fill ability of lunchbox
+
 1.4.0
 Added ability to fill food bag, lunchbox, etc. with food when shift right clicking on item container such like chests
 
