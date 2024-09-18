@@ -21,6 +21,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.NetworkHooks;
 import team.creative.creativecore.common.util.type.list.TupleList;
@@ -87,20 +88,12 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
         bestStacks.sort((x, y) -> y.key.compareTo(x.key));
         
         for (int slot : bestStacks.values()) {
-            boolean hasSpace = false;
-            for (int j = 0; j < inv.getSlots(); j++) {
-                if (!inv.getStackInSlot(j).isEmpty())
-                    continue;
-                hasSpace = true;
-                int maxStackSize = Math.min(handler.getStackInSlot(slot).getMaxStackSize(), handler.getSlotLimit(slot));
-                var remain = inv.insertItem(j, handler.extractItem(slot, maxStackSize, false), false);
-                if (!remain.isEmpty())
-                    handler.insertItem(slot, remain, false);
-                if (handler.getStackInSlot(slot).isEmpty())
-                    break;
-            }
-            if (!hasSpace)
+            var stack = handler.extractItem(slot, handler.getStackInSlot(slot).getCount(), false);
+            var result = ItemHandlerHelper.insertItem(inv, stack, false);
+            if (!result.isEmpty()) {
+                handler.insertItem(slot, result, false);
                 break;
+            }
         }
         
         return InteractionResult.SUCCESS;
