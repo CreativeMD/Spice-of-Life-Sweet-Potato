@@ -22,6 +22,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
+import team.creative.solonion.api.BenefitCapability;
 import team.creative.solonion.api.FoodCapability;
 import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.common.SOLOnion;
@@ -91,9 +92,11 @@ public class SOLOnionEvent {
         FoodCapability original = SOLOnionAPI.getFoodCapability(originalPlayer);
         FoodCapability newInstance = SOLOnionAPI.getFoodCapability(event.getEntity());
         newInstance.deserializeNBT(original.serializeNBT());
-        // can't sync yet; client hasn't attached capabilities yet
         
-        updatePlayerBenefits(event.getEntity());
+        BenefitCapability originalB = SOLOnionAPI.getBenefitCapability(originalPlayer);
+        BenefitCapability newInstanceB = SOLOnionAPI.getBenefitCapability(event.getEntity());
+        newInstanceB.deserializeNBT(originalB.serializeNBT());
+        
         originalPlayer.invalidateCaps();
     }
     
