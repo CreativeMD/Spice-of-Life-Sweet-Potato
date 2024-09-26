@@ -23,8 +23,10 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import team.creative.solonion.api.FoodPlayerData;
 import team.creative.solonion.api.SOLOnionAPI;
 import team.creative.solonion.common.SOLOnion;
+import team.creative.solonion.common.benefit.BenefitPlayerDataImpl;
 import team.creative.solonion.common.benefit.BenefitStack;
 import team.creative.solonion.common.benefit.BenefitThreshold;
+import team.creative.solonion.common.food.FoodPlayerDataImpl;
 import team.creative.solonion.common.item.foodcontainer.FoodContainerItem;
 import team.creative.solonion.common.network.FoodListMessage;
 
@@ -74,14 +76,16 @@ public class SOLOnionEvent {
             return;
         
         Player originalPlayer = event.getOriginal();
-        //originalPlayer.reviveCaps(); // so we can access the capabilities; entity will get removed either way
-        FoodPlayerData original = SOLOnionAPI.getFoodCapability(originalPlayer);
-        FoodPlayerData newInstance = SOLOnionAPI.getFoodCapability(event.getEntity());
-        newInstance.deserializeNBT(event.getEntity().registryAccess(), original.serializeNBT(event.getEntity().registryAccess()));
-        // can't sync yet; client hasn't attached capabilities yet
+        Player newPlayer = event.getEntity();
+        var provider = newPlayer.registryAccess();
         
-        updatePlayerBenefits(event.getEntity());
-        //originalPlayer.invalidateCaps();
+        FoodPlayerDataImpl food = new FoodPlayerDataImpl();
+        food.deserializeNBT(provider, SOLOnionAPI.getFoodCapability(originalPlayer).serializeNBT(provider));
+        newPlayer.setData(SOLOnionAPI.FOOD_DATA, food);
+        
+        BenefitPlayerDataImpl benefit = new BenefitPlayerDataImpl();
+        benefit.deserializeNBT(provider, SOLOnionAPI.getBenefitCapability(originalPlayer).serializeNBT(provider));
+        newPlayer.setData(SOLOnionAPI.BENEFIT_DATA, benefit);
     }
     
     @SubscribeEvent
