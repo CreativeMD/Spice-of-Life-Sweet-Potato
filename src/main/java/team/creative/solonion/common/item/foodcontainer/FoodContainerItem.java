@@ -1,6 +1,7 @@
 package team.creative.solonion.common.item.foodcontainer;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -70,7 +71,7 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
             }
         }
         
-        bestStacks.sort((x, y) -> y.key.compareTo(x.key));
+        bestStacks.sort(Comparator.comparingDouble(x -> x.key));
         
         for (int slot : bestStacks.values()) {
             var stack = handler.extractItem(slot, handler.getStackInSlot(slot).getCount(), false);
@@ -172,7 +173,13 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
                 
                 if (!playerEntity.getInventory().add(result))
                     playerEntity.drop(result, false);
+                
             }
+            
+            List<ItemStack> stacks = new ArrayList<>(handler.getSlots());
+            for (int i = 0; i < handler.getSlots(); i++)
+                stacks.add(handler.getStackInSlot(i));
+            stack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(stacks));
             
             if (!world.isClientSide)
                 EventHooks.onItemUseFinish(player, foodCopy, 0, result);
