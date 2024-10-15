@@ -90,6 +90,7 @@ public class SOLOnionEvent {
     
     @SubscribeEvent
     public void onPlayerRespawn(PlayerRespawnEvent event) {
+        updatePlayerBenefits(event.getEntity());
         syncFoodList(event.getEntity());
     }
     
