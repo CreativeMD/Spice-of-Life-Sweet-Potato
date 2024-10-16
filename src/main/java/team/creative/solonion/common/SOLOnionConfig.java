@@ -120,8 +120,11 @@ public final class SOLOnionConfig implements ICreativeConfig {
         FoodProperties prop = food.getItem().getFoodProperties(food, entity);
         if (prop != null) {
             double diversity = (prop.getNutrition() / complexityStandardNutrition) * (prop.getSaturationModifier() / complexityStandardSaturation);
-            for (Pair<MobEffectInstance, Float> pair : prop.getEffects())
-                diversity += (pair.getFirst().getAmplifier() + 1) * getModifierPerCategory(pair.getFirst().getEffect().getCategory()) * pair.getSecond();
+            for (Pair<MobEffectInstance, Float> pair : prop.getEffects()) {
+                var instance = pair.getFirst();
+                if (instance != null)
+                    diversity += (instance.getAmplifier() + 1) * getModifierPerCategory(instance.getEffect().getCategory()) * pair.getSecond();
+            }
             return diversity;
         }
         return 0;
