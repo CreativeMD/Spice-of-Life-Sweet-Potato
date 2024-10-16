@@ -1,3 +1,6 @@
+1.4.5
+Fixed crash when food properties pass null mobeffectinstance (caused crash with create garnished)
+
 1.4.4
 Fixed not getting benefits even if reset on death is set to false (you had to login or eat to get them again)
 
