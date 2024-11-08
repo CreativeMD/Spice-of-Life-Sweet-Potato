@@ -10,7 +10,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -37,7 +36,7 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
     public final int nslots;
     
     public FoodContainerItem(int nslots, String displayName) {
-        super(new Properties().stacksTo(1).setNoRepair().food(new FoodProperties.Builder().build()));
+        super(new Properties().stacksTo(1).food(new FoodProperties.Builder().build()));
         
         this.displayName = displayName;
         this.nslots = nslots;
@@ -55,7 +54,7 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
         TupleList<Double, Integer> bestStacks = new TupleList<Double, Integer>();
         for (int i = 0; i < handler.getSlots(); i++) {
             ItemStack stack = handler.getStackInSlot(i);
-            if (!stack.isEmpty() && stack.getFoodProperties(context.getPlayer()) != null && OriginsManager.isEdible(context.getPlayer(), stack)) {
+            if (!stack.isEmpty() && stack.get(DataComponents.FOOD) != null && OriginsManager.isEdible(context.getPlayer(), stack)) {
                 for (int j = 0; j < inv.getSlots(); j++) { // Fill up the slots which are already taken
                     var toBeStacked = inv.getStackInSlot(j);
                     if (ItemStack.isSameItem(stack, toBeStacked) && ItemStack.isSameItemSameComponents(stack, toBeStacked)) {
@@ -91,25 +90,25 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
     }
     
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
         if (!world.isClientSide && player.isCrouching())
             player.openMenu(new FoodContainerProvider(displayName), player.blockPosition());
         
         if (!player.isCrouching())
             return processRightClick(world, player, hand);
-        return InteractionResultHolder.pass(player.getItemInHand(hand));
+        return InteractionResult.PASS;
     }
     
-    private InteractionResultHolder<ItemStack> processRightClick(Level world, Player player, InteractionHand hand) {
+    private InteractionResult processRightClick(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (isInventoryEmpty(player, stack))
-            return InteractionResultHolder.pass(stack);
+            return InteractionResult.PASS;
         
         if (player.canEat(false)) {
             player.startUsingItem(hand);
-            return InteractionResultHolder.consume(stack);
+            return InteractionResult.CONSUME;
         }
-        return InteractionResultHolder.fail(stack);
+        return InteractionResult.FAIL;
     }
     
     private static boolean isInventoryEmpty(Player player, ItemStack container) {
@@ -119,7 +118,7 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
         
         for (int i = 0; i < handler.getSlots(); i++) {
             ItemStack stack = handler.getStackInSlot(i);
-            if (!stack.isEmpty() && stack.getFoodProperties(player) != null && OriginsManager.isEdible(player, stack))
+            if (!stack.isEmpty() && stack.get(DataComponents.FOOD) != null && OriginsManager.isEdible(player, stack))
                 return false;
         }
         return true;
@@ -164,10 +163,10 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
         
         ItemStack bestFood = handler.getStackInSlot(bestFoodSlot);
         ItemStack foodCopy = bestFood.copy();
-        if (bestFood.getFoodProperties(player) != null && !bestFood.isEmpty() && OriginsManager.isEdible(player, foodCopy)) {
+        if (bestFood.get(DataComponents.FOOD) != null && !bestFood.isEmpty() && OriginsManager.isEdible(player, foodCopy)) {
             ItemStack result = bestFood.finishUsingItem(world, entity);
             // put bowls/bottles etc. into player inventory
-            if (result.getFoodProperties(player) == null) {
+            if (result.get(DataComponents.FOOD) == null) {
                 handler.setStackInSlot(bestFoodSlot, ItemStack.EMPTY);
                 Player playerEntity = (Player) entity;
                 
@@ -201,7 +200,7 @@ public class FoodContainerItem extends Item implements OnionFoodContainer {
         for (int i = 0; i < handler.getSlots(); i++) {
             ItemStack food = handler.getStackInSlot(i);
             
-            if (food.getFoodProperties(player) == null || food.isEmpty() || !OriginsManager.isEdible(player, food))
+            if (food.get(DataComponents.FOOD) == null || food.isEmpty() || !OriginsManager.isEdible(player, food))
                 continue;
             
             double diversityChange = foodList.simulateEat(player, food);

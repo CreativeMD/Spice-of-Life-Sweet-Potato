@@ -4,16 +4,20 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.food.FoodProperties.PossibleEffect;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
+import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import team.creative.creativecore.Side;
 import team.creative.creativecore.common.config.api.CreativeConfig;
@@ -113,16 +117,17 @@ public final class SOLOnionConfig implements ICreativeConfig {
     
     public double getDiversity(LivingEntity entity, ItemStack food) {
         for (FoodProperty property : foodDiversity)
-            if (property.ingredient.is(food))
+            if (property.ingredient.is(entity.level(), food))
                 return property.diversity;
-        FoodProperties prop = food.getItem().getFoodProperties(food, entity);
+        FoodProperties prop = food.get(DataComponents.FOOD);
         if (prop != null) {
             double diversity = (prop.nutrition() / complexityStandardNutrition) * (prop.saturation() / complexityStandardSaturation);
-            for (PossibleEffect effect : prop.effects()) {
-                var instance = effect.effect();
-                if (instance != null)
-                    diversity += (instance.getAmplifier() + 1) * getModifierPerCategory(instance.getEffect().value().getCategory()) * effect.probability();
-            }
+            var consum = food.get(DataComponents.CONSUMABLE);
+            if (consum != null && consum.animation() == ItemUseAnimation.EAT)
+                for (ConsumeEffect c : consum.onConsumeEffects())
+                    if (c instanceof ApplyStatusEffectsConsumeEffect effects)
+                        for (MobEffectInstance effect : effects.effects())
+                            diversity += (effect.getAmplifier() + 1) * getModifierPerCategory(effect.getEffect().value().getCategory()) * effects.probability();
             return diversity;
         }
         return 0;

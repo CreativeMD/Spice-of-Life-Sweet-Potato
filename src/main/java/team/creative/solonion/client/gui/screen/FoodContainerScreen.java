@@ -7,6 +7,7 @@ package team.creative.solonion.client.gui.screen;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -54,11 +55,11 @@ public class FoodContainerScreen extends AbstractContainerScreen<FoodContainer> 
     protected void drawBackground(GuiGraphics graphics, ResourceLocation gui) {
         int relX = (this.width - this.getXSize()) / 2;
         int relY = (this.height - this.getYSize()) / 2;
-        graphics.blit(gui, relX, relY, 0, 0, this.getXSize(), this.getYSize());
+        graphics.blitInscribed(gui, relX, relY, 0, 0, this.getXSize(), this.getYSize());
     }
     
     protected void drawSlot(GuiGraphics graphics, int x, int y, ResourceLocation texture, int size) {
-        graphics.blit(texture, this.getGuiLeft() + x, this.getGuiTop() + y, 0, 0, size, size, size, size);
+        graphics.blit(RenderType::guiTextured, texture, this.getGuiLeft() + x, this.getGuiTop() + y, 0, 0, size, size, size, size);
     }
     
     protected void drawSlot(GuiGraphics graphics, int x, int y) {

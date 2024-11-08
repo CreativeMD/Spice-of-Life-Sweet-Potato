@@ -7,6 +7,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -74,7 +75,7 @@ public class SOLOnionClient {
         if (stack.getItem() instanceof OnionFoodContainer c)
             stack = c.getActualFood(player, stack);
         
-        FoodProperties foodproperties = stack.getFoodProperties(player);
+        FoodProperties foodproperties = stack.get(DataComponents.FOOD);
         if (foodproperties == null)
             return;
         

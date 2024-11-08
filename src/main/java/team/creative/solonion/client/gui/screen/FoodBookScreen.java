@@ -128,7 +128,7 @@ public final class FoodBookScreen extends Screen implements PageFlipButton.Pagea
     }
     
     @Override
-    protected void renderBlurredBackground(float partialTicks) {}
+    protected void renderBlurredBackground() {}
     
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {

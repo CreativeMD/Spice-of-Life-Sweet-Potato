@@ -152,7 +152,7 @@ public class BenefitAttribute extends Benefit<Attribute> {
             if (nbt instanceof ListTag list)
                 for (int i = 0; i < list.size(); i++) {
                     CompoundTag tag = list.getCompound(i);
-                    Reference<Attribute> att = BuiltInRegistries.ATTRIBUTE.getHolder(ResourceLocation.parse(tag.getString("att"))).get();
+                    Reference<Attribute> att = BuiltInRegistries.ATTRIBUTE.get(ResourceLocation.parse(tag.getString("att"))).get();
                     if (att != null)
                         applied.put(new AttributeHolder(att, Operation.BY_ID.apply(tag.getInt("op"))), AttributeModifier.load(tag.getCompound("mod")));
                 }

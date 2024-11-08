@@ -11,6 +11,7 @@ import org.jetbrains.annotations.UnknownNullability;
 import it.unimi.dsi.fastutil.objects.Object2DoubleArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap.Entry;
 import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -149,7 +150,7 @@ public final class FoodPlayerDataImpl implements FoodPlayerData {
     
     @Override
     public int getLastEaten(LivingEntity entity, ItemStack food) {
-        if (food.getFoodProperties(entity) == null)
+        if (food.get(DataComponents.FOOD) == null)
             return -1;
         
         double d = SOLOnion.CONFIG.getDiversity(entity, food);
@@ -164,7 +165,7 @@ public final class FoodPlayerDataImpl implements FoodPlayerData {
     
     @Override
     public boolean hasEaten(LivingEntity entity, ItemStack food) {
-        if (food.getFoodProperties(entity) == null)
+        if (food.get(DataComponents.FOOD) == null)
             return false;
         double d = SOLOnion.CONFIG.getDiversity(entity, food);
         for (ItemStack stack : this)

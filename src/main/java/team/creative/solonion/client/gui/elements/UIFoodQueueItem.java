@@ -27,7 +27,7 @@ public class UIFoodQueueItem extends UIItemStack {
     }
     
     private List<Component> getFoodQueueTooltip() {
-        Component foodName = Component.translatable(itemStack.getItem().getDescriptionId(itemStack)).withStyle(itemStack.getRarity().getStyleModifier());
+        Component foodName = Component.translatable(itemStack.getItem().getDescriptionId()).withStyle(itemStack.getRarity().getStyleModifier());
         
         List<Component> tooltip = new ArrayList<>();
         tooltip.add(foodName);

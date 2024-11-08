@@ -1,5 +1,6 @@
 package team.creative.solonion.common.event;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -111,7 +112,7 @@ public class SOLOnionEvent {
             return;
         
         ItemStack usedItem = event.getItem();
-        if (usedItem.getFoodProperties(player) == null && usedItem.getItem() != Items.CAKE)
+        if (usedItem.get(DataComponents.FOOD) == null && usedItem.getItem() != Items.CAKE)
             return;
         if (usedItem.getItem() instanceof FoodContainerItem)
             return;
@@ -133,7 +134,7 @@ public class SOLOnionEvent {
         Item eatenItem = Items.CAKE;
         // If Farmer's Delight is installed, replace "cake" with FD's "cake slice"
         if (ModList.get().isLoaded("farmersdelight"))
-            eatenItem = BuiltInRegistries.ITEM.get(ResourceLocation.tryBuild("farmersdelight", "cake_slice"));
+            eatenItem = BuiltInRegistries.ITEM.getValue(ResourceLocation.tryBuild("farmersdelight", "cake_slice"));
         ItemStack eatenItemStack = new ItemStack(eatenItem);
         
         if (clickedBlock == Blocks.CAKE && player.canEat(false) && event.getHand() == InteractionHand.MAIN_HAND && !event.getLevel().isClientSide) {

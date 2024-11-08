@@ -45,7 +45,7 @@ public final class PageFlipButton extends Button {
         int textureY = direction == Direction.FORWARD ? 192 : 205;
         
         RenderSystem.setShaderTexture(0, texture);
-        graphics.blit(texture, getX(), getY(), textureX, textureY, 23, 13);
+        graphics.blitInscribed(texture, getX(), getY(), textureX, textureY, 23, 13);
     }
     
     public void updateState() {
