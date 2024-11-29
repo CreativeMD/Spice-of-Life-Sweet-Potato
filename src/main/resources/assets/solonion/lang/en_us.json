@@ -40,6 +40,9 @@
 	"gui.solonion.tooltip.last_eaten": "Last eaten: %d meals ago",
 	"gui.solonion.tooltip.last_eaten_singular": "Last eaten: %d meal ago",
 	
+	"gui.solonion.inventory.button": "SOL",
+	"gui.solonion.inventory.tooltip": "SOL Onion Stats\nDiversity: %s",
+	
 	"config.solonion.att": "Attribute",
 	"config.solonion.eff": "Mob Effect",
 	
