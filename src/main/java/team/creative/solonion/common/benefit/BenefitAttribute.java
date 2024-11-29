@@ -168,11 +168,13 @@ public class BenefitAttribute extends Benefit<Attribute> {
             
             if (stack != null)
                 for (var entry : stack.object2DoubleEntrySet()) {
-                    var modi = new AttributeModifier(ResourceLocation.tryBuild(SOLOnion.MODID, entry.getKey().operation.toString().toLowerCase()), entry.getDoubleValue(), entry
-                            .getKey().operation);
+                    var location = ResourceLocation.tryBuild(SOLOnion.MODID, entry.getKey().operation.toString().toLowerCase());
                     var att = player.getAttribute(entry.getKey().attribute);
+                    att.removeModifier(location); // make sure modifier does not exist already
+                    var modi = new AttributeModifier(location, entry.getDoubleValue(), entry.getKey().operation);
                     if (att != null) {
                         float oldMax = player.getMaxHealth();
+                        
                         att.addPermanentModifier(modi);
                         applied.put(entry.getKey(), modi);
                         if (entry.getKey().attribute == Attributes.MAX_HEALTH && !FirstAidManager.INSTALLED) {
