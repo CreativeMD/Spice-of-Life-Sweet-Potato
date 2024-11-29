@@ -93,6 +93,16 @@ public final class SOLOnionConfig implements ICreativeConfig {
     public boolean showDisabledTooltip = true;
     @CreativeConfig(type = ConfigSynchronization.CLIENT)
     public boolean shouldShowInactiveBenefits = true;
+    @CreativeConfig(type = ConfigSynchronization.CLIENT)
+    public boolean showButtonInInventory = true;
+    @CreativeConfig(type = ConfigSynchronization.CLIENT)
+    public int buttonInventoryX = 130;
+    @CreativeConfig(type = ConfigSynchronization.CLIENT)
+    public int buttonInventoryY = 62;
+    @CreativeConfig(type = ConfigSynchronization.CLIENT)
+    public int buttonInventoryWidth = 24;
+    @CreativeConfig(type = ConfigSynchronization.CLIENT)
+    public int buttonInventoryHeight = 16;
     
     @Override
     public void configured(Side side) {
