@@ -1,3 +1,6 @@
+1.4.7
+Added new textures made by davka
+
 1.4.6
 Added button to inventory to check stats (remove need for book) inspired by Diet mod
 Fixed crash when removing and readding this mod again
