@@ -106,7 +106,7 @@ public final class FoodPlayerDataImpl implements FoodPlayerData {
     
     @Override
     public void eat(LivingEntity entity, ItemStack stack) {
-        if (!SOLOnion.CONFIG.isAllowed(stack) && !SOLOnion.CONFIG.shouldExcludedCount)
+        if (!SOLOnion.CONFIG.isAllowed(entity.level(), stack) && !SOLOnion.CONFIG.shouldExcludedCount)
             return;
         
         startIndex--;
@@ -119,7 +119,7 @@ public final class FoodPlayerDataImpl implements FoodPlayerData {
     
     @Override
     public double simulateEat(LivingEntity entity, ItemStack stack) {
-        if (!SOLOnion.CONFIG.isAllowed(stack) && !SOLOnion.CONFIG.shouldExcludedCount)
+        if (!SOLOnion.CONFIG.isAllowed(entity.level(), stack) && !SOLOnion.CONFIG.shouldExcludedCount)
             return 0.0;
         
         List<ItemStack> stacks = new ArrayList<>(SOLOnion.CONFIG.trackCount);

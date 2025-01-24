@@ -91,7 +91,7 @@ public class SOLOnionClient {
     }
     
     public static void addTooltip(double diversity, int lastEaten, ItemStack stack, List<Component> tooltip, Player player) {
-        boolean isAllowed = SOLOnion.CONFIG.isAllowed(stack);
+        boolean isAllowed = SOLOnion.CONFIG.isAllowed(player.level(), stack);
         
         if (!isAllowed) {
             if (SOLOnion.CONFIG.showDisabledTooltip)

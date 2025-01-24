@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import team.creative.creativecore.Side;
 import team.creative.creativecore.common.config.api.CreativeConfig;
@@ -121,8 +122,8 @@ public final class SOLOnionConfig implements ICreativeConfig {
         }
     }
     
-    public boolean isAllowed(ItemStack food) {
-        return foodItems.canPass(food);
+    public boolean isAllowed(Level level, ItemStack food) {
+        return foodItems.canPass(level, food);
     }
     
     public double getDiversity(LivingEntity entity, ItemStack food) {
